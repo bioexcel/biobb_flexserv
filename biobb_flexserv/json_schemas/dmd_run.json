@@ -1,0 +1,146 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://bioexcel.eu/biobb_flexserv/json_schemas/1.0/dmd_run",
+    "name": "biobb_flexserv DMDRun",
+    "title": "Wrapper of the Discrete Molecular Dynamics tool from the FlexServ module.",
+    "description": "Generates protein conformational structures using the Discrete Molecular Dynamics (DMD) method.",
+    "type": "object",
+    "info": {
+        "wrapped_software": {
+            "name": "FlexServ Discrete Molecular Dynamics",
+            "version": ">=1.0",
+            "license": "Apache-2.0"
+        },
+        "ontology": {
+            "name": "EDAM",
+            "schema": "http://edamontology.org/EDAM.owl"
+        }
+    },
+    "required": [
+        "input_pdb_path",
+        "output_log_path",
+        "output_crd_path"
+    ],
+    "properties": {
+        "input_pdb_path": {
+            "type": "string",
+            "description": "Input PDB file",
+            "filetype": "input",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/data/flexserv/structure.ca.pdb",
+            "enum": [
+                ".*\\.pdb$"
+            ],
+            "file_formats": [
+                {
+                    "extension": ".*\\.pdb$",
+                    "description": "Input PDB file",
+                    "edam": "format_1476"
+                }
+            ]
+        },
+        "output_log_path": {
+            "type": "string",
+            "description": "Output log file",
+            "filetype": "output",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/flexserv/flexserv_bd.log",
+            "enum": [
+                ".*\\.log$",
+                ".*\\.out$",
+                ".*\\.txt$",
+                ".*\\.o$"
+            ],
+            "file_formats": [
+                {
+                    "extension": ".*\\.log$",
+                    "description": "Output log file",
+                    "edam": "format_2330"
+                },
+                {
+                    "extension": ".*\\.out$",
+                    "description": "Output log file",
+                    "edam": "format_2330"
+                },
+                {
+                    "extension": ".*\\.txt$",
+                    "description": "Output log file",
+                    "edam": "format_2330"
+                },
+                {
+                    "extension": ".*\\.o$",
+                    "description": "Output log file",
+                    "edam": "format_2330"
+                }
+            ]
+        },
+        "output_crd_path": {
+            "type": "string",
+            "description": "Output ensemble",
+            "filetype": "output",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/flexserv/traj.crd",
+            "enum": [
+                ".*\\.crd$",
+                ".*\\.mdcrd$",
+                ".*\\.inpcrd$"
+            ],
+            "file_formats": [
+                {
+                    "extension": ".*\\.crd$",
+                    "description": "Output ensemble",
+                    "edam": "format_3878"
+                },
+                {
+                    "extension": ".*\\.mdcrd$",
+                    "description": "Output ensemble",
+                    "edam": "format_3878"
+                },
+                {
+                    "extension": ".*\\.inpcrd$",
+                    "description": "Output ensemble",
+                    "edam": "format_3878"
+                }
+            ]
+        },
+        "properties": {
+            "type": "object",
+            "properties": {
+                "binary_path": {
+                    "type": "string",
+                    "default": "dmdgoopt",
+                    "wf_prop": false,
+                    "description": "DMD binary path to be used."
+                },
+                "dt": {
+                    "type": "number",
+                    "default": 1e-12,
+                    "wf_prop": false,
+                    "description": "Integration time (s)"
+                },
+                "temperature": {
+                    "type": "integer",
+                    "default": 300,
+                    "wf_prop": false,
+                    "description": "Simulation temperature (K)"
+                },
+                "frames": {
+                    "type": "integer",
+                    "default": 1000,
+                    "wf_prop": false,
+                    "description": "Number of frames in the final ensemble"
+                },
+                "remove_tmp": {
+                    "type": "boolean",
+                    "default": true,
+                    "wf_prop": true,
+                    "description": "Remove temporal files."
+                },
+                "restart": {
+                    "type": "boolean",
+                    "default": false,
+                    "wf_prop": true,
+                    "description": "Do not execute if output files exist."
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

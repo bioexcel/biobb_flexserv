@@ -1,0 +1,32 @@
+working_dir_path: /tmp/biobb/unitests
+
+bd_run:
+  paths:
+    input_pdb_path: file:test_data_dir/flexserv/structure.ca.pdb
+    output_crd_path: bd_run_out.crd
+    ref_output_crd_path: file:test_reference_dir/flexserv/bd_run_traj.crd
+    output_log_path: bd_run_out.log
+    ref_output_log_path: file:test_reference_dir/flexserv/bd_run_out.log
+  properties:
+    time: 10000
+    wfreq: 100
+
+nma_run:
+  paths:
+    input_pdb_path: file:test_data_dir/flexserv/structure.ca.pdb
+    output_crd_path: nma_run_out.crd
+    ref_output_crd_path: file:test_reference_dir/flexserv/nma_run_traj.crd
+    output_log_path: nma_run_out.log
+    ref_output_log_path: file:test_reference_dir/flexserv/nma_run_out.log
+  properties:
+    frames: 100
+
+dmd_run:
+  paths:
+    input_pdb_path: file:test_data_dir/flexserv/structure.ca.pdb
+    output_crd_path: dmd_run_out.crd
+    ref_output_crd_path: file:test_reference_dir/flexserv/dmd_run_traj.crd
+    output_log_path: dmd_run_out.log
+    ref_output_log_path: file:test_reference_dir/flexserv/dmd_run_out.log
+  properties:
+    frames: 100

@@ -1,0 +1,50 @@
+{
+    "_id": "biobb_flexserv",
+    "desc": "Biobb_flexserv is a BioBB category for biomolecular flexibility studies on protein 3D structures.",
+    "github": "https://github.com/bioexcel/biobb_flexserv",
+    "readthedocs": "https://biobb-flexserv.readthedocs.io/en/latest/",
+    "conda": "https://anaconda.org/bioconda/biobb_flexserv",
+    "docker": "",
+    "singularity": "",
+    "version": "3.8.0",
+    "tools" : [
+        {
+            "block" : "BDRun",
+            "tool" : "FlexServ BD",
+            "desc" : "Run Brownian Dynamics from FlexServ",
+            "exec" : "bd_run",
+            "docs": "https://biobb-flexserv.readthedocs.io/en/latest/flexserv.html#module-flexserv.bd_run"
+        },
+        {
+            "block" : "DMDRun",
+            "tool" : "FlexServ DMD",
+            "desc" : "Run Discrete Molecular Dynamics from FlexServ",
+            "exec" : "dmd_run",
+            "docs": "https://biobb-flexserv.readthedocs.io/en/latest/flexserv.html#module-flexserv.dmd_run"
+        },
+        {
+            "block" : "NMARun",
+            "tool" : "FlexServ NMA",
+            "desc" : "Run Normal Mode Analysis from FlexServ",
+            "exec" : "nma_run",
+            "docs": "https://biobb-flexserv.readthedocs.io/en/latest/flexserv.html#module-flexserv.nma_run"
+        }
+    ],
+    "dep_pypi" : [
+        "install_requires=['biobb_common==3.8.1']",
+        "python_requires='>=3.7.*'"
+    ],
+    "dep_conda" : [
+        "python >=3.7.*",
+        "biobb_common ==3.8.1",
+        "flexserv ==1.0.1"
+    ],
+    "keywords" : [
+        "BD",
+        "DMD",
+        "NMA",
+        "Flexibility",
+        "Structure",
+        "3D"
+    ]
+}

@@ -1,0 +1,3 @@
+include biobb_flexserv/utils/*
+recursive-include biobb_flexserv/cp2k/cp2k_data/ *
+include biobb_flexserv/cp2k/cp2k_in/*
