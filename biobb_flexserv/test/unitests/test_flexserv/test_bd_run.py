@@ -6,7 +6,7 @@ class TestBDRun():
         fx.test_setup(self, 'bd_run')
 
     def teardown_class(self):
-        fx.test_teardown(self)
+        #fx.test_teardown(self)
         pass
 
     def test_bd_run(self):

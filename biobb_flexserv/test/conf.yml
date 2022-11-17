@@ -30,3 +30,29 @@ dmd_run:
     ref_output_log_path: file:test_reference_dir/flexserv/dmd_run_out.log
   properties:
     frames: 100
+
+pcazip:
+  paths:
+    input_crd_path: file:test_data_dir/pcasuite/traj.crd
+    input_pdb_path: file:test_data_dir/pcasuite/structure.ca.pdb
+    output_pcz_path: pcazip.pcz
+    ref_output_pcz_path: file:test_reference_dir/pcasuite/pcazip.ref.pcz
+  properties:
+    variance: 90
+
+pcaunzip:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_crd_path: pcazip.crd
+    ref_output_pcz_path: file:test_reference_dir/pcasuite/pcazip.ref.crd
+  properties:
+    pdb : False
+
+pcz_animate:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_crd_path: pcazip_anim1.pdb
+    ref_output_pcz_path: file:test_reference_dir/pcasuite/pcz_animation.pdb
+  properties:
+    eigenvector: 1
+    pdb: True

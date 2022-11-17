@@ -95,16 +95,24 @@ class PCAunzip(BiobbObject):
         self.stage_files()
 
         # Creating temporary folder
-        #self.tmp_folder = fu.create_unique_dir()
-        #fu.log('Creating %s temporary folder' % self.tmp_folder, self.out_log)
+        # These BBs need a temporary folder as pcasuite does not allow for long input paths
+        # e.g. pczaunzip -i /Users/user/BioBB/Dev/biobb_flexserv/biobb_flexserv/test/data/pcasuite/pcazip.pcz
+        #      gives --> "Illegal instruction: 4"
+        self.tmp_folder = fu.create_unique_dir()
+        fu.log('Creating %s temporary folder' % self.tmp_folder, self.out_log)
 
-        #shutil.copy2(self.io_dict["in"]["input_pdb_path"], self.tmp_folder)
+        # Copying input files to temporary folder
+        shutil.copy2(self.io_dict["in"]["input_pcz_path"], self.tmp_folder)
+
+        # Defining output files in temporary folder
+        output_file_name = PurePath(self.io_dict["out"]["output_crd_path"]).name
+        output_file = str(PurePath(self.tmp_folder).joinpath(output_file_name))
 
         # Command line
         # pcaunzip -i infile [-o outfile] [--pdb] [--verbose] [--help]
-        self.cmd = [self.binary_path,
+        self.cmd = ['cd', self.tmp_folder, ';', self.binary_path,
                 "-i", PurePath(self.io_dict["in"]["input_pcz_path"]).name,
-                "-o", PurePath(self.io_dict["out"]["output_crd_path"]).name
+                "-o", output_file_name 
                ]
  
         if self.verbose:
@@ -116,12 +124,15 @@ class PCAunzip(BiobbObject):
         # Run Biobb block
         self.run_biobb()
 
+        # Copy output trajectory
+        shutil.copy2(output_file, PurePath(self.io_dict["out"]["output_crd_path"]))
+
         # Copy files to host
         self.copy_to_host()
 
         # remove temporary folder(s)
         if self.remove_tmp:
-            #self.tmp_files.append(self.tmp_folder)
+            self.tmp_files.append(self.tmp_folder)
             self.remove_tmp_files()
 
         return self.return_code
