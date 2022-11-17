@@ -39,6 +39,8 @@ def is_valid_file(ext, argument):
 		'input_pcz_path': ['pcz'],
 		'output_log_path': ['log','out','txt','o'],
 		'output_crd_path': ['crd','mdcrd','inpcrd','pdb'],
-		'output_pcz_path': ['pcz']
+		'output_pcz_path': ['pcz'],
+		'output_dat_path': ['dat','txt','csv'],
+		'output_pdb_path': ['pdb']
 	}
 	return ext in formats[argument]

@@ -56,3 +56,14 @@ pcz_animate:
   properties:
     eigenvector: 1
     pdb: True
+
+pcz_bfactor:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_dat_path: bfactors.dat
+    ref_output_dat_path: file:test_reference_dir/pcasuite/bfactors.dat
+    output_pdb_path: bfactors.pdb
+    ref_output_pdb_path: file:test_reference_dir/pcasuite/bfactors.pdb
+  properties:
+    eigenvector: 1
+    pdb: True
