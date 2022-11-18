@@ -41,6 +41,7 @@ def is_valid_file(ext, argument):
 		'output_crd_path': ['crd','mdcrd','inpcrd','pdb'],
 		'output_pcz_path': ['pcz'],
 		'output_dat_path': ['dat','txt','csv'],
-		'output_pdb_path': ['pdb']
+		'output_pdb_path': ['pdb'],
+		'output_json_path': ['json']
 	}
 	return ext in formats[argument]
