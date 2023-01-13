@@ -128,8 +128,8 @@ class PCZhinges(BiobbObject):
                 if "Window" in line:  # Window 28: residue  54 seems a downhill hinge point
                     residue = int(line.split(' ')[4])
                     dict_out["hinge_residues"].append(residue)
-                if "Consensus" in line: # Consensus Downhill hinge point:  23.7 (  64.965)
-                    hinge_point = float(line.split(' ')[5])
+                if "Consensus" in line: # Consensus Downhill hinge point :  23.7 (  64.965)
+                    hinge_point = float(line.split(':')[1].split('(')[0])
                     dict_out["consensus_hinge"] = hinge_point
         elif self.method == "Dynamic_domain":
             start = 0

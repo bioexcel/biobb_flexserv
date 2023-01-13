@@ -6,7 +6,7 @@ bd_run:
     output_crd_path: bd_run_out.crd
     ref_output_crd_path: file:test_reference_dir/flexserv/bd_run_traj.crd
     output_log_path: bd_run_out.log
-    ref_output_log_path: file:test_reference_dir/flexserv/bd_run_out.log
+    ref_output_log_path: file:test_reference_dir/flexserv/bd_run_traj.log
   properties:
     time: 10000
     wfreq: 100
@@ -15,7 +15,7 @@ nma_run:
   paths:
     input_pdb_path: file:test_data_dir/flexserv/structure.ca.pdb
     output_crd_path: nma_run_out.crd
-    ref_output_crd_path: file:test_reference_dir/flexserv/nma_run_traj.crd
+    ref_output_crd_path: file:test_reference_dir/flexserv/nma_run_out.crd
     output_log_path: nma_run_out.log
     ref_output_log_path: file:test_reference_dir/flexserv/nma_run_out.log
   properties:
@@ -25,7 +25,7 @@ dmd_run:
   paths:
     input_pdb_path: file:test_data_dir/flexserv/structure.ca.pdb
     output_crd_path: dmd_run_out.crd
-    ref_output_crd_path: file:test_reference_dir/flexserv/dmd_run_traj.crd
+    ref_output_crd_path: file:test_reference_dir/flexserv/dmd_run_out.crd
     output_log_path: dmd_run_out.log
     ref_output_log_path: file:test_reference_dir/flexserv/dmd_run_out.log
   properties:
@@ -36,7 +36,7 @@ pcazip:
     input_crd_path: file:test_data_dir/pcasuite/traj.crd
     input_pdb_path: file:test_data_dir/pcasuite/structure.ca.pdb
     output_pcz_path: pcazip.pcz
-    ref_output_pcz_path: file:test_reference_dir/pcasuite/pcazip.ref.pcz
+    ref_output_pcz_path: file:test_reference_dir/pcasuite/pcazip.pcz
   properties:
     variance: 90
 
@@ -44,7 +44,7 @@ pcaunzip:
   paths:
     input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
     output_crd_path: pcazip.crd
-    ref_output_pcz_path: file:test_reference_dir/pcasuite/pcazip.ref.crd
+    ref_output_crd_path: file:test_reference_dir/pcasuite/pcazip.crd
   properties:
     pdb : False
 
@@ -52,7 +52,7 @@ pcz_animate:
   paths:
     input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
     output_crd_path: pcazip_anim1.pdb
-    ref_output_pcz_path: file:test_reference_dir/pcasuite/pcz_animation.pdb
+    ref_output_crd_path: file:test_reference_dir/pcasuite/pcazip_anim1.pdb
   properties:
     eigenvector: 1
     pdb: True
@@ -67,3 +67,55 @@ pcz_bfactor:
   properties:
     eigenvector: 1
     pdb: True
+
+pcz_hinges:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: hinges.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/hinges.json
+  properties:
+    eigenvector: 0
+    method: Bfactor_slope
+
+pcz_info:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_info.json
+
+pcz_evecs:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz_evecs.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_evecs.json
+  properties:
+    eigenvector: 1
+
+pcz_collectivity:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz_collectivity.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_collectivity.json
+  properties:
+    eigenvector: 0
+
+pcz_lindemann:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz_lindemann.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_lindemann.json
+
+pcz_similarity:
+  paths:
+    input_pcz_path1: file:test_data_dir/pcasuite/pcazip.pcz
+    input_pcz_path2: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz_similarity.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_similarity.json
+
+pcz_stiffness:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz_stiffness.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_stiffness.json
+  properties:
+    eigenvector: 0

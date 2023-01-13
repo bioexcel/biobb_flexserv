@@ -12,4 +12,5 @@ class TestNMARun():
     def test_bd_run(self):
         nma_run(properties=self.properties, **self.paths)
         assert fx.not_empty(self.paths['output_crd_path'])
-        #assert fx.equal(self.paths['output_crd_path'], self.paths['ref_output_crd_path'])
+        assert fx.equal(self.paths['output_crd_path'], self.paths['ref_output_crd_path'])
+        assert fx.equal(self.paths['output_log_path'], self.paths['ref_output_log_path'])

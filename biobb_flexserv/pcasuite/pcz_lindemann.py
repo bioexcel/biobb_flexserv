@@ -1,41 +1,41 @@
 #!/usr/bin/env python3
 
-"""Module containing the PCAunzip class and the command line interface."""
+"""Module containing the PCZlindemann class and the command line interface."""
 import argparse
 import shutil, re, os
+import json
 from pathlib import Path, PurePath
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import  settings
 from biobb_common.tools import file_utils as fu
 from biobb_common.tools.file_utils import launchlogger
-import biobb_flexserv.pcasuite.pcaunzip as myself
+import biobb_flexserv.pcasuite.pcz_lindemann as myself
 from biobb_flexserv.pcasuite.common import *
 
-class PCAunzip(BiobbObject):
+class PCZlindemann(BiobbObject):
     """
-    | biobb_flexserv PCAunzip
-    | Wrapper of the pcaunzip tool from the PCAsuite FlexServ module.
-    | Uncompress Molecular Dynamics (MD) trajectories compressed using Principal Component Analysis (PCA) algorithms.
+    | biobb_flexserv PCZlindemann
+    | Extract Lindemann coefficient (an estimate of the solid-liquid behaviour of a protein) from a compressed PCZ file.
+    | Wrapper of the pczdump tool from the PCAsuite FlexServ module.
 
     Args:
-        input_pcz_path (str): Input compressed trajectory. File type: input. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/data/pcasuite/pcazip.pcz>`_. Accepted formats: pcz (edam:format_3874).
-        output_crd_path (str): Output uncompressed trajectory. File type: output. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/traj.crd>`_. Accepted formats: crd (edam:format_3878), mdcrd (edam:format_3878), inpcrd (edam:format_3878), pdb (edam:format_1476).
+        input_pcz_path (str): Input compressed trajectory file. File type: input. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/data/pcasuite/pcazip.pcz>`_. Accepted formats: pcz (edam:format_3874).
+        output_json_path (str): Output json file with PCA Eigen Vectors. File type: output. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/pca_evecs.json>`_. Accepted formats: json (edam:format_3464).
         properties (dict - Python dictionary object containing the tool parameters, not input/output files):
-            * **binary_path** (*str*) - ("pcaunzip") pcaunzip binary path to be used.
-            * **verbose** (*bool*) - (False) Make output verbose
-            * **pdb** (*bool*) - (False) Use PDB format for output trajectory
+            * **binary_path** (*str*) - ("pczdump") pczdump binary path to be used.
+            * **mask** (*str*) - ("all atoms") Residue mask, in the format ":resnum1, resnum2, resnum3" (e.g. ":10,21,33"). See https://mmb.irbbarcelona.org/software/pcasuite/ for the complete format specification.
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
             * **restart** (*bool*) - (False) [WF property] Do not execute if output files exist.
 
     Examples:
         This is a use example of how to use the building block from Python::
 
-            from biobb_flexserv.pcasuite.pcaunzip import pcaunzip
+            from biobb_flexserv.pcasuite.pcz_lindemann import pcz_lindemann
             prop = {
-                'pdb': False
+                'mask': ':10,12,15'
             }
-            pcaunzip( input_pcz_path='/path/to/pcazip_input.pcz',
-                    output_crd_path='/path/to/pcazip_traj.crd',
+            pcz_lindemann( input_pcz_path='/path/to/pcazip_input.pcz',
+                    output_json_path='/path/to/lindemann_report.json',
                     properties=prop)
 
     Info:
@@ -49,7 +49,7 @@ class PCAunzip(BiobbObject):
 
     """
     def __init__(self, input_pcz_path: str, 
-    output_crd_path: str, properties: dict = None, **kwargs) -> None:
+    output_json_path: str, properties: dict = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -58,18 +58,18 @@ class PCAunzip(BiobbObject):
 
         # Input/Output files
         self.io_dict = {
-            'in': { 'input_pcz_path': input_pcz_path,
+            'in': { 
+                'input_pcz_path': input_pcz_path
              },
             'out': {    
-                    'output_crd_path': output_crd_path
+                'output_json_path': output_json_path
             }
         }
 
         # Properties specific for BB
         self.properties = properties
-        self.binary_path = properties.get('binary_path', 'pcaunzip')
-        self.verbose = properties.get('verbose', False)
-        self.pdb = properties.get('pdb', False)
+        self.binary_path = properties.get('binary_path', 'pczdump')
+        self.mask = properties.get('mask', '')
 
         # Check the properties
         self.check_properties(properties)
@@ -81,11 +81,11 @@ class PCAunzip(BiobbObject):
         self.io_dict["in"]["input_pcz_path"] = check_input_path(self.io_dict["in"]["input_pcz_path"], "input_pcz_path", False, out_log, self.__class__.__name__)
 
         # Check output(s)
-        self.io_dict["out"]["output_crd_path"] = check_output_path(self.io_dict["out"]["output_crd_path"],"output_crd_path", False, out_log, self.__class__.__name__)
+        self.io_dict["out"]["output_json_path"] = check_output_path(self.io_dict["out"]["output_json_path"],"output_json_path", False, out_log, self.__class__.__name__)
 
     @launchlogger
     def launch(self):
-        """Launches the execution of the FlexServ pcaunzip module."""
+        """Launches the execution of the FlexServ pcz_lindemann module."""
 
         # check input/output paths and parameters
         self.check_data_params(self.out_log, self.err_log)
@@ -105,27 +105,40 @@ class PCAunzip(BiobbObject):
         shutil.copy2(self.io_dict["in"]["input_pcz_path"], self.tmp_folder)
 
         # Defining output files in temporary folder
-        output_file_name = PurePath(self.io_dict["out"]["output_crd_path"]).name
+        output_file_name = PurePath(self.io_dict["out"]["output_json_path"]).name
         output_file = str(PurePath(self.tmp_folder).joinpath(output_file_name))
 
         # Command line
-        # pcaunzip -i infile [-o outfile] [--pdb] [--verbose] [--help]
+        # pczdump -i structure.ca.std.pcz --lindemann -M ":2-86" -o lindemann_report.txt
         self.cmd = ['cd', self.tmp_folder, ';', self.binary_path,
                 "-i", PurePath(self.io_dict["in"]["input_pcz_path"]).name,
-                "-o", output_file_name 
+                "-o", output_file_name,
+                "--lindemann"
                ]
  
-        if self.verbose:
-            self.cmd.append('-v')
-
-        if self.pdb:
-            self.cmd.append('--pdb')
+        if self.mask:
+            self.cmd.append("-M {}".format(self.mask))
 
         # Run Biobb block
         self.run_biobb()
 
-        # Copy output trajectory
-        shutil.copy2(output_file, PurePath(self.io_dict["out"]["output_crd_path"]))
+        # Parse output Lindemann
+           #  0.132891
+        info_dict = {}
+        with open (output_file,'r') as file:
+            for line in file:
+                info = float(line.strip())
+                info_dict['lindemann'] = info
+
+        # convert into JSON:
+        y = json.dumps(info_dict)
+
+        ## the result is a JSON string:
+        print(json.dumps(info_dict, indent=4))
+
+        with open (PurePath(self.io_dict["out"]["output_json_path"]),'w') as out_file:
+            #out_file.write(out_data)
+            out_file.write(json.dumps(info_dict, indent=4))
 
         # Copy files to host
         self.copy_to_host()
@@ -137,24 +150,24 @@ class PCAunzip(BiobbObject):
 
         return self.return_code
 
-def pcaunzip(input_pcz_path: str, 
-            output_crd_path: str,
+def pcz_lindemann(input_pcz_path: str, output_json_path: str,
             properties: dict = None, **kwargs) -> int:
-    """Create :class:`PCAunzip <flexserv.pcasuite.pcaunzip>`flexserv.pcasuite.PCAunzip class and
-    execute :meth:`launch() <flexserv.pcasuite.pcaunzip.launch>` method"""
+    """Create :class:`PCZlindemann <flexserv.pcasuite.pcz_lindemann>`flexserv.pcasuite.PCZlindemann class and
+    execute :meth:`launch() <flexserv.pcasuite.pcz_lindemann.launch>` method"""
 
-    return PCAunzip(  input_pcz_path=input_pcz_path,
-                    output_crd_path=output_crd_path,
+    return PCZlindemann(  
+                    input_pcz_path=input_pcz_path,
+                    output_json_path=output_json_path,
                     properties=properties).launch()
 
 def main():
-    parser = argparse.ArgumentParser(description='Uncompress Molecular Dynamics (MD) compressed trajectories using Principal Component Analysis (PCA) algorithms.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
+    parser = argparse.ArgumentParser(description='Extract Lindemann coefficients from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
     parser.add_argument('--config', required=False, help='Configuration file')
 
     # Specific args
     required_args = parser.add_argument_group('required arguments')
     required_args.add_argument('--input_pcz_path', required=True, help='Input compressed trajectory file. Accepted formats: pcz.')
-    required_args.add_argument('--output_crd_path', required=True, help='Output trajectory file. Accepted formats: crd, mdcrd, inpcrd, pdb.')
+    required_args.add_argument('--output_json_path', required=True, help='Output json file with Lindemann coefficient report. Accepted formats: json.')
 
     args = parser.parse_args()
     #config = args.config if args.config else None
@@ -163,8 +176,8 @@ def main():
     properties = settings.ConfReader(config=args.config).get_prop_dic()
 
     # Specific call
-    pcaunzip(       input_pcz_path=args.input_pcz_path,
-                    output_crd_path=args.output_crd_path,
+    pcz_lindemann(         input_pcz_path=args.input_pcz_path,
+                    output_json_path=args.output_json_path,
                     properties=properties)
 
 if __name__ == '__main__':

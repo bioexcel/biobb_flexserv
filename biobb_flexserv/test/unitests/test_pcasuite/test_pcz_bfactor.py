@@ -13,5 +13,5 @@ class TestPCZbfactor():
         pcz_bfactor(properties=self.properties, **self.paths)
         assert fx.not_empty(self.paths['output_dat_path'])
         assert fx.not_empty(self.paths['output_pdb_path'])
-        #assert fx.equal(self.paths['output_dat_path'], self.paths['ref_output_dat_path'])
-        #assert fx.equal(self.paths['output_pdb_path'], self.paths['ref_output_pdb_path'])
+        assert fx.equal(self.paths['output_dat_path'], self.paths['ref_output_dat_path'])
+        assert fx.equal(self.paths['output_pdb_path'], self.paths['ref_output_pdb_path'])

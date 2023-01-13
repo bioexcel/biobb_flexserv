@@ -12,4 +12,4 @@ class TestPCZanimate():
     def test_pcz_animate(self):
         pcz_animate(properties=self.properties, **self.paths)
         assert fx.not_empty(self.paths['output_crd_path'])
-        #assert fx.equal(self.paths['output_crd_path'], self.paths['ref_output_crd_path'])
+        assert fx.equal(self.paths['output_crd_path'], self.paths['ref_output_crd_path'])

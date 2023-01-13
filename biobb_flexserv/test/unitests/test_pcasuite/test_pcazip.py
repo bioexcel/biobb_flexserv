@@ -12,4 +12,4 @@ class TestPCAzip():
     def test_pcazip(self):
         pcazip(properties=self.properties, **self.paths)
         assert fx.not_empty(self.paths['output_pcz_path'])
-        #assert fx.equal(self.paths['output_crd_path'], self.paths['ref_output_crd_path'])
+        assert fx.equal(self.paths['output_pcz_path'], self.paths['ref_output_pcz_path'])
