@@ -2,14 +2,10 @@
 
 """Module containing the bd_run class and the command line interface."""
 import argparse
-import shutil, re, os
 from pathlib import Path, PurePath
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import  settings
-from biobb_common.tools import file_utils as fu
 from biobb_common.tools.file_utils import launchlogger
-import biobb_flexserv.flexserv.bd_run as myself
-from biobb_flexserv.flexserv.common import *
 
 class BDRun(BiobbObject):
     """
@@ -58,6 +54,7 @@ class BDRun(BiobbObject):
 
         # Call parent class constructor
         super().__init__(properties)
+        self.locals_var_dict = locals().copy()
 
         # Input/Output files
         self.io_dict = {
@@ -76,33 +73,15 @@ class BDRun(BiobbObject):
 
         # Check the properties
         self.check_properties(properties)
-
-    def check_data_params(self, out_log, out_err):
-        """ Checks input/output paths correctness """
-
-        # Check input(s)
-        self.io_dict["in"]["input_pdb_path"] = check_input_path(self.io_dict["in"]["input_pdb_path"], "input_pdb_path", False, out_log, self.__class__.__name__)
-
-        # Check output(s)
-        self.io_dict["out"]["output_log_path"] = check_output_path(self.io_dict["out"]["output_log_path"],"output_log_path", False, out_log, self.__class__.__name__)
-        self.io_dict["out"]["output_crd_path"] = check_output_path(self.io_dict["out"]["output_crd_path"],"output_crd_path", False, out_log, self.__class__.__name__)
+        self.check_arguments()
 
     @launchlogger
     def launch(self):
         """Launches the execution of the FlexServ BDRun module."""
 
-        # check input/output paths and parameters
-        self.check_data_params(self.out_log, self.err_log)
-
         # Setup Biobb
         if self.check_restart(): return 0
         self.stage_files()
-
-        # Creating temporary folder
-        #self.tmp_folder = fu.create_unique_dir()
-        #fu.log('Creating %s temporary folder' % self.tmp_folder, self.out_log)
-
-        #shutil.copy2(self.io_dict["in"]["input_pdb_path"], self.tmp_folder)
 
         # Command line
         # bd structure.ca.pdb 1000000 1e-15 1000 40 3.8 traj.crd > bd.log
@@ -125,9 +104,12 @@ class BDRun(BiobbObject):
         self.copy_to_host()
 
         # remove temporary folder(s)
-        if self.remove_tmp:
-            #self.tmp_files.append(self.tmp_folder)
-            self.remove_tmp_files()
+        self.tmp_files.extend([
+            self.stage_io_dict.get("unique_dir")
+        ])
+        self.remove_tmp_files()
+
+        self.check_arguments(output_files_created=True, raise_exception=False)
 
         return self.return_code
 
@@ -137,7 +119,7 @@ def bd_run(input_pdb_path: str,
     """Create :class:`BDRun <flexserv.bd_run.BDRun>`flexserv.bd_run.BDRun class and
     execute :meth:`launch() <flexserv.bd_run.BDRun.launch>` method"""
 
-    return BDRun( input_pdb_path=input_pdb_path,
+    return BDRun(   input_pdb_path=input_pdb_path,
                     output_log_path=output_log_path,
                     output_crd_path=output_crd_path,
                     properties=properties).launch()
@@ -153,9 +135,7 @@ def main():
     required_args.add_argument('--output_crd_path', required=True, help='Output ensemble file. Accepted formats: crd, mdcrd, inpcrd.')
 
     args = parser.parse_args()
-    #config = args.config if args.config else None
     args.config = args.config or "{}"
-    #properties = settings.ConfReader(config=config).get_prop_dic()
     properties = settings.ConfReader(config=args.config).get_prop_dic()
 
     # Specific call

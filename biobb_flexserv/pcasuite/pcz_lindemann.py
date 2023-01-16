@@ -2,15 +2,13 @@
 
 """Module containing the PCZlindemann class and the command line interface."""
 import argparse
-import shutil, re, os
+import shutil
 import json
-from pathlib import Path, PurePath
+from pathlib import PurePath
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import  settings
 from biobb_common.tools import file_utils as fu
 from biobb_common.tools.file_utils import launchlogger
-import biobb_flexserv.pcasuite.pcz_lindemann as myself
-from biobb_flexserv.pcasuite.common import *
 
 class PCZlindemann(BiobbObject):
     """
@@ -55,6 +53,7 @@ class PCZlindemann(BiobbObject):
 
         # Call parent class constructor
         super().__init__(properties)
+        self.locals_var_dict = locals().copy()
 
         # Input/Output files
         self.io_dict = {
@@ -73,22 +72,11 @@ class PCZlindemann(BiobbObject):
 
         # Check the properties
         self.check_properties(properties)
-
-    def check_data_params(self, out_log, out_err):
-        """ Checks input/output paths correctness """
-
-        # Check input(s)
-        self.io_dict["in"]["input_pcz_path"] = check_input_path(self.io_dict["in"]["input_pcz_path"], "input_pcz_path", False, out_log, self.__class__.__name__)
-
-        # Check output(s)
-        self.io_dict["out"]["output_json_path"] = check_output_path(self.io_dict["out"]["output_json_path"],"output_json_path", False, out_log, self.__class__.__name__)
+        self.check_arguments()
 
     @launchlogger
     def launch(self):
         """Launches the execution of the FlexServ pcz_lindemann module."""
-
-        # check input/output paths and parameters
-        self.check_data_params(self.out_log, self.err_log)
 
         # Setup Biobb
         if self.check_restart(): return 0
@@ -144,9 +132,13 @@ class PCZlindemann(BiobbObject):
         self.copy_to_host()
 
         # remove temporary folder(s)
-        if self.remove_tmp:
-            self.tmp_files.append(self.tmp_folder)
-            self.remove_tmp_files()
+        self.tmp_files.extend([
+            self.stage_io_dict.get("unique_dir"),
+            self.tmp_folder
+        ])
+        self.remove_tmp_files()
+
+        self.check_arguments(output_files_created=True, raise_exception=False)
 
         return self.return_code
 
@@ -170,13 +162,11 @@ def main():
     required_args.add_argument('--output_json_path', required=True, help='Output json file with Lindemann coefficient report. Accepted formats: json.')
 
     args = parser.parse_args()
-    #config = args.config if args.config else None
     args.config = args.config or "{}"
-    #properties = settings.ConfReader(config=config).get_prop_dic()
     properties = settings.ConfReader(config=args.config).get_prop_dic()
 
     # Specific call
-    pcz_lindemann(         input_pcz_path=args.input_pcz_path,
+    pcz_lindemann(  input_pcz_path=args.input_pcz_path,
                     output_json_path=args.output_json_path,
                     properties=properties)
 
