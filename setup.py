@@ -23,9 +23,20 @@ setuptools.setup(
     python_requires='>=3.7.*',
     entry_points={
         "console_scripts": [
-            "bd_run = biobb_flexserv.flexserv.flexserv_bdrun:main",
-            "dmd_run = biobb_flexserv.flexserv.flexserv_dmdrun:main",
-            "nma_run = biobb_flexserv.flexserv.flexserv_nmarun:main"
+            "bd_run = biobb_flexserv.flexserv.bd_run:main",
+            "dmd_run = biobb_flexserv.flexserv.dmd_run:main",
+            "nma_run = biobb_flexserv.flexserv.nma_run:main",
+            "pcazip = biobb_flexserv.pcasuite.pcazip:main",
+            "pcaunzip = biobb_flexserv.pcasuite.pcaunzip:main",
+            "pcz_animate = biobb_flexserv.pcasuite.pcz_animate:main",
+            "pcz_bfactor = biobb_flexserv.pcasuite.pcz_bfactor:main",
+            "pcz_collectivity = biobb_flexserv.pcasuite.pcz_collectivity:main",
+            "pcz_evecs = biobb_flexserv.pcasuite.pcz_evecs:main",
+            "pcz_hinges = biobb_flexserv.pcasuite.pcz_hinges:main",
+            "pcz_info = biobb_flexserv.pcasuite.pcz_info:main",
+            "pcz_lindemann = biobb_flexserv.pcasuite.pcz_lindemann:main",
+            "pcz_stiffness = biobb_flexserv.pcasuite.pcz_stiffness:main",
+            "pcz_similarity = biobb_flexserv.pcasuite.pcz_similarity:main"
         ]
     },
     classifiers=(
