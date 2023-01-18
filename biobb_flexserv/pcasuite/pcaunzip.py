@@ -2,7 +2,7 @@
 
 """Module containing the PCAunzip class and the command line interface."""
 import argparse
-from pathlib import PurePath
+from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import  settings
 from biobb_common.tools import file_utils as fu
@@ -97,15 +97,11 @@ class PCAunzip(BiobbObject):
 
         # Command line
         # pcaunzip -i infile [-o outfile] [--pdb] [--verbose] [--help]
-        fu.log("PATATA", self.out_log)
-        fu.log(self.stage_io_dict.get("unique_dir"), self.out_log)
-        input_pcz = "/".join(self.stage_io_dict["in"]["input_pcz_path"].split("/")[-2:])
-        output_pcz = "/".join(self.stage_io_dict["out"]["output_crd_path"].split("/")[-2:])
 
         self.cmd = [self.binary_path,
-                "-i", input_pcz,
-                "-o", output_pcz
-               ]
+                    "-i", str(Path(self.stage_io_dict["in"]["input_pcz_path"]).relative_to(Path.cwd())),
+                    "-o", str(Path(self.stage_io_dict["out"]["output_crd_path"]).relative_to(Path.cwd()))
+                   ]
  
         if self.verbose:
             self.cmd.append('-v')
