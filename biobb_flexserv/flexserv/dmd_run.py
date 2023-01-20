@@ -3,10 +3,9 @@
 """Module containing the dmd_run class and the command line interface."""
 import argparse
 import shutil
-from pathlib import PurePath
+from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import  settings
-from biobb_common.tools import file_utils as fu
 from biobb_common.tools.file_utils import launchlogger
 
 class DMDRun(BiobbObject):
@@ -86,19 +85,25 @@ class DMDRun(BiobbObject):
         if self.check_restart(): return 0
         self.stage_files()
 
-        # Creating temporary folder
-        self.tmp_folder = fu.create_unique_dir()
-        fu.log('Creating %s temporary folder' % self.tmp_folder, self.out_log)
-        instructions_file = str(PurePath(self.tmp_folder).joinpath("dmd.in"))
-        output_file = str(PurePath(self.tmp_folder).joinpath("snapshots.crd"))
-        output_log_file = str(PurePath(self.tmp_folder).joinpath("snapshots.log"))
+        # Internal file paths
+        try:
+            # Using rel paths to shorten the amount of characters due to fortran path length limitations
+            input_pdb = str(Path(self.stage_io_dict["in"]["input_pdb_path"]).relative_to(Path.cwd()))
+            output_crd = str(Path(self.stage_io_dict["out"]["output_crd_path"]).relative_to(Path.cwd()))
+            output_log = str(Path(self.stage_io_dict["out"]["output_log_path"]).relative_to(Path.cwd()))
+        except ValueError:
+            # Container or remote case
+            input_pdb = self.stage_io_dict["in"]["input_pdb_path"]
+            output_crd = self.stage_io_dict["out"]["output_crd_path"]
+            output_log = self.stage_io_dict["out"]["output_log_path"]
 
-        shutil.copy2(self.io_dict["in"]["input_pdb_path"], self.tmp_folder)
-
+        # Config file
+        instructions_file = str(Path(self.stage_io_dict.get("unique_dir")).joinpath("dmd.in"))
         with open(instructions_file, 'w') as dmdin:
 
             dmdin.write("&INPUT\n")
-            dmdin.write("  FILE9='{}',\n".format(PurePath(self.io_dict["in"]["input_pdb_path"]).name))
+            dmdin.write("  FILE9='{}',\n".format(input_pdb))
+            dmdin.write("  FILE21='{}',\n".format(output_crd))
             dmdin.write("  TSNAP={},\n".format(self.dt))
             dmdin.write("  NBLOC={},\n".format(self.frames))
             dmdin.write("  TEMP={},\n".format(self.temperature))
@@ -111,26 +116,21 @@ class DMDRun(BiobbObject):
 
         # Command line
         # dmdgoopt < dmd.in > dmd.log
-        self.cmd = ['cd', self.tmp_folder, ';', 
+        self.cmd = [ 
                 self.binary_path,
-                '<', "dmd.in",
-                '>', "snapshots.log"
+                '<', instructions_file,
+                '>', output_log
                ]
 
         # Run Biobb block
         self.run_biobb()
-
-        # Copy output ensemble
-        shutil.copy2(output_file, PurePath(self.io_dict["out"]["output_crd_path"]))
-        shutil.copy2(output_log_file, PurePath(self.io_dict["out"]["output_log_path"]))
 
         # Copy files to host
         self.copy_to_host()
 
         # remove temporary folder(s)
         self.tmp_files.extend([
-            self.stage_io_dict.get("unique_dir"),
-            self.tmp_folder
+            self.stage_io_dict.get("unique_dir")
         ])
         self.remove_tmp_files()
 

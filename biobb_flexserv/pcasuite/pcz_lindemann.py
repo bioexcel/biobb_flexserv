@@ -2,12 +2,10 @@
 
 """Module containing the PCZlindemann class and the command line interface."""
 import argparse
-import shutil
 import json
-from pathlib import PurePath
+from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import  settings
-from biobb_common.tools import file_utils as fu
 from biobb_common.tools.file_utils import launchlogger
 
 class PCZlindemann(BiobbObject):
@@ -82,25 +80,24 @@ class PCZlindemann(BiobbObject):
         if self.check_restart(): return 0
         self.stage_files()
 
-        # Creating temporary folder
-        # These BBs need a temporary folder as pcasuite does not allow for long input paths
-        # e.g. pczaunzip -i /Users/user/BioBB/Dev/biobb_flexserv/biobb_flexserv/test/data/pcasuite/pcazip.pcz
-        #      gives --> "Illegal instruction: 4"
-        self.tmp_folder = fu.create_unique_dir()
-        fu.log('Creating %s temporary folder' % self.tmp_folder, self.out_log)
+        # Internal file paths
+        try:
+            # Using rel paths to shorten the amount of characters due to fortran path length limitations
+            input_pcz = str(Path(self.stage_io_dict["in"]["input_pcz_path"]).relative_to(Path.cwd()))
+            output_json = str(Path(self.stage_io_dict["out"]["output_json_path"]).relative_to(Path.cwd()))
+        except ValueError:
+            # Container or remote case
+            input_pcz = self.stage_io_dict["in"]["input_pcz_path"]
+            output_json = self.stage_io_dict["out"]["output_json_path"]
 
-        # Copying input files to temporary folder
-        shutil.copy2(self.io_dict["in"]["input_pcz_path"], self.tmp_folder)
-
-        # Defining output files in temporary folder
-        output_file_name = PurePath(self.io_dict["out"]["output_json_path"]).name
-        output_file = str(PurePath(self.tmp_folder).joinpath(output_file_name))
+        # Temporary output
+        temp_out = str(Path(self.stage_io_dict.get("unique_dir")).joinpath("output.dat"))
 
         # Command line
         # pczdump -i structure.ca.std.pcz --lindemann -M ":2-86" -o lindemann_report.txt
-        self.cmd = ['cd', self.tmp_folder, ';', self.binary_path,
-                "-i", PurePath(self.io_dict["in"]["input_pcz_path"]).name,
-                "-o", output_file_name,
+        self.cmd = [self.binary_path,
+                "-i", input_pcz,
+                "-o", temp_out,
                 "--lindemann"
                ]
  
@@ -113,7 +110,7 @@ class PCZlindemann(BiobbObject):
         # Parse output Lindemann
            #  0.132891
         info_dict = {}
-        with open (output_file,'r') as file:
+        with open (temp_out,'r') as file:
             for line in file:
                 info = float(line.strip())
                 info_dict['lindemann'] = info
@@ -124,8 +121,7 @@ class PCZlindemann(BiobbObject):
         ## the result is a JSON string:
         print(json.dumps(info_dict, indent=4))
 
-        with open (PurePath(self.io_dict["out"]["output_json_path"]),'w') as out_file:
-            #out_file.write(out_data)
+        with open (output_json, 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
 
         # Copy files to host
@@ -133,8 +129,7 @@ class PCZlindemann(BiobbObject):
 
         # remove temporary folder(s)
         self.tmp_files.extend([
-            self.stage_io_dict.get("unique_dir"),
-            self.tmp_folder
+            self.stage_io_dict.get("unique_dir")
         ])
         self.remove_tmp_files()
 

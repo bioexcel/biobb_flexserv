@@ -2,11 +2,9 @@
 
 """Module containing the nma_run class and the command line interface."""
 import argparse
-import shutil
-from pathlib import PurePath
+from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import  settings
-from biobb_common.tools import file_utils as fu
 from biobb_common.tools.file_utils import launchlogger
 
 class NMARun(BiobbObject):
@@ -22,6 +20,7 @@ class NMARun(BiobbObject):
         properties (dict - Python dictionary object containing the tool parameters, not input/output files):
             * **binary_path** (*str*) - ("bd") BD binary path to be used.
             * **frames** (*int*) - (1000) Number of frames in the final ensemble
+            * **nvecs** (*int*) - (50) Number of vectors to take into account for the ensemble generation
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
             * **restart** (*bool*) - (False) [WF property] Do not execute if output files exist.
 
@@ -68,6 +67,7 @@ class NMARun(BiobbObject):
         self.properties = properties
         self.binary_path = properties.get('binary_path', 'diaghess')
         self.frames = properties.get('frames', 1000)
+        self.nvecs = properties.get('nvecs', 50)
 
         # Check the properties
         self.check_properties(properties)
@@ -81,47 +81,46 @@ class NMARun(BiobbObject):
         if self.check_restart(): return 0
         self.stage_files()
 
-        # Creating temporary folder
-        self.tmp_folder = fu.create_unique_dir()
-        fu.log('Creating %s temporary folder' % self.tmp_folder, self.out_log)
-        output_file = str(PurePath(self.tmp_folder).joinpath("snapshots.crd"))
-        output_log_file = str(PurePath(self.tmp_folder).joinpath("snapshots.log"))
-
-        shutil.copy2(self.io_dict["in"]["input_pdb_path"], self.tmp_folder)
+        # Internal file paths
+        try:
+            # Using rel paths to shorten the amount of characters due to fortran path length limitations
+            input_pdb = str(Path(self.stage_io_dict["in"]["input_pdb_path"]).relative_to(Path.cwd()))
+            output_crd = str(Path(self.stage_io_dict["out"]["output_crd_path"]).relative_to(Path.cwd()))
+            output_log = str(Path(self.stage_io_dict["out"]["output_log_path"]).relative_to(Path.cwd()))
+        except ValueError:
+            # Container or remote case
+            input_pdb = self.stage_io_dict["in"]["input_pdb_path"]
+            output_crd = self.stage_io_dict["out"]["output_crd_path"]
+            output_log = self.stage_io_dict["out"]["output_log_path"]
 
         # Command line
         #nmanu.pl structure.ca.pdb hessian.dat 1 0 40
         #diaghess
         #mc-eigen.pl eigenvec.dat > file.proj
         #pca_anim_mc.pl -pdb structure.ca.pdb -evec eigenvec.dat -i file.proj -n 50 -pout traj.crd
-        self.cmd = ['cd', self.tmp_folder, ';', 
+        self.cmd = [ 
                 "nmanu.pl ",
-                PurePath(self.io_dict["in"]["input_pdb_path"]).name,
+                input_pdb,
                 "hessian.dat 1 0 40;",
                 self.binary_path,
-                "; mc-eigen.pl eigenvec.dat > file.proj",
+                "; mc-eigen-mdweb.pl eigenvec.dat ", str(self.frames), " > file.proj",
                 "; pca_anim_mc.pl -pdb",
-                PurePath(self.io_dict["in"]["input_pdb_path"]).name,
+                input_pdb,
                 " -evec eigenvec.dat -i file.proj -n ",
-                str(self.frames),
-                " -pout",  "snapshots.crd",
-                '>', "snapshots.log"
+                str(self.nvecs),
+                " -pout",  output_crd,
+                '>', output_log
                ]
 
         # Run Biobb block
         self.run_biobb()
-
-        # Copy output ensemble
-        shutil.copy2(output_file, PurePath(self.io_dict["out"]["output_crd_path"]))
-        shutil.copy2(output_log_file, PurePath(self.io_dict["out"]["output_log_path"]))
 
         # Copy files to host
         self.copy_to_host()
 
         # remove temporary folder(s)
         self.tmp_files.extend([
-            self.stage_io_dict.get("unique_dir"),
-            self.tmp_folder
+            self.stage_io_dict.get("unique_dir")
         ])
         self.remove_tmp_files()
 

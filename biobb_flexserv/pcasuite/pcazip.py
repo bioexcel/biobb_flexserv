@@ -2,11 +2,9 @@
 
 """Module containing the PCAzip class and the command line interface."""
 import argparse
-import shutil
-from pathlib import PurePath
+from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import  settings
-from biobb_common.tools import file_utils as fu
 from biobb_common.tools.file_utils import launchlogger
 
 class PCAzip(BiobbObject):
@@ -89,28 +87,24 @@ class PCAzip(BiobbObject):
         if self.check_restart(): return 0
         self.stage_files()
 
-        # Creating temporary folder
-        # These BBs need a temporary folder as pcasuite does not allow for long input paths
-        # e.g. pczaunzip -i /Users/user/BioBB/Dev/biobb_flexserv/biobb_flexserv/test/data/pcasuite/pcazip.pcz
-        #      gives --> "Illegal instruction: 4"
-        self.tmp_folder = fu.create_unique_dir()
-        fu.log('Creating %s temporary folder' % self.tmp_folder, self.out_log)
-
-        # Copying input files to temporary folder
-        shutil.copy2(self.io_dict["in"]["input_pdb_path"], self.tmp_folder)
-        shutil.copy2(self.io_dict["in"]["input_crd_path"], self.tmp_folder)
-
-        # Defining output files in temporary folder
-        output_file_name = PurePath(self.io_dict["out"]["output_pcz_path"]).name
-        output_file = str(PurePath(self.tmp_folder).joinpath(output_file_name))
+        try:
+            # Using rel paths to shorten the amount of characters due to fortran path length limitations
+            input_pdb = str(Path(self.stage_io_dict["in"]["input_pdb_path"]).relative_to(Path.cwd()))
+            input_crd = str(Path(self.stage_io_dict["in"]["input_crd_path"]).relative_to(Path.cwd()))
+            output_pcz = str(Path(self.stage_io_dict["out"]["output_pcz_path"]).relative_to(Path.cwd()))
+        except ValueError:
+            # Container or remote case
+            input_pdb = self.stage_io_dict["in"]["input_pdb_path"]
+            input_crd = self.stage_io_dict["in"]["input_crd_path"]
+            output_pcz = self.stage_io_dict["out"]["output_pcz_path"]
 
         # Command line
         # pcazip -i infile -o outfile -n natoms
         # [-v] [--mask maskfile] [-e nev] [-q qual] [--pdb pdbfile]
-        self.cmd = ['cd', self.tmp_folder, ';', self.binary_path,
-                "-p", str(PurePath(self.io_dict["in"]["input_pdb_path"])),
-                "-i", str(PurePath(self.io_dict["in"]["input_crd_path"])),
-                "-o", output_file_name
+        self.cmd = [self.binary_path,
+                "-p", input_pdb,
+                "-i", input_crd,
+                "-o", output_pcz
                ]
  
         if self.verbose:
@@ -130,16 +124,12 @@ class PCAzip(BiobbObject):
         # Run Biobb block
         self.run_biobb()
 
-        # Copy output trajectory
-        shutil.copy2(output_file, PurePath(self.io_dict["out"]["output_pcz_path"]))
-
         # Copy files to host
         self.copy_to_host()
 
         # remove temporary folder(s)
         self.tmp_files.extend([
-            self.stage_io_dict.get("unique_dir"),
-            self.tmp_folder
+            self.stage_io_dict.get("unique_dir")
         ])
         self.remove_tmp_files()
 

@@ -2,11 +2,9 @@
 
 """Module containing the PCZbfactor class and the command line interface."""
 import argparse
-import shutil
-from pathlib import PurePath
+from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import  settings
-from biobb_common.tools import file_utils as fu
 from biobb_common.tools.file_utils import launchlogger
 
 class PCZbfactor(BiobbObject):
@@ -87,27 +85,23 @@ class PCZbfactor(BiobbObject):
         if self.check_restart(): return 0
         self.stage_files()
 
-        # Creating temporary folder
-        # These BBs need a temporary folder as pcasuite does not allow for long input paths
-        # e.g. pczaunzip -i /Users/user/BioBB/Dev/biobb_flexserv/biobb_flexserv/test/data/pcasuite/pcazip.pcz
-        #      gives --> "Illegal instruction: 4"
-        self.tmp_folder = fu.create_unique_dir()
-        fu.log('Creating %s temporary folder' % self.tmp_folder, self.out_log)
-
-        # Copying input files to temporary folder
-        shutil.copy2(self.io_dict["in"]["input_pcz_path"], self.tmp_folder)
-
-        # Defining output files in temporary folder
-        output_dat_file_name = PurePath(self.io_dict["out"]["output_dat_path"]).name
-        output_dat_file = str(PurePath(self.tmp_folder).joinpath(output_dat_file_name))
-        output_pdb_file_name = PurePath(self.io_dict["out"]["output_pdb_path"]).name
-        output_pdb_file = str(PurePath(self.tmp_folder).joinpath(output_pdb_file_name))
+        # Internal file paths
+        try:
+            # Using rel paths to shorten the amount of characters due to fortran path length limitations
+            input_pcz = str(Path(self.stage_io_dict["in"]["input_pcz_path"]).relative_to(Path.cwd()))
+            output_pdb = str(Path(self.stage_io_dict["out"]["output_pdb_path"]).relative_to(Path.cwd()))
+            output_dat = str(Path(self.stage_io_dict["out"]["output_dat_path"]).relative_to(Path.cwd()))
+        except ValueError:
+            # Container or remote case
+            input_pcz = self.stage_io_dict["in"]["input_pcz_path"]
+            output_pdb = self.stage_io_dict["out"]["output_pdb_path"]
+            output_dat = self.stage_io_dict["out"]["output_dat_path"]
 
         # Command line (1: dat file)
         # pczdump -i structure.ca.std.pcz --fluc=1 -o bfactor_1.dat
-        self.cmd = ['cd', self.tmp_folder, ';', self.binary_path,
-                "-i", PurePath(self.io_dict["in"]["input_pcz_path"]).name,
-                "-o", output_dat_file_name,
+        self.cmd = [self.binary_path,
+                "-i", input_pcz,
+                "-o", output_dat,
                 "--bfactor",
                 "--fluc={}".format(self.eigenvector)
                ]
@@ -118,9 +112,9 @@ class PCZbfactor(BiobbObject):
         if self.pdb:
             # Command line (2: pdb file)
             # pczdump -i structure.ca.std.pcz --fluc=1 --pdb -o bfactor_1.pdb
-            self.cmd = ['cd', self.tmp_folder, ';', self.binary_path,
-                "-i", PurePath(self.io_dict["in"]["input_pcz_path"]).name,
-                "-o", output_pdb_file_name,
+            self.cmd = [self.binary_path,
+                "-i", input_pcz,
+                "-o", output_pdb,
                 "--bfactor",
                 "--fluc={}".format(self.eigenvector),
                 "--pdb"
@@ -129,19 +123,12 @@ class PCZbfactor(BiobbObject):
             # Run Biobb block
             self.run_biobb()
 
-        # Copy output trajectory
-        shutil.copy2(output_dat_file, PurePath(self.io_dict["out"]["output_dat_path"]))
-
-        if self.pdb:
-            shutil.copy2(output_pdb_file, PurePath(self.io_dict["out"]["output_pdb_path"]))
-
         # Copy files to host
         self.copy_to_host()
 
         # remove temporary folder(s)
         self.tmp_files.extend([
-            self.stage_io_dict.get("unique_dir"),
-            self.tmp_folder
+            self.stage_io_dict.get("unique_dir")
         ])
         self.remove_tmp_files()
 

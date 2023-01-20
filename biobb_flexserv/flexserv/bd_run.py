@@ -83,18 +83,30 @@ class BDRun(BiobbObject):
         if self.check_restart(): return 0
         self.stage_files()
 
+        # Internal file paths
+        try:
+            # Using rel paths to shorten the amount of characters due to fortran path length limitations
+            input_pdb = str(Path(self.stage_io_dict["in"]["input_pdb_path"]).relative_to(Path.cwd()))
+            output_crd = str(Path(self.stage_io_dict["out"]["output_crd_path"]).relative_to(Path.cwd()))
+            output_log = str(Path(self.stage_io_dict["out"]["output_log_path"]).relative_to(Path.cwd()))
+        except ValueError:
+            # Container or remote case
+            input_pdb = self.stage_io_dict["in"]["input_pdb_path"]
+            output_crd = self.stage_io_dict["out"]["output_crd_path"]
+            output_log = self.stage_io_dict["out"]["output_log_path"]
+
         # Command line
         # bd structure.ca.pdb 1000000 1e-15 1000 40 3.8 traj.crd > bd.log
         # itempsmax, dt, itsnap, const, r0
         self.cmd = [self.binary_path,
-                PurePath(self.io_dict["in"]["input_pdb_path"]).name,
+                input_pdb,
                 str(self.time),
                 str(self.dt),
                 str(self.wfreq),
                 "40", # Hardcoded "Const", see https://mmb.irbbarcelona.org/gitlab/adam/FlexServ/blob/master/bd/bd2.f#L51 
                 "3.8", # Hardcoded "r0", see https://mmb.irbbarcelona.org/gitlab/adam/FlexServ/blob/master/bd/bd2.f#L52
-                PurePath(self.io_dict["out"]["output_crd_path"]).name,
-                '>', PurePath(self.io_dict["out"]["output_log_path"]).name
+                output_crd,
+                '>',output_log
                ]
 
         # Run Biobb block

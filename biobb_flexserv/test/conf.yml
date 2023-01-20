@@ -4,9 +4,9 @@ bd_run:
   paths:
     input_pdb_path: file:test_data_dir/flexserv/structure.ca.pdb
     output_crd_path: bd_run_out.crd
-    ref_output_crd_path: file:test_reference_dir/flexserv/bd_run_traj.crd
+    ref_output_crd_path: file:test_reference_dir/flexserv/bd_run_out.crd
     output_log_path: bd_run_out.log
-    ref_output_log_path: file:test_reference_dir/flexserv/bd_run_traj.log
+    ref_output_log_path: file:test_reference_dir/flexserv/bd_run_out.log
   properties:
     time: 10000
     wfreq: 100

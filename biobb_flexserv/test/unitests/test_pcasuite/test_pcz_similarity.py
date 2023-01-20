@@ -6,7 +6,7 @@ class TestPCZsimilarity():
         fx.test_setup(self, 'pcz_similarity')
 
     def teardown_class(self):
-        fx.test_teardown(self)
+        #fx.test_teardown(self)
         pass
 
     def test_pcz_similarity(self):

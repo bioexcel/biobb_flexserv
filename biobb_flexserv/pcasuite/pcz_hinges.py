@@ -2,12 +2,10 @@
 
 """Module containing the PCZhinges class and the command line interface."""
 import argparse
-import shutil
 import json
-from pathlib import PurePath
+from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import  settings
-from biobb_common.tools import file_utils as fu
 from biobb_common.tools.file_utils import launchlogger
 
 class PCZhinges(BiobbObject):
@@ -163,25 +161,24 @@ class PCZhinges(BiobbObject):
         if self.check_restart(): return 0
         self.stage_files()
 
-        # Creating temporary folder
-        # These BBs need a temporary folder as pcasuite does not allow for long input paths
-        # e.g. pczaunzip -i /Users/user/BioBB/Dev/biobb_flexserv/biobb_flexserv/test/data/pcasuite/pcazip.pcz
-        #      gives --> "Illegal instruction: 4"
-        self.tmp_folder = fu.create_unique_dir()
-        fu.log('Creating %s temporary folder' % self.tmp_folder, self.out_log)
+        # Internal file paths
+        try:
+            # Using rel paths to shorten the amount of characters due to fortran path length limitations
+            input_pcz = str(Path(self.stage_io_dict["in"]["input_pcz_path"]).relative_to(Path.cwd()))
+            output_json = str(Path(self.stage_io_dict["out"]["output_json_path"]).relative_to(Path.cwd()))
+        except ValueError:
+            # Container or remote case
+            input_pcz = self.stage_io_dict["in"]["input_pcz_path"]
+            output_json = self.stage_io_dict["out"]["output_json_path"]
 
-        # Copying input files to temporary folder
-        shutil.copy2(self.io_dict["in"]["input_pcz_path"], self.tmp_folder)
-
-        # Defining output files in temporary folder
-        output_file_name = "hinges_report.txt"
-        output_file = str(PurePath(self.tmp_folder).joinpath(output_file_name))
+        # Temporary output
+        temp_out = str(Path(self.stage_io_dict.get("unique_dir")).joinpath("output.dat"))
 
         # Command line (1: dat file)
         # pczdump -i structure.ca.std.pcz --fluc=1 -o bfactor_1.dat
-        self.cmd = ['cd', self.tmp_folder, ';', self.binary_path,
-                "-i", PurePath(self.io_dict["in"]["input_pcz_path"]).name,
-                "-o", output_file_name,
+        self.cmd = [self.binary_path,
+                "-i", input_pcz,
+                "-o", temp_out,
                 "-t", "0.3",
                 "--hinge={}".format(self.eigenvector),
                 ">&", "pcz_dump.hinges.log"
@@ -191,7 +188,7 @@ class PCZhinges(BiobbObject):
         self.run_biobb()
 
         # Parsing output file and extracting results for the given method 
-        dict_out = self.parse_output(output_file)
+        dict_out = self.parse_output(temp_out)
 
         # convert into JSON:
         y = json.dumps(dict_out)
@@ -199,8 +196,7 @@ class PCZhinges(BiobbObject):
         ## the result is a JSON string:
         print(json.dumps(dict_out, indent=4))
 
-        with open (PurePath(self.io_dict["out"]["output_json_path"]),'w') as out_file:
-            #out_file.write(out_data)
+        with open (output_json, 'w') as out_file:
             out_file.write(json.dumps(dict_out, indent=4))
 
         # Copy files to host
@@ -208,8 +204,7 @@ class PCZhinges(BiobbObject):
 
         # remove temporary folder(s)
         self.tmp_files.extend([
-            self.stage_io_dict.get("unique_dir"),
-            self.tmp_folder
+            self.stage_io_dict.get("unique_dir")
         ])
         self.remove_tmp_files()
 
