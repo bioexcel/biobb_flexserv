@@ -1,9 +1,13 @@
+[![](https://github.com/bioexcel/biobb_flexserv/actions/workflows/linting_and_testing.yml/badge.svg)](https://github.com/bioexcel/biobb_flexserv/actions/workflows/linting_and_testing.yml)
+[![](https://codecov.io/gh/bioexcel/biobb_flexserv/branch/master/graph/badge.svg?token=1WU81J2VLP)](https://codecov.io/gh/bioexcel/biobb_flexserv)
 [![](https://readthedocs.org/projects/biobb-flexserv/badge/?version=latest)](https://biobb-flexserv.readthedocs.io/en/latest/?badge=latest)
+
 [![](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](https://anaconda.org/bioconda/biobb_flexserv)
-<!---[![](https://img.shields.io/badge/docker-Quay.io-blue)](https://quay.io/repository/biocontainers/biobb_flexserv?tab=tags)
-[![](https://img.shields.io/badge/singularity-GalaxyProject-blue)](https://depot.galaxyproject.org/singularity/biobb_flexserv:3.9.1--pyhdfd78af_0)
--->
+[![](https://img.shields.io/badge/docker-Quay.io-blue)](https://quay.io/repository/biocontainers/biobb_flexserv?tab=tags)
+[![](https://img.shields.io/badge/singularity-GalaxyProject-blue)](https://depot.galaxyproject.org/singularity/biobb_flexserv:3.9.0--pyhdfd78af_0)
+
 [![](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 
 # biobb_flexserv
 
