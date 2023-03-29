@@ -1,5 +1,12 @@
 # Biobb FlexServ changelog
 
+## What's new in version [3.9.1](https://github.com/bioexcel/biobb_flexserv/releases/tag/v3.9.1)?
+The version 3.9.1 fixes a bug in Python dependencies. 
+
+### New features
+
+* Bug fixes
+
 ## What's new in version [3.9.0](https://github.com/bioexcel/biobb_flexserv/releases/tag/v3.9.0)?
 The version 3.9.0 is the first release of the biobb_flexserv module available in BioConda as a Conda package. 
 
