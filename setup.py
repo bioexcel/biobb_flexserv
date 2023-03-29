@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="biobb_flexserv",
-    version="3.8.1",
+    version="3.9.0",
     author="Biobb developers",
     author_email="adam.hospital@irbbarcelona.org",
     description="biobb_flexserv is a BioBB category for biomolecular flexibility studies on protein 3D structures.",
@@ -19,15 +19,15 @@ setuptools.setup(
     },
     packages=setuptools.find_packages(exclude=['docs', 'test']),
     include_package_data=True,
-    install_requires=['biobb_common==3.8.1'],
+    install_requires=['biobb_common==3.9.0'],
     python_requires='>=3.7.*',
     entry_points={
         "console_scripts": [
             "bd_run = biobb_flexserv.flexserv.bd_run:main",
             "dmd_run = biobb_flexserv.flexserv.dmd_run:main",
             "nma_run = biobb_flexserv.flexserv.nma_run:main",
-            "pcazip = biobb_flexserv.pcasuite.pcazip:main",
-            "pcaunzip = biobb_flexserv.pcasuite.pcaunzip:main",
+            "pcz_zip = biobb_flexserv.pcasuite.pcz_zip:main",
+            "pcz_unzip = biobb_flexserv.pcasuite.pcz_unzip:main",
             "pcz_animate = biobb_flexserv.pcasuite.pcz_animate:main",
             "pcz_bfactor = biobb_flexserv.pcasuite.pcz_bfactor:main",
             "pcz_collectivity = biobb_flexserv.pcasuite.pcz_collectivity:main",

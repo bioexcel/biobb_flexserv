@@ -1,0 +1,87 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://bioexcel.eu/biobb_flexserv/json_schemas/1.0/pcz_lindemann",
+    "name": "biobb_flexserv PCZlindemann",
+    "title": "Extract Lindemann coefficient (an estimate of the solid-liquid behaviour of a protein) from a compressed PCZ file.",
+    "description": "Wrapper of the pczdump tool from the PCAsuite FlexServ module.",
+    "type": "object",
+    "info": {
+        "wrapped_software": {
+            "name": "FlexServ PCAsuite",
+            "version": ">=1.0",
+            "license": "Apache-2.0"
+        },
+        "ontology": {
+            "name": "EDAM",
+            "schema": "http://edamontology.org/EDAM.owl"
+        }
+    },
+    "required": [
+        "input_pcz_path",
+        "output_json_path"
+    ],
+    "properties": {
+        "input_pcz_path": {
+            "type": "string",
+            "description": "Input compressed trajectory file",
+            "filetype": "input",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/data/pcasuite/pcazip.pcz",
+            "enum": [
+                ".*\\.pcz$"
+            ],
+            "file_formats": [
+                {
+                    "extension": ".*\\.pcz$",
+                    "description": "Input compressed trajectory file",
+                    "edam": "format_3874"
+                }
+            ]
+        },
+        "output_json_path": {
+            "type": "string",
+            "description": "Output json file with PCA Eigen Vectors",
+            "filetype": "output",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/pcz_lindemann.json",
+            "enum": [
+                ".*\\.json$"
+            ],
+            "file_formats": [
+                {
+                    "extension": ".*\\.json$",
+                    "description": "Output json file with PCA Eigen Vectors",
+                    "edam": "format_3464"
+                }
+            ]
+        },
+        "properties": {
+            "type": "object",
+            "properties": {
+                "binary_path": {
+                    "type": "string",
+                    "default": "pczdump",
+                    "wf_prop": false,
+                    "description": "pczdump binary path to be used."
+                },
+                "mask": {
+                    "type": "string",
+                    "default": "all atoms",
+                    "wf_prop": false,
+                    "description": "Residue mask, in the format \":resnum1, resnum2, resnum3\" (e.g. \":10,21,33\"). See https://mmb.irbbarcelona.org/software/pcasuite/ for the complete format specification."
+                },
+                "remove_tmp": {
+                    "type": "boolean",
+                    "default": true,
+                    "wf_prop": true,
+                    "description": "Remove temporal files."
+                },
+                "restart": {
+                    "type": "boolean",
+                    "default": false,
+                    "wf_prop": true,
+                    "description": "Do not execute if output files exist."
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

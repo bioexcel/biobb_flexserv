@@ -7,7 +7,7 @@ class TestDMDRun():
 
     def teardown_class(self):
         fx.test_teardown(self)
-        pass
+        #pass
 
     def test_dmd_run(self):
         dmd_run(properties=self.properties, **self.paths)

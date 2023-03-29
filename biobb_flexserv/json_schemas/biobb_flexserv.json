@@ -6,7 +6,7 @@
     "conda": "https://anaconda.org/bioconda/biobb_flexserv",
     "docker": "",
     "singularity": "",
-    "version": "3.8.0",
+    "version": "3.9.0",
     "tools" : [
         {
             "block" : "BDRun",
@@ -28,15 +28,92 @@
             "desc" : "Run Normal Mode Analysis from FlexServ",
             "exec" : "nma_run",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/flexserv.html#module-flexserv.nma_run"
-        }
+        },
+        {
+            "block" : "PCZzip",
+            "tool" : "PCAsuite pczzip",
+            "desc" : "Compress MD simulation trajectories with PCA suite",
+            "exec" : "pcz_zip",
+            "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_zip"
+        },
+        {
+            "block" : "PCZunzip",
+            "tool" : "PCAsuite pczunzip",
+            "desc" : "Uncompress MD simulation trajectories with PCA suite",
+            "exec" : "pcz_unzip",
+            "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_unzip"
+        },
+        {
+            "block" : "PCZanimate",
+            "tool" : "PCAsuite pczdump",
+            "desc" : "Extract PCA animations from a compressed PCZ file",
+            "exec" : "pczdump",
+            "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_animate"
+        },
+        {
+            "block" : "PCZbfactor",
+            "tool" : "PCAsuite pczdump",
+            "desc" : "Extract residue bfactors x PCA mode from a compressed PCZ file",
+            "exec" : "pczdump",
+            "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_bfactor"
+        },
+        {
+            "block" : "PCZcollectivity",
+            "tool" : "PCAsuite pczdump",
+            "desc" : "Extract PCA collectivity (numerical measure of how many atoms are affected by a given mode) from a compressed PCZ file",
+            "exec" : "pczdump",
+            "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcc_collectivity"
+        },
+        {
+            "block" : "PCZevecs",
+            "tool" : "PCAsuite pczdump",
+            "desc" : "Extract PCA Eigen Vectors from a compressed PCZ file",
+            "exec" : "pczdump",
+            "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_evecs"
+        },
+        {
+            "block" : "PCZhinges",
+            "tool" : "PCAsuite pczdump",
+            "desc" : "Compute possible hinge regions (residues around which large protein movements are organized) of a molecule from a compressed PCZ file",
+            "exec" : "pczdump",
+            "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_hinges"
+        },
+        {
+            "block" : "PCZinfo",
+            "tool" : "PCAsuite pczdump",
+            "desc" : "Extract PCA info (variance, Dimensionality) from a compressed PCZ file",
+            "exec" : "pczdump",
+            "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_info"
+        },
+        {
+            "block" : "PCZlindemann",
+            "tool" : "PCAsuite pczdump",
+            "desc" : "ComExtract Lindemann coefficient (an estimate of the solid-liquid behaviour of a protein) from a compressed PCZ file",
+            "exec" : "pczdump",
+            "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_lindemann"
+        },
+        {
+            "block" : "PCZsimilarity",
+            "tool" : "PCAsuite pczdump",
+            "desc" : "Compute PCA similarity between two given compressed PCZ files",
+            "exec" : "pczdump",
+            "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_similarity"
+        },
+        {
+            "block" : "PCZstiffness",
+            "tool" : "PCAsuite pczdump",
+            "desc" : "Extract PCA stiffness from a compressed PCZ file",
+            "exec" : "pczdump",
+            "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_stiffness"
+        },
     ],
     "dep_pypi" : [
-        "install_requires=['biobb_common==3.8.1']",
+        "install_requires=['biobb_common==3.9.0']",
         "python_requires='>=3.7.*'"
     ],
     "dep_conda" : [
         "python >=3.7.*",
-        "biobb_common ==3.8.1",
+        "biobb_common ==3.9.0",
         "flexserv ==1.0.1"
     ],
     "keywords" : [

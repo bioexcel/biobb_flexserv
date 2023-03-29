@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
-"""Module containing the PCAunzip class and the command line interface."""
+"""Module containing the PCZunzip class and the command line interface."""
 import argparse
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import  settings
 from biobb_common.tools.file_utils import launchlogger
 
-class PCAunzip(BiobbObject):
+class PCZunzip(BiobbObject):
     """
-    | biobb_flexserv PCAunzip
+    | biobb_flexserv PCZunzip
     | Wrapper of the pcaunzip tool from the PCAsuite FlexServ module.
     | Uncompress Molecular Dynamics (MD) trajectories compressed using Principal Component Analysis (PCA) algorithms.
 
@@ -26,11 +26,11 @@ class PCAunzip(BiobbObject):
     Examples:
         This is a use example of how to use the building block from Python::
 
-            from biobb_flexserv.pcasuite.pcaunzip import pcaunzip
+            from biobb_flexserv.pcasuite.pcz_unzip import pcz_unzip
             prop = {
                 'pdb': False
             }
-            pcaunzip( input_pcz_path='/path/to/pcazip_input.pcz',
+            pcz_unzip( input_pcz_path='/path/to/pcazip_input.pcz',
                     output_crd_path='/path/to/pcazip_traj.crd',
                     properties=prop)
 
@@ -80,6 +80,7 @@ class PCAunzip(BiobbObject):
         if self.check_restart(): return 0
         self.stage_files()
 
+        # Internal file paths
         try:
             # Using rel paths to shorten the amount of characters due to fortran path length limitations
             input_pcz = str(Path(self.stage_io_dict["in"]["input_pcz_path"]).relative_to(Path.cwd()))
@@ -118,13 +119,13 @@ class PCAunzip(BiobbObject):
 
         return self.return_code
 
-def pcaunzip(input_pcz_path: str, 
+def pcz_unzip(input_pcz_path: str, 
             output_crd_path: str,
             properties: dict = None, **kwargs) -> int:
-    """Create :class:`PCAunzip <flexserv.pcasuite.pcaunzip>`flexserv.pcasuite.PCAunzip class and
-    execute :meth:`launch() <flexserv.pcasuite.pcaunzip.launch>` method"""
+    """Create :class:`PCZunzip <flexserv.pcasuite.PCZunzip>`flexserv.pcasuite.PCZunzip class and
+    execute :meth:`launch() <flexserv.pcasuite.PCZunzip.launch>` method"""
 
-    return PCAunzip(  input_pcz_path=input_pcz_path,
+    return PCZunzip(  input_pcz_path=input_pcz_path,
                     output_crd_path=output_crd_path,
                     properties=properties).launch()
 
@@ -142,7 +143,7 @@ def main():
     properties = settings.ConfReader(config=args.config).get_prop_dic()
 
     # Specific call
-    pcaunzip(       input_pcz_path=args.input_pcz_path,
+    pcz_unzip(       input_pcz_path=args.input_pcz_path,
                     output_crd_path=args.output_crd_path,
                     properties=properties)
 

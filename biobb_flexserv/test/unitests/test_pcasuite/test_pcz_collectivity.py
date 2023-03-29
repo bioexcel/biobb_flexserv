@@ -7,7 +7,7 @@ class TestPCZcollectivity():
 
     def teardown_class(self):
         fx.test_teardown(self)
-        pass
+        #pass
 
     def test_pcz_collectivity(self):
         pcz_collectivity(properties=self.properties, **self.paths)

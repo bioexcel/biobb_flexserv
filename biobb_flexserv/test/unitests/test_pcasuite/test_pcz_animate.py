@@ -7,7 +7,7 @@ class TestPCZanimate():
 
     def teardown_class(self):
         fx.test_teardown(self)
-        pass
+        #pass
 
     def test_pcz_animate(self):
         pcz_animate(properties=self.properties, **self.paths)

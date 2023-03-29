@@ -7,7 +7,7 @@ class TestPCZlindemann():
 
     def teardown_class(self):
         fx.test_teardown(self)
-        pass
+        #pass
 
     def test_pcz_lindemann(self):
         pcz_lindemann(properties=self.properties, **self.paths)

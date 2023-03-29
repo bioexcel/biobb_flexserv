@@ -1,0 +1,134 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://bioexcel.eu/biobb_flexserv/json_schemas/1.0/pcz_zip",
+    "name": "biobb_flexserv PCZzip",
+    "title": "Wrapper of the pcazip tool from the PCAsuite FlexServ module.",
+    "description": "Compress Molecular Dynamics (MD) trajectories using Principal Component Analysis (PCA) algorithms.",
+    "type": "object",
+    "info": {
+        "wrapped_software": {
+            "name": "FlexServ PCAsuite",
+            "version": ">=1.0",
+            "license": "Apache-2.0"
+        },
+        "ontology": {
+            "name": "EDAM",
+            "schema": "http://edamontology.org/EDAM.owl"
+        }
+    },
+    "required": [
+        "input_pdb_path",
+        "input_crd_path",
+        "output_pcz_path"
+    ],
+    "properties": {
+        "input_pdb_path": {
+            "type": "string",
+            "description": "Input PDB file",
+            "filetype": "input",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/data/pcasuite/structure.ca.pdb",
+            "enum": [
+                ".*\\.pdb$"
+            ],
+            "file_formats": [
+                {
+                    "extension": ".*\\.pdb$",
+                    "description": "Input PDB file",
+                    "edam": "format_1476"
+                }
+            ]
+        },
+        "input_crd_path": {
+            "type": "string",
+            "description": "Input Trajectory file",
+            "filetype": "input",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/data/pcasuite/traj.crd",
+            "enum": [
+                ".*\\.crd$",
+                ".*\\.mdcrd$",
+                ".*\\.inpcrd$"
+            ],
+            "file_formats": [
+                {
+                    "extension": ".*\\.crd$",
+                    "description": "Input Trajectory file",
+                    "edam": "format_3878"
+                },
+                {
+                    "extension": ".*\\.mdcrd$",
+                    "description": "Input Trajectory file",
+                    "edam": "format_3878"
+                },
+                {
+                    "extension": ".*\\.inpcrd$",
+                    "description": "Input Trajectory file",
+                    "edam": "format_3878"
+                }
+            ]
+        },
+        "output_pcz_path": {
+            "type": "string",
+            "description": "Output compressed trajectory",
+            "filetype": "output",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/pcazip.pcz",
+            "enum": [
+                ".*\\.pcz$"
+            ],
+            "file_formats": [
+                {
+                    "extension": ".*\\.pcz$",
+                    "description": "Output compressed trajectory",
+                    "edam": "format_3874"
+                }
+            ]
+        },
+        "properties": {
+            "type": "object",
+            "properties": {
+                "binary_path": {
+                    "type": "string",
+                    "default": "pcazip",
+                    "wf_prop": false,
+                    "description": "pcazip binary path to be used."
+                },
+                "neigenv": {
+                    "type": "integer",
+                    "default": 0,
+                    "wf_prop": false,
+                    "description": "Number of generated eigenvectors"
+                },
+                "variance": {
+                    "type": "integer",
+                    "default": 90,
+                    "wf_prop": false,
+                    "description": "Percentage of variance captured by the final set of eigenvectors"
+                },
+                "verbose": {
+                    "type": "boolean",
+                    "default": false,
+                    "wf_prop": false,
+                    "description": "Make output verbose"
+                },
+                "gauss_rmsd": {
+                    "type": "boolean",
+                    "default": false,
+                    "wf_prop": false,
+                    "description": "Use a gaussian RMSd for fitting"
+                },
+                "remove_tmp": {
+                    "type": "boolean",
+                    "default": true,
+                    "wf_prop": true,
+                    "description": "Remove temporal files."
+                },
+                "restart": {
+                    "type": "boolean",
+                    "default": false,
+                    "wf_prop": true,
+                    "description": "Do not execute if output files exist."
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

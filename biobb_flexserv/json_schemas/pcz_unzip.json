@@ -1,0 +1,111 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://bioexcel.eu/biobb_flexserv/json_schemas/1.0/pcz_unzip",
+    "name": "biobb_flexserv PCZunzip",
+    "title": "Wrapper of the pcaunzip tool from the PCAsuite FlexServ module.",
+    "description": "Uncompress Molecular Dynamics (MD) trajectories compressed using Principal Component Analysis (PCA) algorithms.",
+    "type": "object",
+    "info": {
+        "wrapped_software": {
+            "name": "FlexServ PCAsuite",
+            "version": ">=1.0",
+            "license": "Apache-2.0"
+        },
+        "ontology": {
+            "name": "EDAM",
+            "schema": "http://edamontology.org/EDAM.owl"
+        }
+    },
+    "required": [
+        "input_pcz_path",
+        "output_crd_path"
+    ],
+    "properties": {
+        "input_pcz_path": {
+            "type": "string",
+            "description": "Input compressed trajectory",
+            "filetype": "input",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/data/pcasuite/pcazip.pcz",
+            "enum": [
+                ".*\\.pcz$"
+            ],
+            "file_formats": [
+                {
+                    "extension": ".*\\.pcz$",
+                    "description": "Input compressed trajectory",
+                    "edam": "format_3874"
+                }
+            ]
+        },
+        "output_crd_path": {
+            "type": "string",
+            "description": "Output uncompressed trajectory",
+            "filetype": "output",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/traj.crd",
+            "enum": [
+                ".*\\.crd$",
+                ".*\\.mdcrd$",
+                ".*\\.inpcrd$",
+                ".*\\.pdb$"
+            ],
+            "file_formats": [
+                {
+                    "extension": ".*\\.crd$",
+                    "description": "Output uncompressed trajectory",
+                    "edam": "format_3878"
+                },
+                {
+                    "extension": ".*\\.mdcrd$",
+                    "description": "Output uncompressed trajectory",
+                    "edam": "format_3878"
+                },
+                {
+                    "extension": ".*\\.inpcrd$",
+                    "description": "Output uncompressed trajectory",
+                    "edam": "format_3878"
+                },
+                {
+                    "extension": ".*\\.pdb$",
+                    "description": "Output uncompressed trajectory",
+                    "edam": "format_1476"
+                }
+            ]
+        },
+        "properties": {
+            "type": "object",
+            "properties": {
+                "binary_path": {
+                    "type": "string",
+                    "default": "pcaunzip",
+                    "wf_prop": false,
+                    "description": "pcaunzip binary path to be used."
+                },
+                "verbose": {
+                    "type": "boolean",
+                    "default": false,
+                    "wf_prop": false,
+                    "description": "Make output verbose"
+                },
+                "pdb": {
+                    "type": "boolean",
+                    "default": false,
+                    "wf_prop": false,
+                    "description": "Use PDB format for output trajectory"
+                },
+                "remove_tmp": {
+                    "type": "boolean",
+                    "default": true,
+                    "wf_prop": true,
+                    "description": "Remove temporal files."
+                },
+                "restart": {
+                    "type": "boolean",
+                    "default": false,
+                    "wf_prop": true,
+                    "description": "Do not execute if output files exist."
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

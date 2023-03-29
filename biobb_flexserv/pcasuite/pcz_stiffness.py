@@ -16,7 +16,7 @@ class PCZstiffness(BiobbObject):
 
     Args:
         input_pcz_path (str): Input compressed trajectory file. File type: input. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/data/pcasuite/pcazip.pcz>`_. Accepted formats: pcz (edam:format_3874).
-        output_json_path (str): Output json file with PCA Stiffness. File type: output. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/pca_stiffness.json>`_. Accepted formats: json (edam:format_3464).
+        output_json_path (str): Output json file with PCA Stiffness. File type: output. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/pcz_stiffness.json>`_. Accepted formats: json (edam:format_3464).
         properties (dict - Python dictionary object containing the tool parameters, not input/output files):
             * **binary_path** (*str*) - ("pczdump") pczdump binary path to be used.
             * **eigenvector** (*int*) - (0) PCA mode (eigenvector) from which to extract stiffness.

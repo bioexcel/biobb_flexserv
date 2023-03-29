@@ -7,16 +7,16 @@ from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import  settings
 from biobb_common.tools.file_utils import launchlogger
 
-class PCAzip(BiobbObject):
+class PCZzip(BiobbObject):
     """
-    | biobb_flexserv PCAzip
+    | biobb_flexserv PCZzip
     | Wrapper of the pcazip tool from the PCAsuite FlexServ module.
     | Compress Molecular Dynamics (MD) trajectories using Principal Component Analysis (PCA) algorithms.
 
     Args:
         input_pdb_path (str): Input PDB file. File type: input. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/data/pcasuite/structure.ca.pdb>`_. Accepted formats: pdb (edam:format_1476).
         input_crd_path (str): Input Trajectory file. File type: input. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/data/pcasuite/traj.crd>`_. Accepted formats: crd (edam:format_3878), mdcrd (edam:format_3878), inpcrd (edam:format_3878).
-        output_pcz_path (str): Output compressed trajectory. File type: output. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/pcazip.ref.pcz>`_. Accepted formats: pcz (edam:format_3874).
+        output_pcz_path (str): Output compressed trajectory. File type: output. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/pcazip.pcz>`_. Accepted formats: pcz (edam:format_3874).
         properties (dict - Python dictionary object containing the tool parameters, not input/output files):
             * **binary_path** (*str*) - ("pcazip") pcazip binary path to be used.
             * **neigenv** (*int*) - (0) Number of generated eigenvectors
@@ -29,11 +29,11 @@ class PCAzip(BiobbObject):
     Examples:
         This is a use example of how to use the building block from Python::
 
-            from biobb_flexserv.pcasuite.pcazip import pcazip
+            from biobb_flexserv.pcasuite.pcz_zip import pcz_zip
             prop = {
                 'variance': 90
             }
-            pcazip( input_pdb_path='/path/to/pcazip_input.pdb',
+            pcz_zip( input_pdb_path='/path/to/pcazip_input.pdb',
                     input_crd_path='/path/to/pcazip_input.crd',
                     output_pcz_path='/path/to/pcazip_traj.pcz',
                     properties=prop)
@@ -71,7 +71,8 @@ class PCAzip(BiobbObject):
         self.properties = properties
         self.binary_path = properties.get('binary_path', 'pcazip')
         self.neigenv = properties.get('neigenv', 0)
-        self.variance = properties.get('variance', 90)
+        #self.variance = properties.get('variance', 90)
+        self.variance = properties.get('variance')
         self.verbose = properties.get('verbose', False)
         self.gauss_rmsd = properties.get('gauss_rmsd', False)
 
@@ -137,13 +138,13 @@ class PCAzip(BiobbObject):
 
         return self.return_code
 
-def pcazip(input_pdb_path: str, input_crd_path: str,
+def pcz_zip(input_pdb_path: str, input_crd_path: str,
             output_pcz_path: str,
             properties: dict = None, **kwargs) -> int:
-    """Create :class:`PCAzip <flexserv.pcasuite.pcazip>`flexserv.pcasuite.PCAzip class and
-    execute :meth:`launch() <flexserv.pcasuite.pcazip.launch>` method"""
+    """Create :class:`PCZzip <flexserv.pcasuite.PCZzip>`flexserv.pcasuite.PCZzip class and
+    execute :meth:`launch() <flexserv.pcasuite.PCZzip.launch>` method"""
 
-    return PCAzip(  input_pdb_path=input_pdb_path,
+    return PCZzip(  input_pdb_path=input_pdb_path,
                     input_crd_path=input_crd_path,
                     output_pcz_path=output_pcz_path,
                     properties=properties).launch()
@@ -163,7 +164,7 @@ def main():
     properties = settings.ConfReader(config=args.config).get_prop_dic()
 
     # Specific call
-    pcazip(         input_pdb_path=args.input_pdb_path,
+    pcz_zip(         input_pdb_path=args.input_pdb_path,
                     input_crd_path=args.input_crd_path,
                     output_pcz_path=args.output_pcz_path,
                     properties=properties)

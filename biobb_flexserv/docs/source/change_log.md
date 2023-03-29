@@ -1,5 +1,19 @@
 # Biobb FlexServ changelog
 
+## What's new in version [3.9.0](https://github.com/bioexcel/biobb_flexserv/releases/tag/v3.9.0)?
+The version 3.9.0 is the first release of the biobb_flexserv module available in BioConda as a Conda package. 
+
+### New features
+
+* BioBB_flexserv BioConda package
+
+## What's new in version [3.8.1](https://github.com/bioexcel/biobb_flexserv/releases/tag/v3.8.1)?
+The version 3.8.1 adds PCAsuite tools into the biobb_flexserv module. There have been added the pcz_zip, pcz_unzip, pcz_hinges, pcz_info, pcz_lindemann, pcz_evecs, pcz_collectivity and pcz_animate tools.
+
+### New features
+
+* PCA suite tool: pcz_zip, pcz_unzip, pcz_hinges, pcz_info, pcz_lindemann, pcz_evecs, pcz_collectivity and pcz_animate tools
+
 ## What's new in version [3.8.0](https://github.com/bioexcel/biobb_flexserv/releases/tag/v3.8.0)?
 The version 3.8.0 is the first release of biobb_flexserv. There have been added the run_bd, run_dmd and run_nma tools.
 

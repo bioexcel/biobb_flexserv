@@ -7,7 +7,7 @@ class TestPCZhinges():
 
     def teardown_class(self):
         fx.test_teardown(self)
-        pass
+        #pass
 
     def test_pcz_hinges(self):
         pcz_hinges(properties=self.properties, **self.paths)

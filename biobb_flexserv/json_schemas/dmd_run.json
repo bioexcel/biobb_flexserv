@@ -42,7 +42,7 @@
             "type": "string",
             "description": "Output log file",
             "filetype": "output",
-            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/flexserv/flexserv_bd.log",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/flexserv/dmd_run_out.log",
             "enum": [
                 ".*\\.log$",
                 ".*\\.out$",
@@ -76,7 +76,7 @@
             "type": "string",
             "description": "Output ensemble",
             "filetype": "output",
-            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/flexserv/traj.crd",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/flexserv/dmd_run_out.crd",
             "enum": [
                 ".*\\.crd$",
                 ".*\\.mdcrd$",

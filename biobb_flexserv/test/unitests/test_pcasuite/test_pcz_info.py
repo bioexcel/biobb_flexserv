@@ -7,7 +7,7 @@ class TestPCZinfo():
 
     def teardown_class(self):
         fx.test_teardown(self)
-        pass
+        #pass
 
     def test_pcz_info(self):
         pcz_info(properties=self.properties, **self.paths)

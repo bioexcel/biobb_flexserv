@@ -5,3 +5,4 @@ biobb_flexserv
    :maxdepth: 4
 
    flexserv
+   pcasuite

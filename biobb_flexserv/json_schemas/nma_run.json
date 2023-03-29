@@ -42,7 +42,7 @@
             "type": "string",
             "description": "Output log file",
             "filetype": "output",
-            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/flexserv/flexserv_bd.log",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/flexserv/nma_run_out.log",
             "enum": [
                 ".*\\.log$",
                 ".*\\.out$",
@@ -76,7 +76,7 @@
             "type": "string",
             "description": "Output ensemble",
             "filetype": "output",
-            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/flexserv/traj.crd",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/flexserv/nma_run_out.crd",
             "enum": [
                 ".*\\.crd$",
                 ".*\\.mdcrd$",
@@ -114,6 +114,12 @@
                     "default": 1000,
                     "wf_prop": false,
                     "description": "Number of frames in the final ensemble"
+                },
+                "nvecs": {
+                    "type": "integer",
+                    "default": 50,
+                    "wf_prop": false,
+                    "description": "Number of vectors to take into account for the ensemble generation"
                 },
                 "remove_tmp": {
                     "type": "boolean",

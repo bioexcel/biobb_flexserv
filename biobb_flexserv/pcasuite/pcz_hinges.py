@@ -2,7 +2,7 @@
 
 """Module containing the PCZhinges class and the command line interface."""
 import argparse
-import json
+import json, re
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import  settings
@@ -115,7 +115,7 @@ class PCZhinges(BiobbObject):
             for line in out_data.split("\n"):
                 print ("Bfactor_slope: -" + str(line) + "-")
                 if "Window" in line:  # Window 28: residue  54 seems a downhill hinge point
-                    residue = int(line.split(' ')[4])
+                    residue = int(re.split(r'\s+',line)[3])
                     dict_out["hinge_residues"].append(residue)
                 if "Consensus" in line: # Consensus Downhill hinge point :  23.7 (  64.965)
                     hinge_point = float(line.split(':')[1].split('(')[0])
@@ -148,8 +148,16 @@ class PCZhinges(BiobbObject):
                     dict_out["clusters"].append(cluster)
                     start = start + 1
                 if start and "[" in line:
-                    print("START: " + line)
-                    dict_out["clusters"][start-1]["residues"] = line.replace(", ]", "]")
+                    #dict_out["clusters"][start-1]["residues"] = list(map(int,list(line.replace(", ]", "").replace("  [","").split(', '))))
+                    dict_out["clusters"][start-1]["residues"] = eval(line)
+                #Interacting regions: 13 14 30 31 69 70 84 85 112 113 114 115 116 166 167 199 200
+                if "Interacting regions" in line:
+                    nums = line.split(':')[1]
+                    dict_out["interacting_regions"] = list(map(int,nums.split()))
+                #Hinge residues: 13 14 30 31 69 70 84 85 112 113 114 115 116 166 167 199 200
+                if "Hinge residues" in line:  
+                    nums = line.split(':')[1]
+                    dict_out["hinge_residues"] = list(map(int,nums.split()))
 
         return dict_out
 

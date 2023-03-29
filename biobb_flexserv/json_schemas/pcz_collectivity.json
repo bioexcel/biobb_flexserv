@@ -1,0 +1,87 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://bioexcel.eu/biobb_flexserv/json_schemas/1.0/pcz_collectivity",
+    "name": "biobb_flexserv PCZcollectivity",
+    "title": "Extract PCA collectivity (numerical measure of how many atoms are affected by a given mode) from a compressed PCZ file.",
+    "description": "Wrapper of the pczdump tool from the PCAsuite FlexServ module.",
+    "type": "object",
+    "info": {
+        "wrapped_software": {
+            "name": "FlexServ PCAsuite",
+            "version": ">=1.0",
+            "license": "Apache-2.0"
+        },
+        "ontology": {
+            "name": "EDAM",
+            "schema": "http://edamontology.org/EDAM.owl"
+        }
+    },
+    "required": [
+        "input_pcz_path",
+        "output_json_path"
+    ],
+    "properties": {
+        "input_pcz_path": {
+            "type": "string",
+            "description": "Input compressed trajectory file",
+            "filetype": "input",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/data/pcasuite/pcazip.pcz",
+            "enum": [
+                ".*\\.pcz$"
+            ],
+            "file_formats": [
+                {
+                    "extension": ".*\\.pcz$",
+                    "description": "Input compressed trajectory file",
+                    "edam": "format_3874"
+                }
+            ]
+        },
+        "output_json_path": {
+            "type": "string",
+            "description": "Output json file with PCA Collectivity indexes per mode",
+            "filetype": "output",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/pcz_collectivity.json",
+            "enum": [
+                ".*\\.json$"
+            ],
+            "file_formats": [
+                {
+                    "extension": ".*\\.json$",
+                    "description": "Output json file with PCA Collectivity indexes per mode",
+                    "edam": "format_3464"
+                }
+            ]
+        },
+        "properties": {
+            "type": "object",
+            "properties": {
+                "eigenvector": {
+                    "type": "integer",
+                    "default": 0,
+                    "wf_prop": false,
+                    "description": "PCA mode (eigenvector) from which to extract stiffness."
+                },
+                "binary_path": {
+                    "type": "string",
+                    "default": "pczdump",
+                    "wf_prop": false,
+                    "description": "pczdump binary path to be used."
+                },
+                "remove_tmp": {
+                    "type": "boolean",
+                    "default": true,
+                    "wf_prop": true,
+                    "description": "Remove temporal files."
+                },
+                "restart": {
+                    "type": "boolean",
+                    "default": false,
+                    "wf_prop": true,
+                    "description": "Do not execute if output files exist."
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

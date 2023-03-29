@@ -1,0 +1,121 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://bioexcel.eu/biobb_flexserv/json_schemas/1.0/pcz_bfactor",
+    "name": "biobb_flexserv PCZbfactor",
+    "title": "Extract residue bfactors x PCA mode from a compressed PCZ file.",
+    "description": "Wrapper of the pczdump tool from the PCAsuite FlexServ module.",
+    "type": "object",
+    "info": {
+        "wrapped_software": {
+            "name": "FlexServ PCAsuite",
+            "version": ">=1.0",
+            "license": "Apache-2.0"
+        },
+        "ontology": {
+            "name": "EDAM",
+            "schema": "http://edamontology.org/EDAM.owl"
+        }
+    },
+    "required": [
+        "input_pcz_path",
+        "output_dat_path"
+    ],
+    "properties": {
+        "input_pcz_path": {
+            "type": "string",
+            "description": "Input compressed trajectory file",
+            "filetype": "input",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/data/pcasuite/pcazip.pcz",
+            "enum": [
+                ".*\\.pcz$"
+            ],
+            "file_formats": [
+                {
+                    "extension": ".*\\.pcz$",
+                    "description": "Input compressed trajectory file",
+                    "edam": "format_3874"
+                }
+            ]
+        },
+        "output_dat_path": {
+            "type": "string",
+            "description": "Output Bfactor x residue x PCA mode file",
+            "filetype": "output",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/bfactors.dat",
+            "enum": [
+                ".*\\.dat$",
+                ".*\\.txt$",
+                ".*\\.csv$"
+            ],
+            "file_formats": [
+                {
+                    "extension": ".*\\.dat$",
+                    "description": "Output Bfactor x residue x PCA mode file",
+                    "edam": "format_1637"
+                },
+                {
+                    "extension": ".*\\.txt$",
+                    "description": "Output Bfactor x residue x PCA mode file",
+                    "edam": "format_2330"
+                },
+                {
+                    "extension": ".*\\.csv$",
+                    "description": "Output Bfactor x residue x PCA mode file",
+                    "edam": "format_3752"
+                }
+            ]
+        },
+        "output_pdb_path": {
+            "type": "string",
+            "description": "Output PDB with Bfactor x residue x PCA mode file",
+            "filetype": "output",
+            "sample": "https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/bfactors.pdb",
+            "enum": [
+                ".*\\.pdb$"
+            ],
+            "file_formats": [
+                {
+                    "extension": ".*\\.pdb$",
+                    "description": "Output PDB with Bfactor x residue x PCA mode file",
+                    "edam": "format_1476"
+                }
+            ]
+        },
+        "properties": {
+            "type": "object",
+            "properties": {
+                "binary_path": {
+                    "type": "string",
+                    "default": "pczdump",
+                    "wf_prop": false,
+                    "description": "pczdump binary path to be used."
+                },
+                "eigenvector": {
+                    "type": "integer",
+                    "default": 0,
+                    "wf_prop": false,
+                    "description": "PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes)."
+                },
+                "pdb": {
+                    "type": "boolean",
+                    "default": false,
+                    "wf_prop": false,
+                    "description": "Generate a PDB file with the computed bfactors (to be easily represented with colour scale)"
+                },
+                "remove_tmp": {
+                    "type": "boolean",
+                    "default": true,
+                    "wf_prop": true,
+                    "description": "Remove temporal files."
+                },
+                "restart": {
+                    "type": "boolean",
+                    "default": false,
+                    "wf_prop": true,
+                    "description": "Do not execute if output files exist."
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

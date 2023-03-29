@@ -19,7 +19,7 @@ class PCZsimilarity(BiobbObject):
     Args:
         input_pcz_path1 (str): Input compressed trajectory file 1. File type: input. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/data/pcasuite/pcazip.pcz>`_. Accepted formats: pcz (edam:format_3874).
         input_pcz_path2 (str): Input compressed trajectory file 2. File type: input. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/data/pcasuite/pcazip.pcz>`_. Accepted formats: pcz (edam:format_3874).
-        output_json_path (str): Output json file with PCA Similarity results. File type: output. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/pca_similarity.json>`_. Accepted formats: json (edam:format_3464).
+        output_json_path (str): Output json file with PCA Similarity results. File type: output. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/pcz_similarity.json>`_. Accepted formats: json (edam:format_3464).
         properties (dict - Python dictionary object containing the tool parameters, not input/output files):
             * **binary_path** (*str*) - ("pczdump") pczdump binary path to be used.
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
@@ -87,8 +87,8 @@ class PCZsimilarity(BiobbObject):
 
     # Get the weighted cross product between eigenvectors
     # This is meant to compare PCA results for molecular dynamics structural conformations
-    # The number of eigenvectors to be compared may be specified. All (0) by defualt
-    # DISCLAIMER: This code has been translated from a perl script signed by Alberto 13/09/04
+    # The number of eigenvectors to be compared may be specified. All (0) by default
+    # DISCLAIMER: This code has been translated from a perl script signed by Alberto Perez (13/09/04)
     def get_similarity_index (self, 
         eigenvalues_1, eigenvectors_1, 
         eigenvalues_2, eigenvectors_2):
@@ -166,8 +166,30 @@ class PCZsimilarity(BiobbObject):
         n_components = len(eigenvectors_1)
         # Get the dot product
         dpm = self.dot_product(eigenvectors_1, eigenvectors_2)
+        print(dpm)
         sso = np.sqrt((dpm * dpm).sum() / n_components)
+        #sso = (dpm * dpm).sum() / n_components
         return sso
+
+    def get_rwsip (self, 
+        eigenvalues_1, eigenvectors_1, 
+        eigenvalues_2, eigenvectors_2):
+
+        # Get the number of eigenvectors
+        n_components = len(eigenvectors_1)
+
+        accum = 0
+        norm = 0
+        for pc in range(0,n_components):
+            dpm = np.dot(eigenvectors_1[pc], np.transpose(eigenvectors_2[pc]))
+            val = dpm * dpm * eigenvalues_1[pc] * eigenvalues_2[pc]
+            norm = norm + eigenvalues_1[pc] * eigenvalues_2[pc]
+            accum = accum + val
+
+        sso = np.sqrt(accum / norm)
+        #sso = (dpm * dpm).sum() / n_components
+        return sso
+
 
     @launchlogger
     def launch(self):
@@ -234,7 +256,7 @@ class PCZsimilarity(BiobbObject):
         # Command line 2
         # pczdump -i structure.ca.std.pcz --evals -o evals.txt
         self.cmd = []
-        for pc in (range(1,num_evals_min)):
+        for pc in (range(1,num_evals_min+1)):
             # Evecs pcz 1 
             self.cmd.append(self.binary_path)
             self.cmd.append("-i")
@@ -262,7 +284,7 @@ class PCZsimilarity(BiobbObject):
         info_dict['evecs_2'] = {}
         eigenvectors_1 = []
         eigenvectors_2 = []
-        for pc in (range(1,num_evals_min)):
+        for pc in (range(1,num_evals_min+1)):
             pc_id = "pc{}".format(pc)
             info_dict['evecs_1'][pc_id] = []
             info_dict['evecs_2'][pc_id] = []
@@ -289,7 +311,10 @@ class PCZsimilarity(BiobbObject):
         simIndex = self.get_similarity_index(info_dict['evals_1'], eigenvectors_1, info_dict['evals_2'], eigenvectors_2)
         info_dict['similarityIndex'] = float("{:.3f}".format(simIndex))
         dotProduct = self.get_subspace_overlap(eigenvectors_1, eigenvectors_2)
-        info_dict['similarityIndex_dotProduct'] = float("{:.3f}".format(dotProduct))
+        #info_dict['similarityIndex_dotProduct'] = float("{:.3f}".format(dotProduct))
+        info_dict['similarityIndex_rmsip'] = float("{:.3f}".format(dotProduct))
+        rwsip = self.get_rwsip(info_dict['evals_1'], eigenvectors_1, info_dict['evals_2'], eigenvectors_2)
+        info_dict['similarityIndex_rwsip'] = float("{:.3f}".format(rwsip))
 
         # convert into JSON:
         y = json.dumps(info_dict)

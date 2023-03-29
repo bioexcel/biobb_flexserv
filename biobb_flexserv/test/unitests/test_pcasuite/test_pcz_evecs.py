@@ -7,7 +7,7 @@ class TestPCZevecs():
 
     def teardown_class(self):
         fx.test_teardown(self)
-        pass
+        #pass
 
     def test_pcz_evecs(self):
         pcz_evecs(properties=self.properties, **self.paths)

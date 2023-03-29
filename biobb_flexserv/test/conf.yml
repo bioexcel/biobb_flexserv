@@ -31,7 +31,7 @@ dmd_run:
   properties:
     frames: 100
 
-pcazip:
+pcz_zip:
   paths:
     input_crd_path: file:test_data_dir/pcasuite/traj.crd
     input_pdb_path: file:test_data_dir/pcasuite/structure.ca.pdb
@@ -40,7 +40,7 @@ pcazip:
   properties:
     variance: 90
 
-pcaunzip:
+pcz_unzip:
   paths:
     input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
     output_crd_path: pcazip.crd
