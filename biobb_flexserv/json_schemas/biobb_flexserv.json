@@ -4,8 +4,8 @@
     "github": "https://github.com/bioexcel/biobb_flexserv",
     "readthedocs": "https://biobb-flexserv.readthedocs.io/en/latest/",
     "conda": "https://anaconda.org/bioconda/biobb_flexserv",
-    "docker": "",
-    "singularity": "",
+    "docker": "https://quay.io/biocontainers/biobb_flexserv:3.9.1--pyhdfd78af_1",
+    "singularity": "https://depot.galaxyproject.org/singularity/biobb_flexserv:3.9.1--pyhdfd78af_1",
     "version": "3.9.1",
     "tools" : [
         {
