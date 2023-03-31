@@ -105,7 +105,7 @@
             "desc" : "Extract PCA stiffness from a compressed PCZ file",
             "exec" : "pczdump",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_stiffness"
-        },
+        }
     ],
     "dep_pypi" : [
         "install_requires=['biobb_common==3.9.0']",
