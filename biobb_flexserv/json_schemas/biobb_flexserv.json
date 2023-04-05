@@ -45,65 +45,65 @@
         },
         {
             "block" : "PCZanimate",
-            "tool" : "PCAsuite pczdump",
+            "tool" : "PCAsuite pczanimate",
             "desc" : "Extract PCA animations from a compressed PCZ file",
-            "exec" : "pczdump",
+            "exec" : "pcz_animate",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_animate"
         },
         {
             "block" : "PCZbfactor",
-            "tool" : "PCAsuite pczdump",
+            "tool" : "PCAsuite pczbfactor",
             "desc" : "Extract residue bfactors x PCA mode from a compressed PCZ file",
-            "exec" : "pczdump",
+            "exec" : "pcz_bfactor",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_bfactor"
         },
         {
             "block" : "PCZcollectivity",
-            "tool" : "PCAsuite pczdump",
+            "tool" : "PCAsuite pczcollectivity",
             "desc" : "Extract PCA collectivity (numerical measure of how many atoms are affected by a given mode) from a compressed PCZ file",
-            "exec" : "pczdump",
+            "exec" : "pcz_collectivity",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcc_collectivity"
         },
         {
             "block" : "PCZevecs",
-            "tool" : "PCAsuite pczdump",
+            "tool" : "PCAsuite pczevecs",
             "desc" : "Extract PCA Eigen Vectors from a compressed PCZ file",
-            "exec" : "pczdump",
+            "exec" : "pcz_evecs",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_evecs"
         },
         {
             "block" : "PCZhinges",
-            "tool" : "PCAsuite pczdump",
+            "tool" : "PCAsuite pczhinges",
             "desc" : "Compute possible hinge regions (residues around which large protein movements are organized) of a molecule from a compressed PCZ file",
-            "exec" : "pczdump",
+            "exec" : "pcz_hinges",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_hinges"
         },
         {
             "block" : "PCZinfo",
-            "tool" : "PCAsuite pczdump",
+            "tool" : "PCAsuite pczinfo",
             "desc" : "Extract PCA info (variance, Dimensionality) from a compressed PCZ file",
-            "exec" : "pczdump",
+            "exec" : "pcz_info",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_info"
         },
         {
             "block" : "PCZlindemann",
-            "tool" : "PCAsuite pczdump",
+            "tool" : "PCAsuite pczlindemann",
             "desc" : "ComExtract Lindemann coefficient (an estimate of the solid-liquid behaviour of a protein) from a compressed PCZ file",
-            "exec" : "pczdump",
+            "exec" : "pcz_lindemann",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_lindemann"
         },
         {
             "block" : "PCZsimilarity",
-            "tool" : "PCAsuite pczdump",
+            "tool" : "PCAsuite pczsimilarity",
             "desc" : "Compute PCA similarity between two given compressed PCZ files",
-            "exec" : "pczdump",
+            "exec" : "pcz_similarity",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_similarity"
         },
         {
             "block" : "PCZstiffness",
-            "tool" : "PCAsuite pczdump",
+            "tool" : "PCAsuite pczstiffness",
             "desc" : "Extract PCA stiffness from a compressed PCZ file",
-            "exec" : "pczdump",
+            "exec" : "pcz_stiffness",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_stiffness"
         }
     ],
