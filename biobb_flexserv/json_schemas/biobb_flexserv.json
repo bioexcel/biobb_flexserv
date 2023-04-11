@@ -4,9 +4,9 @@
     "github": "https://github.com/bioexcel/biobb_flexserv",
     "readthedocs": "https://biobb-flexserv.readthedocs.io/en/latest/",
     "conda": "https://anaconda.org/bioconda/biobb_flexserv",
-    "docker": "https://quay.io/biocontainers/biobb_flexserv:3.9.1--pyhdfd78af_1",
-    "singularity": "https://depot.galaxyproject.org/singularity/biobb_flexserv:3.9.1--pyhdfd78af_1",
-    "version": "3.9.1",
+    "docker": "https://quay.io/biocontainers/biobb_flexserv:4.0.0--pyhdfd78af_1",
+    "singularity": "https://depot.galaxyproject.org/singularity/biobb_flexserv:4.0.0--pyhdfd78af_1",
+    "version": "4.0.0",
     "tools" : [
         {
             "block" : "BDRun",
@@ -108,12 +108,12 @@
         }
     ],
     "dep_pypi" : [
-        "install_requires=['biobb_common==3.9.0']",
+        "install_requires=['biobb_common==4.0.0']",
         "python_requires='>=3.7,<3.10'"
     ],
     "dep_conda" : [
         "python >=3.7,<3.10",
-        "biobb_common ==3.9.0",
+        "biobb_common ==4.0.0",
         "flexserv ==1.0.2"
     ],
     "keywords" : [

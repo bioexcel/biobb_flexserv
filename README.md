@@ -35,7 +35,7 @@ The latest documentation of this package can be found in our readthedocs site:
 [latest API documentation](http://biobb_flexserv.readthedocs.io/en/latest/).
 
 ### Version
-v3.9.1 2022.4
+v4.0.0 2023.1
 
 ### Installation
 Using PIP:
@@ -45,7 +45,7 @@ Using PIP:
 * Installation:
 
 
-        pip install "biobb_flexserv>=3.9.1"
+        pip install "biobb_flexserv>=4.0.0"
 
 
 * Usage: [Python API documentation](https://biobb-flexserv.readthedocs.io/en/latest/modules.html)
@@ -55,23 +55,23 @@ Using ANACONDA:
 * Installation:
 
 
-        conda install -c bioconda "biobb_flexserv>=3.9.1"
+        conda install -c bioconda "biobb_flexserv>=4.0.0"
 
 
 * Usage: With conda installation BioBBs can be used with the [Python API documentation](https://biobb-flexserv.readthedocs.io/en/latest/modules.html) and the [Command Line documentation](https://biobb-flexserv.readthedocs.io/en/latest/command_line.html)
 
-<!---Using DOCKER:
+Using DOCKER:
 
 * Installation:
 
 
-        docker pull quay.io/biocontainers/biobb_flexserv:3.9.1--pyhdfd78af_0
+        docker pull quay.io/biocontainers/biobb_flexserv:4.0.0--pyhdfd78af_0
 
 
 * Usage:
 
 
-        docker run quay.io/biocontainers/biobb_flexserv:3.9.1--pyhdfd78af_0
+        docker run quay.io/biocontainers/biobb_flexserv:4.0.0--pyhdfd78af_0
 
 Using SINGULARITY:
 
@@ -80,14 +80,13 @@ Using SINGULARITY:
 * Installation:
 
 
-        singularity pull --name biobb_flexserv.sif https://depot.galaxyproject.org/singularity/biobb_flexserv:3.9.1--pyhdfd78af_0
+        singularity pull --name biobb_flexserv.sif https://depot.galaxyproject.org/singularity/biobb_flexserv:4.0.0--pyhdfd78af_0
 
 
 * Usage:
 
 
         singularity exec biobb_flexserv.sif <command>
--->
 
 The command list and specification can be found at the [Command Line documentation](https://biobb-flexserv.readthedocs.io/en/latest/command_line.html).
 
