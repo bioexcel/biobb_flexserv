@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>flake8 violations: biobb_flexserv/pcasuite/pcz_unzip.py</title>
+      <meta http-equiv="Content-Type" value="text/html; charset=UTF-8">
+      <link rel="stylesheet" href="styles.css">
+<script>
+function bindHandler(link) {
+   var code = link.getAttribute('data-code');
+   var key = location.pathname + '#' + code;
+
+   var ul = link.parentNode.querySelector('.details');
+   if (sessionStorage[key] != 'open') {
+      ul.style.display = 'none';
+   }
+   link.addEventListener('click', function (event) {
+      if (!ul.style.display || ul.style.display == 'none') {
+         ul.style.display = 'block';
+         sessionStorage[key] = 'open';
+      } else {
+         ul.style.display = 'none';
+         sessionStorage[key] = 'closed';
+      }
+   });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+   var links = document.querySelectorAll('#index > li > a');
+   for (var i = 0; i < links.length; i++) {
+      bindHandler(links[i]);
+   }
+});
+</script>
+   </head>
+   <body>
+      <div id="masthead" class="sev-2"></div>
+      <div id="page">
+         <p id="srclink">
+            <a title="View full annotated source"
+               href="biobb_flexserv.pcasuite.pcz_unzip.source.html">
+               <img src="file.svg" alt="&#x2261;">
+            </a></p>
+         <h1>
+            <a href="index.html">
+               <img src="back.svg" alt="&#x2B05;">
+               biobb_flexserv/pcasuite/pcz_unzip.py
+            </a>
+         </h1>
+
+         <ul id="index">
+         
+         <li>
+            <a data-code="E128">
+               <span class="count sev-2">
+                  7
+               </span>
+               <strong>E128:</strong> continuation line under-indented for visual indent
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l48">
+                  <tt><i>48</i>     <span class="n">output_crd_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l123">
+                  <tt><i>123</i>             <span class="n">output_crd_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l124">
+                  <tt><i>124</i>             <span class="n">properties</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l129">
+                  <tt><i>129</i>                     <span class="n">output_crd_path</span><span class="o">=</span><span class="n">output_crd_path</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l130">
+                  <tt><i>130</i>                     <span class="n">properties</span><span class="o">=</span><span class="n">properties</span><span class="p">)</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l147">
+                  <tt><i>147</i>                     <span class="n">output_crd_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">output_crd_path</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l148">
+                  <tt><i>148</i>                     <span class="n">properties</span><span class="o">=</span><span class="n">properties</span><span class="p">)</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E201">
+               <span class="count sev-2">
+                  3
+               </span>
+               <strong>E201:</strong> whitespace after '{'
+               
+                  (and 1 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>Whitespace after '{':</p>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l58">
+                  <tt><i>58</i>             <span class="s1">&#39;in&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;input_pcz_path&#39;</span><span class="p">:</span> <span class="n">input_pcz_path</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Whitespace after '(':</p>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l128">
+                  <tt><i>128</i>     <span class="k">return</span> <span class="n">PCZunzip</span><span class="p">(</span>  <span class="n">input_pcz_path</span><span class="o">=</span><span class="n">input_pcz_path</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Whitespace after '(':</p>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l146">
+                  <tt><i>146</i>     <span class="n">pcz_unzip</span><span class="p">(</span>       <span class="n">input_pcz_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">input_pcz_path</span><span class="p">,</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E302">
+               <span class="count sev-2">
+                  3
+               </span>
+               <strong>E302:</strong> expected 2 blank lines, found 1
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l10">
+                  <tt><i>10</i> <span class="k">class</span> <span class="nc">PCZunzip</span><span class="p">(</span><span class="n">BiobbObject</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l122">
+                  <tt><i>122</i> <span class="k">def</span> <span class="nf">pcz_unzip</span><span class="p">(</span><span class="n">input_pcz_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> </tt>
+               </a>
+            </li><li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l132">
+                  <tt><i>132</i> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="W291">
+               <span class="count sev-2">
+                  3
+               </span>
+               <strong>W291:</strong> trailing whitespace
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l47">
+                  <tt><i>47</i>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_pcz_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> </tt>
+               </a>
+            </li><li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l60">
+                  <tt><i>60</i>             <span class="s1">&#39;out&#39;</span><span class="p">:</span> <span class="p">{</span>    </tt>
+               </a>
+            </li><li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l122">
+                  <tt><i>122</i> <span class="k">def</span> <span class="nf">pcz_unzip</span><span class="p">(</span><span class="n">input_pcz_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> </tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E124">
+               <span class="count sev-2">
+                  2
+               </span>
+               <strong>E124:</strong> closing bracket does not match visual indentation
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l59">
+                  <tt><i>59</i>              <span class="p">},</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l98">
+                  <tt><i>98</i>                    <span class="p">]</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E126">
+               <span class="count sev-2">
+                  1
+               </span>
+               <strong>E126:</strong> continuation line over-indented for hanging indent
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l61">
+                  <tt><i>61</i>                     <span class="s1">&#39;output_crd_path&#39;</span><span class="p">:</span> <span class="n">output_crd_path</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E271">
+               <span class="count sev-2">
+                  1
+               </span>
+               <strong>E271:</strong> multiple spaces after keyword
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l7">
+                  <tt><i>7</i> <span class="kn">from</span> <span class="nn">biobb_common.configuration</span> <span class="kn">import</span>  <span class="n">settings</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E305">
+               <span class="count sev-2">
+                  1
+               </span>
+               <strong>E305:</strong> expected 2 blank lines after class or function definition, found 1
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l150">
+                  <tt><i>150</i> <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E701">
+               <span class="count sev-2">
+                  1
+               </span>
+               <strong>E701:</strong> multiple statements on one line (colon)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l80">
+                  <tt><i>80</i>         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_restart</span><span class="p">():</span> <span class="k">return</span> <span class="mi">0</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="W293">
+               <span class="count sev-2">
+                  1
+               </span>
+               <strong>W293:</strong> blank line contains whitespace
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="biobb_flexserv.pcasuite.pcz_unzip.source.html#l99">
+                  <tt><i>99</i>  </tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         </ul>
+      </div>
+   </body>
+</html>
