@@ -2,11 +2,13 @@
 
 """Module containing the PCZstiffness class and the command line interface."""
 import argparse
-import json, math
+import json
+import math
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import  settings
+from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
+
 
 class PCZstiffness(BiobbObject):
     """
@@ -47,8 +49,8 @@ class PCZstiffness(BiobbObject):
             * schema: http://edamontology.org/EDAM.owl
 
     """
-    def __init__(self, input_pcz_path: str, 
-    output_json_path: str, properties: dict = None, **kwargs) -> None:
+    def __init__(self, input_pcz_path: str,
+                 output_json_path: str, properties: dict = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -58,12 +60,8 @@ class PCZstiffness(BiobbObject):
 
         # Input/Output files
         self.io_dict = {
-            'in': { 
-                'input_pcz_path': input_pcz_path
-             },
-            'out': {    
-                'output_json_path': output_json_path
-            }
+            'in': {'input_pcz_path': input_pcz_path},
+            'out': {'output_json_path': output_json_path}
         }
 
         # Properties specific for BB
@@ -81,7 +79,8 @@ class PCZstiffness(BiobbObject):
         """Launches the execution of the FlexServ pcz_stiffness module."""
 
         # Setup Biobb
-        if self.check_restart(): return 0
+        if self.check_restart():
+            return 0
         self.stage_files()
 
         # Internal file paths
@@ -100,12 +99,12 @@ class PCZstiffness(BiobbObject):
         # Command line
         # pczdump -i structure.ca.std.pcz --stiffness -o pcz.stiffness
         self.cmd = [self.binary_path,
-                "-i", input_pcz,
-                "-o", temp_out,
-                "--stiff={}".format(self.eigenvector),
-                "--temperature={}".format(self.temperature)
-               ]
- 
+                    "-i", input_pcz,
+                    "-o", temp_out,
+                    "--stiff={}".format(self.eigenvector),
+                    "--temperature={}".format(self.temperature)
+                    ]
+
         # Run Biobb block
         self.run_biobb()
 
@@ -114,7 +113,7 @@ class PCZstiffness(BiobbObject):
         info_dict['stiffness'] = []
         info_dict['stiffness_log'] = []
         row = 0
-        with open (temp_out,'r') as file:
+        with open(temp_out, 'r') as file:
             for line in file:
                 info = line.strip().split(',')
                 line_array = []
@@ -126,20 +125,14 @@ class PCZstiffness(BiobbObject):
                             line_array_log.append(math.log10(float(nums)))
                         else:
                             line_array_log.append(float(nums))
-                                
+
                 info_dict['stiffness'].append(line_array)
                 info_dict['stiffness'][row][row] = float('inf')
                 info_dict['stiffness_log'].append(line_array_log)
                 info_dict['stiffness_log'][row][row] = float('inf')
                 row += 1
-       
-        # convert into JSON:
-        y = json.dumps(info_dict)
 
-        ## the result is a JSON string:
-        print(json.dumps(info_dict, indent=4))
-
-        with open (output_json, 'w') as out_file:
+        with open(output_json, 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
 
         # Copy files to host
@@ -155,15 +148,16 @@ class PCZstiffness(BiobbObject):
 
         return self.return_code
 
+
 def pcz_stiffness(input_pcz_path: str, output_json_path: str,
-            properties: dict = None, **kwargs) -> int:
+                  properties: dict = None, **kwargs) -> int:
     """Create :class:`PCZstiffness <flexserv.pcasuite.pcz_stiffness>`flexserv.pcasuite.PCZstiffness class and
     execute :meth:`launch() <flexserv.pcasuite.pcz_stiffness.launch>` method"""
 
-    return PCZstiffness(  
-                    input_pcz_path=input_pcz_path,
-                    output_json_path=output_json_path,
-                    properties=properties).launch()
+    return PCZstiffness(input_pcz_path=input_pcz_path,
+                        output_json_path=output_json_path,
+                        properties=properties).launch()
+
 
 def main():
     parser = argparse.ArgumentParser(description='Extract PCA Stiffness from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
@@ -179,9 +173,10 @@ def main():
     properties = settings.ConfReader(config=args.config).get_prop_dic()
 
     # Specific call
-    pcz_stiffness(  input_pcz_path=args.input_pcz_path,
-                    output_json_path=args.output_json_path,
-                    properties=properties)
+    pcz_stiffness(input_pcz_path=args.input_pcz_path,
+                  output_json_path=args.output_json_path,
+                  properties=properties)
+
 
 if __name__ == '__main__':
     main()

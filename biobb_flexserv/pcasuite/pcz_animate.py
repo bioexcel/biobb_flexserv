@@ -2,11 +2,11 @@
 
 """Module containing the PCZanimate class and the command line interface."""
 import argparse
-import shutil
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import  settings
+from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
+
 
 class PCZanimate(BiobbObject):
     """
@@ -46,8 +46,8 @@ class PCZanimate(BiobbObject):
             * schema: http://edamontology.org/EDAM.owl
 
     """
-    def __init__(self, input_pcz_path: str, 
-    output_crd_path: str, properties: dict = None, **kwargs) -> None:
+    def __init__(self, input_pcz_path: str,
+                 output_crd_path: str, properties: dict = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -57,12 +57,8 @@ class PCZanimate(BiobbObject):
 
         # Input/Output files
         self.io_dict = {
-            'in': { 
-                'input_pcz_path': input_pcz_path
-             },
-            'out': {    
-                'output_crd_path': output_crd_path
-            }
+            'in': {'input_pcz_path': input_pcz_path},
+            'out': {'output_crd_path': output_crd_path}
         }
 
         # Properties specific for BB
@@ -80,7 +76,8 @@ class PCZanimate(BiobbObject):
         """Launches the execution of the FlexServ pcz_animate module."""
 
         # Setup Biobb
-        if self.check_restart(): return 0
+        if self.check_restart():
+            return 0
         self.stage_files()
 
         # Internal file paths
@@ -96,11 +93,11 @@ class PCZanimate(BiobbObject):
         # Command line
         # pczdump -i structure.ca.std.pcz --anim=1 --pdb -o anim_1.pdb
         self.cmd = [self.binary_path,
-                "-i", input_pcz,
-                "-o", output_crd,
-                "--anim={}".format(self.eigenvector)
-               ]
- 
+                    "-i", input_pcz,
+                    "-o", output_crd,
+                    "--anim={}".format(self.eigenvector)
+                    ]
+
         if self.pdb:
             self.cmd.append('--pdb')
 
@@ -120,15 +117,16 @@ class PCZanimate(BiobbObject):
 
         return self.return_code
 
+
 def pcz_animate(input_pcz_path: str, output_crd_path: str,
-            properties: dict = None, **kwargs) -> int:
+                properties: dict = None, **kwargs) -> int:
     """Create :class:`PCZanimate <flexserv.pcasuite.pcz_animate>`flexserv.pcasuite.PCZanimate class and
     execute :meth:`launch() <flexserv.pcasuite.pcz_animate.launch>` method"""
 
-    return PCZanimate(  
-                    input_pcz_path=input_pcz_path,
-                    output_crd_path=output_crd_path,
-                    properties=properties).launch()
+    return PCZanimate(input_pcz_path=input_pcz_path,
+                      output_crd_path=output_crd_path,
+                      properties=properties).launch()
+
 
 def main():
     parser = argparse.ArgumentParser(description='Extract PCA animations from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
@@ -144,9 +142,10 @@ def main():
     properties = settings.ConfReader(config=args.config).get_prop_dic()
 
     # Specific call
-    pcz_animate(    input_pcz_path=args.input_pcz_path,
-                    output_crd_path=args.output_crd_path,
-                    properties=properties)
+    pcz_animate(input_pcz_path=args.input_pcz_path,
+                output_crd_path=args.output_crd_path,
+                properties=properties)
+
 
 if __name__ == '__main__':
     main()

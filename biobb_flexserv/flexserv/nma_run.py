@@ -4,8 +4,9 @@
 import argparse
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import  settings
+from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
+
 
 class NMARun(BiobbObject):
     """
@@ -47,7 +48,7 @@ class NMARun(BiobbObject):
 
     """
     def __init__(self, input_pdb_path: str, output_log_path: str,
-    output_crd_path: str, properties: dict = None, **kwargs) -> None:
+                 output_crd_path: str, properties: dict = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -57,10 +58,9 @@ class NMARun(BiobbObject):
 
         # Input/Output files
         self.io_dict = {
-            'in': { 'input_pdb_path': input_pdb_path },
-            'out': {    'output_log_path': output_log_path,
-                        'output_crd_path': output_crd_path
-            }
+            'in': {'input_pdb_path': input_pdb_path},
+            'out': {'output_log_path': output_log_path,
+                    'output_crd_path': output_crd_path}
         }
 
         # Properties specific for BB
@@ -78,7 +78,8 @@ class NMARun(BiobbObject):
         """Launches the execution of the FlexServ NMARun module."""
 
         # Setup Biobb
-        if self.check_restart(): return 0
+        if self.check_restart():
+            return 0
         self.stage_files()
 
         # Internal file paths
@@ -94,23 +95,22 @@ class NMARun(BiobbObject):
             output_log = self.stage_io_dict["out"]["output_log_path"]
 
         # Command line
-        #nmanu.pl structure.ca.pdb hessian.dat 1 0 40
-        #diaghess
-        #mc-eigen.pl eigenvec.dat > file.proj
-        #pca_anim_mc.pl -pdb structure.ca.pdb -evec eigenvec.dat -i file.proj -n 50 -pout traj.crd
-        self.cmd = [ 
-                "nmanu.pl ",
-                input_pdb,
-                "hessian.dat 1 0 40;",
-                self.binary_path,
-                "; mc-eigen-mdweb.pl eigenvec.dat ", str(self.frames), " > file.proj",
-                "; pca_anim_mc.pl -pdb",
-                input_pdb,
-                " -evec eigenvec.dat -i file.proj -n ",
-                str(self.nvecs),
-                " -pout",  output_crd,
-                '>', output_log
-               ]
+        # nmanu.pl structure.ca.pdb hessian.dat 1 0 40
+        # diaghess
+        # mc-eigen.pl eigenvec.dat > file.proj
+        # pca_anim_mc.pl -pdb structure.ca.pdb -evec eigenvec.dat -i file.proj -n 50 -pout traj.crd
+        self.cmd = ["nmanu.pl ",
+                    input_pdb,
+                    "hessian.dat 1 0 40;",
+                    self.binary_path,
+                    "; mc-eigen-mdweb.pl eigenvec.dat ", str(self.frames), " > file.proj",
+                    "; pca_anim_mc.pl -pdb",
+                    input_pdb,
+                    " -evec eigenvec.dat -i file.proj -n ",
+                    str(self.nvecs),
+                    " -pout", output_crd,
+                    '>', output_log
+                    ]
 
         # Run Biobb block
         self.run_biobb()
@@ -128,16 +128,18 @@ class NMARun(BiobbObject):
 
         return self.return_code
 
+
 def nma_run(input_pdb_path: str,
             output_log_path: str, output_crd_path: str,
             properties: dict = None, **kwargs) -> int:
     """Create :class:`NMARun <flexserv.nma_run.NMARun>`flexserv.nma_run.NMARun class and
     execute :meth:`launch() <flexserv.nma_run.NMARun.launch>` method"""
 
-    return NMARun( input_pdb_path=input_pdb_path,
-                    output_log_path=output_log_path,
-                    output_crd_path=output_crd_path,
-                    properties=properties).launch()
+    return NMARun(input_pdb_path=input_pdb_path,
+                  output_log_path=output_log_path,
+                  output_crd_path=output_crd_path,
+                  properties=properties).launch()
+
 
 def main():
     parser = argparse.ArgumentParser(description='Generates protein conformational structures using the Normal Mode Analysis method.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
@@ -154,10 +156,11 @@ def main():
     properties = settings.ConfReader(config=args.config).get_prop_dic()
 
     # Specific call
-    nma_run(        input_pdb_path=args.input_pdb_path,
-                    output_log_path=args.output_log_path,
-                    output_crd_path=args.output_crd_path,
-                    properties=properties)
+    nma_run(input_pdb_path=args.input_pdb_path,
+            output_log_path=args.output_log_path,
+            output_crd_path=args.output_crd_path,
+            properties=properties)
+
 
 if __name__ == '__main__':
     main()

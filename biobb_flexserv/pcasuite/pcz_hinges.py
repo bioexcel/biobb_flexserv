@@ -2,11 +2,13 @@
 
 """Module containing the PCZhinges class and the command line interface."""
 import argparse
-import json, re
+import json
+import re
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import  settings
+from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
+
 
 class PCZhinges(BiobbObject):
     """
@@ -20,7 +22,7 @@ class PCZhinges(BiobbObject):
         properties (dict - Python dictionary object containing the tool parameters, not input/output files):
             * **binary_path** (*str*) - ("pczdump") pczdump binary path to be used.
             * **eigenvector** (*int*) - (0) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
-            * **method** (*str*) - ("Dynamic_domain") Method to compute the hinge regions (Options: Bfactor_slope, Force_constant, Dynamic_domain) 
+            * **method** (*str*) - ("Dynamic_domain") Method to compute the hinge regions (Options: Bfactor_slope, Force_constant, Dynamic_domain)
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
             * **restart** (*bool*) - (False) [WF property] Do not execute if output files exist.
 
@@ -47,7 +49,7 @@ class PCZhinges(BiobbObject):
 
     """
     def __init__(self, input_pcz_path: str, output_json_path: str,
-    properties: dict = None, **kwargs) -> None:
+                 properties: dict = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -57,12 +59,8 @@ class PCZhinges(BiobbObject):
 
         # Input/Output files
         self.io_dict = {
-            'in': { 
-                'input_pcz_path': input_pcz_path
-             },
-            'out': {    
-                'output_json_path': output_json_path
-            }
+            'in': {'input_pcz_path': input_pcz_path},
+            'out': {'output_json_path': output_json_path}
         }
 
         # Properties specific for BB
@@ -75,7 +73,7 @@ class PCZhinges(BiobbObject):
         self.check_properties(properties)
         self.check_arguments()
 
-    def parse_output(self,output_file):
+    def parse_output(self, output_file):
         """ Parses FlexServ hinges methods output file report """
 
         method = ''
@@ -90,9 +88,9 @@ class PCZhinges(BiobbObject):
 
         start = False
         out_data = ''
-        with open (output_file,'r') as file:
+        with open(output_file, 'r') as file:
             for line in file:
-                if method in line: 
+                if method in line:
                     start = True
                 elif "####" in line:
                     start = False
@@ -104,28 +102,25 @@ class PCZhinges(BiobbObject):
         if self.method == "Force_constant":
             dict_out["values_per_residue"] = []
             for line in out_data.split("\n"):
-                print ("Force_constant: -" + str(line) + "-")
                 if line and "#" not in line:
                     dict_out["values_per_residue"].append(float(line.strip()))
-                if "possible hinge" in line: # Peak constant (possible hinge): residue 64 (16.740)
+                if "possible hinge" in line:  # Peak constant (possible hinge): residue 64 (16.740)
                     residue = int(line.split(' ')[6])
                     dict_out["hinge_residues"] = residue
         elif self.method == "Bfactor_slope":
             dict_out["hinge_residues"] = []
             for line in out_data.split("\n"):
-                print ("Bfactor_slope: -" + str(line) + "-")
                 if "Window" in line:  # Window 28: residue  54 seems a downhill hinge point
-                    residue = int(re.split(r'\s+',line)[3])
+                    residue = int(re.split(r'\s+', line)[3])
                     dict_out["hinge_residues"].append(residue)
-                if "Consensus" in line: # Consensus Downhill hinge point :  23.7 (  64.965)
+                if "Consensus" in line:  # Consensus Downhill hinge point :  23.7 (  64.965)
                     hinge_point = float(line.split(':')[1].split('(')[0])
                     dict_out["consensus_hinge"] = hinge_point
         elif self.method == "Dynamic_domain":
             start = 0
             dict_out["clusters"] = []
             for line in out_data.split("\n"):
-                print ("Dynamic_domain: -" + str(line) + "-")
-                if not "threshold" in line and "nClusters" in line:  # nClusters: 2
+                if "threshold" not in line and "nClusters" in line:  # nClusters: 2
                     nclusters = int(line.split(':')[1])
                     dict_out["nClusters"] = nclusters
                 if "Threshold" in line:  # *** Threshold defined: 0.300000
@@ -140,24 +135,24 @@ class PCZhinges(BiobbObject):
                 if "threshold" in line:  # nClusters: 2 threshold: 3.192873
                     final_threshold = float(line.split(':')[2])
                     dict_out["final_threshold"] = final_threshold
-                if "Cluster" in line and "elements" in line: # Cluster 0 (74 elements)
+                if "Cluster" in line and "elements" in line:  # Cluster 0 (74 elements)
                     clusterLine = line.split()
                     clusterNum = int(clusterLine[1])
-                    clusterElems = int(clusterLine[2].replace('(',''))
-                    cluster = {"clusterNum" : clusterNum, "clusterElems" : clusterElems}
+                    clusterElems = int(clusterLine[2].replace('(', ''))
+                    cluster = {"clusterNum": clusterNum, "clusterElems": clusterElems}
                     dict_out["clusters"].append(cluster)
                     start = start + 1
                 if start and "[" in line:
-                    #dict_out["clusters"][start-1]["residues"] = list(map(int,list(line.replace(", ]", "").replace("  [","").split(', '))))
+                    # dict_out["clusters"][start-1]["residues"] = list(map(int,list(line.replace(", ]", "").replace("  [","").split(', '))))
                     dict_out["clusters"][start-1]["residues"] = eval(line)
-                #Interacting regions: 13 14 30 31 69 70 84 85 112 113 114 115 116 166 167 199 200
+                # Interacting regions: 13 14 30 31 69 70 84 85 112 113 114 115 116 166 167 199 200
                 if "Interacting regions" in line:
                     nums = line.split(':')[1]
-                    dict_out["interacting_regions"] = list(map(int,nums.split()))
-                #Hinge residues: 13 14 30 31 69 70 84 85 112 113 114 115 116 166 167 199 200
-                if "Hinge residues" in line:  
+                    dict_out["interacting_regions"] = list(map(int, nums.split()))
+                # Hinge residues: 13 14 30 31 69 70 84 85 112 113 114 115 116 166 167 199 200
+                if "Hinge residues" in line:
                     nums = line.split(':')[1]
-                    dict_out["hinge_residues"] = list(map(int,nums.split()))
+                    dict_out["hinge_residues"] = list(map(int, nums.split()))
 
         return dict_out
 
@@ -166,7 +161,8 @@ class PCZhinges(BiobbObject):
         """Launches the execution of the FlexServ pcz_hinges module."""
 
         # Setup Biobb
-        if self.check_restart(): return 0
+        if self.check_restart():
+            return 0
         self.stage_files()
 
         # Internal file paths
@@ -185,26 +181,20 @@ class PCZhinges(BiobbObject):
         # Command line (1: dat file)
         # pczdump -i structure.ca.std.pcz --fluc=1 -o bfactor_1.dat
         self.cmd = [self.binary_path,
-                "-i", input_pcz,
-                "-o", temp_out,
-                "-t", "0.3",
-                "--hinge={}".format(self.eigenvector),
-                ">&", "pcz_dump.hinges.log"
-               ]
-  
+                    "-i", input_pcz,
+                    "-o", temp_out,
+                    "-t", "0.3",
+                    "--hinge={}".format(self.eigenvector),
+                    ">&", "pcz_dump.hinges.log"
+                    ]
+
         # Run Biobb block
         self.run_biobb()
 
-        # Parsing output file and extracting results for the given method 
+        # Parsing output file and extracting results for the given method
         dict_out = self.parse_output(temp_out)
 
-        # convert into JSON:
-        y = json.dumps(dict_out)
-
-        ## the result is a JSON string:
-        print(json.dumps(dict_out, indent=4))
-
-        with open (output_json, 'w') as out_file:
+        with open(output_json, 'w') as out_file:
             out_file.write(json.dumps(dict_out, indent=4))
 
         # Copy files to host
@@ -220,15 +210,16 @@ class PCZhinges(BiobbObject):
 
         return self.return_code
 
+
 def pcz_hinges(input_pcz_path: str, output_json_path: str,
-            properties: dict = None, **kwargs) -> int:
+               properties: dict = None, **kwargs) -> int:
     """Create :class:`PCZhinges <flexserv.pcasuite.pcz_hinges>`flexserv.pcasuite.PCZhinges class and
     execute :meth:`launch() <flexserv.pcasuite.pcz_hinges.launch>` method"""
 
-    return PCZhinges(  
-                    input_pcz_path=input_pcz_path,
-                    output_json_path=output_json_path,
-                    properties=properties).launch()
+    return PCZhinges(input_pcz_path=input_pcz_path,
+                     output_json_path=output_json_path,
+                     properties=properties).launch()
+
 
 def main():
     parser = argparse.ArgumentParser(description='Compute possible hinge regions (residues around which large protein movements are organized) of a molecule from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
@@ -244,9 +235,10 @@ def main():
     properties = settings.ConfReader(config=args.config).get_prop_dic()
 
     # Specific call
-    pcz_hinges(     input_pcz_path=args.input_pcz_path,
-                    output_json_path=args.output_json_path,
-                    properties=properties)
+    pcz_hinges(input_pcz_path=args.input_pcz_path,
+               output_json_path=args.output_json_path,
+               properties=properties)
+
 
 if __name__ == '__main__':
     main()

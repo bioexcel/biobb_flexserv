@@ -2,11 +2,13 @@
 
 """Module containing the PCZevecs class and the command line interface."""
 import argparse
-import json, math
+import json
+import math
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import  settings
+from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
+
 
 class PCZevecs(BiobbObject):
     """
@@ -46,8 +48,8 @@ class PCZevecs(BiobbObject):
             * schema: http://edamontology.org/EDAM.owl
 
     """
-    def __init__(self, input_pcz_path: str, 
-    output_json_path: str, properties: dict = None, **kwargs) -> None:
+    def __init__(self, input_pcz_path: str,
+                 output_json_path: str, properties: dict = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -57,12 +59,8 @@ class PCZevecs(BiobbObject):
 
         # Input/Output files
         self.io_dict = {
-            'in': { 
-                'input_pcz_path': input_pcz_path
-             },
-            'out': {    
-                'output_json_path': output_json_path
-            }
+            'in': {'input_pcz_path': input_pcz_path},
+            'out': {'output_json_path': output_json_path}
         }
 
         # Properties specific for BB
@@ -79,7 +77,8 @@ class PCZevecs(BiobbObject):
         """Launches the execution of the FlexServ pcz_evecs module."""
 
         # Setup Biobb
-        if self.check_restart(): return 0
+        if self.check_restart():
+            return 0
         self.stage_files()
 
         # Internal file paths
@@ -98,21 +97,21 @@ class PCZevecs(BiobbObject):
         # Command line
         # pczdump -i structure.ca.std.pcz --evecs -o pcz.evecs
         self.cmd = [self.binary_path,
-                "-i", input_pcz,
-                "-o", temp_out,
-                "--evec={}".format(self.eigenvector)
-               ]
- 
+                    "-i", input_pcz,
+                    "-o", temp_out,
+                    "--evec={}".format(self.eigenvector)
+                    ]
+
         # Run Biobb block
         self.run_biobb()
 
         # Parse output evecs
-           #  0.180  -0.069   0.168   0.204  -0.054   0.235   0.145  -0.001   0.260   0.183
-           # -0.041   0.231   0.174  -0.077   0.144   0.097  -0.022   0.143   0.069   0.008
+        #  0.180  -0.069   0.168   0.204  -0.054   0.235   0.145  -0.001   0.260   0.183
+        # -0.041   0.231   0.174  -0.077   0.144   0.097  -0.022   0.143   0.069   0.008
 
         info_dict = {}
         info_dict['evecs'] = []
-        with open (temp_out,'r') as file:
+        with open(temp_out, 'r') as file:
             for line in file:
                 info = line.strip().split(' ')
                 for nums in info:
@@ -125,22 +124,16 @@ class PCZevecs(BiobbObject):
         proj = 0
         for num in info_dict['evecs']:
             val = float(num) * float(num)
-            proj = proj + val                
+            proj = proj + val
             if module % 3 == 0:
                 proj = math.sqrt(proj)
                 module = 1
-                info_dict['projs'].append(float("{:.4f}".format(proj))) 
+                info_dict['projs'].append(float("{:.4f}".format(proj)))
                 proj = 0
             else:
                 module = module + 1
-       
-        # convert into JSON:
-        y = json.dumps(info_dict)
 
-        ## the result is a JSON string:
-        print(json.dumps(info_dict, indent=4))
-
-        with open (output_json, 'w') as out_file:
+        with open(output_json, 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
 
         # Copy files to host
@@ -156,15 +149,16 @@ class PCZevecs(BiobbObject):
 
         return self.return_code
 
+
 def pcz_evecs(input_pcz_path: str, output_json_path: str,
-            properties: dict = None, **kwargs) -> int:
+              properties: dict = None, **kwargs) -> int:
     """Create :class:`PCZevecs <flexserv.pcasuite.pcz_evecs>`flexserv.pcasuite.PCZevecs class and
     execute :meth:`launch() <flexserv.pcasuite.pcz_evecs.launch>` method"""
 
-    return PCZevecs(  
-                    input_pcz_path=input_pcz_path,
+    return PCZevecs(input_pcz_path=input_pcz_path,
                     output_json_path=output_json_path,
                     properties=properties).launch()
+
 
 def main():
     parser = argparse.ArgumentParser(description='Extract PCA Eigen Vectors from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
@@ -180,9 +174,10 @@ def main():
     properties = settings.ConfReader(config=args.config).get_prop_dic()
 
     # Specific call
-    pcz_evecs(      input_pcz_path=args.input_pcz_path,
-                    output_json_path=args.output_json_path,
-                    properties=properties)
+    pcz_evecs(input_pcz_path=args.input_pcz_path,
+              output_json_path=args.output_json_path,
+              properties=properties)
+
 
 if __name__ == '__main__':
     main()

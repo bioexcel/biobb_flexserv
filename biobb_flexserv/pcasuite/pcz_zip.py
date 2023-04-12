@@ -4,8 +4,9 @@
 import argparse
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import  settings
+from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
+
 
 class PCZzip(BiobbObject):
     """
@@ -48,8 +49,8 @@ class PCZzip(BiobbObject):
             * schema: http://edamontology.org/EDAM.owl
 
     """
-    def __init__(self, input_pdb_path: str, input_crd_path: str, 
-    output_pcz_path: str, properties: dict = None, **kwargs) -> None:
+    def __init__(self, input_pdb_path: str, input_crd_path: str,
+                 output_pcz_path: str, properties: dict = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -59,19 +60,16 @@ class PCZzip(BiobbObject):
 
         # Input/Output files
         self.io_dict = {
-            'in': { 'input_pdb_path': input_pdb_path,
-                    'input_crd_path': input_crd_path
-             },
-            'out': {    
-                    'output_pcz_path': output_pcz_path
-            }
+            'in': {'input_pdb_path': input_pdb_path,
+                   'input_crd_path': input_crd_path},
+            'out': {'output_pcz_path': output_pcz_path}
         }
 
         # Properties specific for BB
         self.properties = properties
         self.binary_path = properties.get('binary_path', 'pcazip')
         self.neigenv = properties.get('neigenv', 0)
-        #self.variance = properties.get('variance', 90)
+        # self.variance = properties.get('variance', 90)
         self.variance = properties.get('variance')
         self.verbose = properties.get('verbose', False)
         self.gauss_rmsd = properties.get('gauss_rmsd', False)
@@ -85,7 +83,8 @@ class PCZzip(BiobbObject):
         """Launches the execution of the FlexServ pcazip module."""
 
         # Setup Biobb
-        if self.check_restart(): return 0
+        if self.check_restart():
+            return 0
         self.stage_files()
 
         try:
@@ -103,11 +102,11 @@ class PCZzip(BiobbObject):
         # pcazip -i infile -o outfile -n natoms
         # [-v] [--mask maskfile] [-e nev] [-q qual] [--pdb pdbfile]
         self.cmd = [self.binary_path,
-                "-p", input_pdb,
-                "-i", input_crd,
-                "-o", output_pcz
-               ]
- 
+                    "-p", input_pdb,
+                    "-i", input_crd,
+                    "-o", output_pcz
+                    ]
+
         if self.verbose:
             self.cmd.append('-v')
 
@@ -117,7 +116,7 @@ class PCZzip(BiobbObject):
         if self.neigenv:
             self.cmd.append('-e')
             self.cmd.append(str(self.neigenv))
- 
+
         if self.variance:
             self.cmd.append('-q')
             self.cmd.append(str(self.variance))
@@ -138,16 +137,18 @@ class PCZzip(BiobbObject):
 
         return self.return_code
 
+
 def pcz_zip(input_pdb_path: str, input_crd_path: str,
             output_pcz_path: str,
             properties: dict = None, **kwargs) -> int:
     """Create :class:`PCZzip <flexserv.pcasuite.PCZzip>`flexserv.pcasuite.PCZzip class and
     execute :meth:`launch() <flexserv.pcasuite.PCZzip.launch>` method"""
 
-    return PCZzip(  input_pdb_path=input_pdb_path,
-                    input_crd_path=input_crd_path,
-                    output_pcz_path=output_pcz_path,
-                    properties=properties).launch()
+    return PCZzip(input_pdb_path=input_pdb_path,
+                  input_crd_path=input_crd_path,
+                  output_pcz_path=output_pcz_path,
+                  properties=properties).launch()
+
 
 def main():
     parser = argparse.ArgumentParser(description='Compress Molecular Dynamics (MD) trajectories using Principal Component Analysis (PCA) algorithms.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
@@ -164,10 +165,11 @@ def main():
     properties = settings.ConfReader(config=args.config).get_prop_dic()
 
     # Specific call
-    pcz_zip(         input_pdb_path=args.input_pdb_path,
-                    input_crd_path=args.input_crd_path,
-                    output_pcz_path=args.output_pcz_path,
-                    properties=properties)
+    pcz_zip(input_pdb_path=args.input_pdb_path,
+            input_crd_path=args.input_crd_path,
+            output_pcz_path=args.output_pcz_path,
+            properties=properties)
+
 
 if __name__ == '__main__':
     main()

@@ -5,8 +5,9 @@ import argparse
 import json
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import  settings
+from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
+
 
 class PCZinfo(BiobbObject):
     """
@@ -40,8 +41,8 @@ class PCZinfo(BiobbObject):
             * schema: http://edamontology.org/EDAM.owl
 
     """
-    def __init__(self, input_pcz_path: str, 
-    output_json_path: str, properties: dict = None, **kwargs) -> None:
+    def __init__(self, input_pcz_path: str,
+                 output_json_path: str, properties: dict = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -51,12 +52,8 @@ class PCZinfo(BiobbObject):
 
         # Input/Output files
         self.io_dict = {
-            'in': { 
-                'input_pcz_path': input_pcz_path
-             },
-            'out': {    
-                'output_json_path': output_json_path
-            }
+            'in': {'input_pcz_path': input_pcz_path},
+            'out': {'output_json_path': output_json_path}
         }
 
         # Properties specific for BB
@@ -72,7 +69,8 @@ class PCZinfo(BiobbObject):
         """Launches the execution of the FlexServ pcz_info module."""
 
         # Setup Biobb
-        if self.check_restart(): return 0
+        if self.check_restart():
+            return 0
         self.stage_files()
 
         # Internal file paths
@@ -92,46 +90,46 @@ class PCZinfo(BiobbObject):
         # Command line
         # pczdump -i structure.ca.std.pcz --info -o pcz.info
         self.cmd = [self.binary_path,
-                "-i", input_pcz,
-                "-o", temp_out_1,
-                "--info", ';',
-                self.binary_path,
-                "-i", input_pcz,
-                "-o", temp_out_2,
-                "--evals"
-               ]
- 
+                    "-i", input_pcz,
+                    "-o", temp_out_1,
+                    "--info", ';',
+                    self.binary_path,
+                    "-i", input_pcz,
+                    "-o", temp_out_2,
+                    "--evals"
+                    ]
+
         # Run Biobb block
         self.run_biobb()
 
         # Parse output info
-            # Title             : MC generated trajectory
-            # Atoms             :       85
-            # Vectors           :        4
-            # Frames            :     1000
-            # Total variance    :  1137.20
-            # Explained variance:  1043.32
-            # Quality           :    91.74%
-            # Dimensionality    :       21
-            # RMSd type         : Standard RMSd
-            # Have atom names   : True
+        # Title             : MC generated trajectory
+        # Atoms             :       85
+        # Vectors           :        4
+        # Frames            :     1000
+        # Total variance    :  1137.20
+        # Explained variance:  1043.32
+        # Quality           :    91.74%
+        # Dimensionality    :       21
+        # RMSd type         : Standard RMSd
+        # Have atom names   : True
         info_dict = {}
-        with open (temp_out_1,'r') as file:
+        with open(temp_out_1, 'r') as file:
             for line in file:
                 info = line.split(':')
-                info_dict[info[0].strip().replace(' ','_')] = info[1].strip()
+                info_dict[info[0].strip().replace(' ', '_')] = info[1].strip()
 
         # Parse output evals
-            # 744.201782
-            # 170.061981
-            # 89.214905
-            # 39.836308
-        info_dict['Eigen_Values'] = []  
-        info_dict['Eigen_Values_dimensionality_vs_total'] = []  
-        info_dict['Eigen_Values_dimensionality_vs_explained'] = []  
+        # 744.201782
+        # 170.061981
+        # 89.214905
+        # 39.836308
+        info_dict['Eigen_Values'] = []
+        info_dict['Eigen_Values_dimensionality_vs_total'] = []
+        info_dict['Eigen_Values_dimensionality_vs_explained'] = []
         accum_tot = 0
         accum_exp = 0
-        with open (temp_out_2,'r') as file:
+        with open(temp_out_2, 'r') as file:
             for line in file:
                 eval = float(line.strip())
                 eval_var = (eval / float(info_dict['Total_variance']))*100
@@ -141,14 +139,8 @@ class PCZinfo(BiobbObject):
                 info_dict['Eigen_Values'].append(eval)
                 info_dict['Eigen_Values_dimensionality_vs_total'].append(accum_tot)
                 info_dict['Eigen_Values_dimensionality_vs_explained'].append(accum_exp)
-       
-        # convert into JSON:
-        y = json.dumps(info_dict)
 
-        ## the result is a JSON string:
-        print(json.dumps(info_dict, indent=4))
-
-        with open (output_json, 'w') as out_file:
+        with open(output_json, 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
 
         # Copy files to host
@@ -164,15 +156,16 @@ class PCZinfo(BiobbObject):
 
         return self.return_code
 
+
 def pcz_info(input_pcz_path: str, output_json_path: str,
-            properties: dict = None, **kwargs) -> int:
+             properties: dict = None, **kwargs) -> int:
     """Create :class:`PCZinfo <flexserv.pcasuite.pcz_info>`flexserv.pcasuite.PCZinfo class and
     execute :meth:`launch() <flexserv.pcasuite.pcz_info.launch>` method"""
 
-    return PCZinfo(  
-                    input_pcz_path=input_pcz_path,
-                    output_json_path=output_json_path,
-                    properties=properties).launch()
+    return PCZinfo(input_pcz_path=input_pcz_path,
+                   output_json_path=output_json_path,
+                   properties=properties).launch()
+
 
 def main():
     parser = argparse.ArgumentParser(description='Extract PCA info from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
@@ -188,9 +181,10 @@ def main():
     properties = settings.ConfReader(config=args.config).get_prop_dic()
 
     # Specific call
-    pcz_info(       input_pcz_path=args.input_pcz_path,
-                    output_json_path=args.output_json_path,
-                    properties=properties)
+    pcz_info(input_pcz_path=args.input_pcz_path,
+             output_json_path=args.output_json_path,
+             properties=properties)
+
 
 if __name__ == '__main__':
     main()

@@ -2,10 +2,11 @@
 
 """Module containing the bd_run class and the command line interface."""
 import argparse
-from pathlib import Path, PurePath
+from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import  settings
+from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
+
 
 class BDRun(BiobbObject):
     """
@@ -48,7 +49,7 @@ class BDRun(BiobbObject):
 
     """
     def __init__(self, input_pdb_path: str, output_log_path: str,
-    output_crd_path: str, properties: dict = None, **kwargs) -> None:
+                 output_crd_path: str, properties: dict = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -58,10 +59,9 @@ class BDRun(BiobbObject):
 
         # Input/Output files
         self.io_dict = {
-            'in': { 'input_pdb_path': input_pdb_path },
-            'out': {    'output_log_path': output_log_path,
-                        'output_crd_path': output_crd_path
-            }
+            'in': {'input_pdb_path': input_pdb_path},
+            'out': {'output_log_path': output_log_path,
+                    'output_crd_path': output_crd_path}
         }
 
         # Properties specific for BB
@@ -80,7 +80,8 @@ class BDRun(BiobbObject):
         """Launches the execution of the FlexServ BDRun module."""
 
         # Setup Biobb
-        if self.check_restart(): return 0
+        if self.check_restart():
+            return 0
         self.stage_files()
 
         # Internal file paths
@@ -99,15 +100,15 @@ class BDRun(BiobbObject):
         # bd structure.ca.pdb 1000000 1e-15 1000 40 3.8 traj.crd > bd.log
         # itempsmax, dt, itsnap, const, r0
         self.cmd = [self.binary_path,
-                input_pdb,
-                str(self.time),
-                str(self.dt),
-                str(self.wfreq),
-                "40", # Hardcoded "Const", see https://mmb.irbbarcelona.org/gitlab/adam/FlexServ/blob/master/bd/bd2.f#L51 
-                "3.8", # Hardcoded "r0", see https://mmb.irbbarcelona.org/gitlab/adam/FlexServ/blob/master/bd/bd2.f#L52
-                output_crd,
-                '>',output_log
-               ]
+                    input_pdb,
+                    str(self.time),
+                    str(self.dt),
+                    str(self.wfreq),
+                    "40",  # Hardcoded "Const", see https://mmb.irbbarcelona.org/gitlab/adam/FlexServ/blob/master/bd/bd2.f#L51
+                    "3.8",  # Hardcoded "r0", see https://mmb.irbbarcelona.org/gitlab/adam/FlexServ/blob/master/bd/bd2.f#L52
+                    output_crd,
+                    '>', output_log
+                    ]
 
         # Run Biobb block
         self.run_biobb()
@@ -125,16 +126,18 @@ class BDRun(BiobbObject):
 
         return self.return_code
 
+
 def bd_run(input_pdb_path: str,
-            output_log_path: str, output_crd_path: str,
-            properties: dict = None, **kwargs) -> int:
+           output_log_path: str, output_crd_path: str,
+           properties: dict = None, **kwargs) -> int:
     """Create :class:`BDRun <flexserv.bd_run.BDRun>`flexserv.bd_run.BDRun class and
     execute :meth:`launch() <flexserv.bd_run.BDRun.launch>` method"""
 
-    return BDRun(   input_pdb_path=input_pdb_path,
-                    output_log_path=output_log_path,
-                    output_crd_path=output_crd_path,
-                    properties=properties).launch()
+    return BDRun(input_pdb_path=input_pdb_path,
+                 output_log_path=output_log_path,
+                 output_crd_path=output_crd_path,
+                 properties=properties).launch()
+
 
 def main():
     parser = argparse.ArgumentParser(description='Generates protein conformational structures using the Brownian Dynamics method.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
@@ -151,10 +154,11 @@ def main():
     properties = settings.ConfReader(config=args.config).get_prop_dic()
 
     # Specific call
-    bd_run(         input_pdb_path=args.input_pdb_path,
-                    output_log_path=args.output_log_path,
-                    output_crd_path=args.output_crd_path,
-                    properties=properties)
+    bd_run(input_pdb_path=args.input_pdb_path,
+           output_log_path=args.output_log_path,
+           output_crd_path=args.output_crd_path,
+           properties=properties)
+
 
 if __name__ == '__main__':
     main()

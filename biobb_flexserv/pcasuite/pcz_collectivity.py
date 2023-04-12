@@ -5,8 +5,9 @@ import argparse
 import json
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import  settings
+from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
+
 
 class PCZcollectivity(BiobbObject):
     """
@@ -46,8 +47,8 @@ class PCZcollectivity(BiobbObject):
             * schema: http://edamontology.org/EDAM.owl
 
     """
-    def __init__(self, input_pcz_path: str, 
-    output_json_path: str, properties: dict = None, **kwargs) -> None:
+    def __init__(self, input_pcz_path: str,
+                 output_json_path: str, properties: dict = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -57,12 +58,8 @@ class PCZcollectivity(BiobbObject):
 
         # Input/Output files
         self.io_dict = {
-            'in': { 
-                'input_pcz_path': input_pcz_path
-             },
-            'out': {    
-                'output_json_path': output_json_path
-            }
+            'in': {'input_pcz_path': input_pcz_path},
+            'out': {'output_json_path': output_json_path}
         }
 
         # Properties specific for BB
@@ -79,7 +76,8 @@ class PCZcollectivity(BiobbObject):
         """Launches the execution of the FlexServ pcz_collectivity module."""
 
         # Setup Biobb
-        if self.check_restart(): return 0
+        if self.check_restart():
+            return 0
         self.stage_files()
 
         # Internal file paths
@@ -98,32 +96,26 @@ class PCZcollectivity(BiobbObject):
         # Command line
         # pczdump -i structure.ca.std.pcz --collectivity -o pcz.collectivity
         self.cmd = [self.binary_path,
-                "-i", input_pcz,
-                "-o", temp_out,
-                "--collectivity={}".format(self.eigenvector)
-               ]
- 
+                    "-i", input_pcz,
+                    "-o", temp_out,
+                    "--collectivity={}".format(self.eigenvector)
+                    ]
+
         # Run Biobb block
         self.run_biobb()
 
         # Parse output collectivity
-           #  0.132891
-           #  0.165089
-           #  0.147202
+        #  0.132891
+        #  0.165089
+        #  0.147202
         info_dict = {}
         info_dict['collectivity'] = []
-        with open (temp_out,'r') as file:
+        with open(temp_out, 'r') as file:
             for line in file:
                 info = float(line.strip())
                 info_dict['collectivity'].append(info)
-       
-        # convert into JSON:
-        y = json.dumps(info_dict)
 
-        ## the result is a JSON string:
-        print(json.dumps(info_dict, indent=4))
-
-        with open (output_json,'w') as out_file:
+        with open(output_json, 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
 
         # Copy files to host
@@ -139,15 +131,16 @@ class PCZcollectivity(BiobbObject):
 
         return self.return_code
 
+
 def pcz_collectivity(input_pcz_path: str, output_json_path: str,
-            properties: dict = None, **kwargs) -> int:
+                     properties: dict = None, **kwargs) -> int:
     """Create :class:`PCZcollectivity <flexserv.pcasuite.pcz_collectivity>`flexserv.pcasuite.PCZcollectivity class and
     execute :meth:`launch() <flexserv.pcasuite.pcz_collectivity.launch>` method"""
 
-    return PCZcollectivity(  
-                    input_pcz_path=input_pcz_path,
-                    output_json_path=output_json_path,
-                    properties=properties).launch()
+    return PCZcollectivity(input_pcz_path=input_pcz_path,
+                           output_json_path=output_json_path,
+                           properties=properties).launch()
+
 
 def main():
     parser = argparse.ArgumentParser(description='Extract PCA collectivity (numerical measure of how many atoms are affected by a given mode) from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
@@ -163,9 +156,10 @@ def main():
     properties = settings.ConfReader(config=args.config).get_prop_dic()
 
     # Specific call
-    pcz_collectivity(   input_pcz_path=args.input_pcz_path,
-                        output_json_path=args.output_json_path,
-                        properties=properties)
+    pcz_collectivity(input_pcz_path=args.input_pcz_path,
+                     output_json_path=args.output_json_path,
+                     properties=properties)
+
 
 if __name__ == '__main__':
     main()

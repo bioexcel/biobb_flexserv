@@ -2,11 +2,11 @@
 
 """Module containing the dmd_run class and the command line interface."""
 import argparse
-import shutil
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import  settings
+from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
+
 
 class DMDRun(BiobbObject):
     """
@@ -49,7 +49,7 @@ class DMDRun(BiobbObject):
 
     """
     def __init__(self, input_pdb_path: str, output_log_path: str,
-    output_crd_path: str, properties: dict = None, **kwargs) -> None:
+                 output_crd_path: str, properties: dict = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -59,16 +59,15 @@ class DMDRun(BiobbObject):
 
         # Input/Output files
         self.io_dict = {
-            'in': { 'input_pdb_path': input_pdb_path },
-            'out': {    'output_log_path': output_log_path,
-                        'output_crd_path': output_crd_path
-            }
+            'in': {'input_pdb_path': input_pdb_path},
+            'out': {'output_log_path': output_log_path,
+                    'output_crd_path': output_crd_path}
         }
 
         # Properties specific for BB
         self.properties = properties
         self.binary_path = properties.get('binary_path', 'dmdgoopt')
-        #self.dt = properties.get('dt', 1.D-12)
+        # self.dt = properties.get('dt', 1.D-12)
         self.dt = properties.get('dt', 1e-12)
         self.temperature = properties.get('temperature', 300)
         self.frames = properties.get('frames', 1000)
@@ -82,7 +81,8 @@ class DMDRun(BiobbObject):
         """Launches the execution of the FlexServ BDRun module."""
 
         # Setup Biobb
-        if self.check_restart(): return 0
+        if self.check_restart():
+            return 0
         self.stage_files()
 
         # Internal file paths
@@ -97,7 +97,7 @@ class DMDRun(BiobbObject):
             output_crd = self.stage_io_dict["out"]["output_crd_path"]
             output_log = self.stage_io_dict["out"]["output_log_path"]
 
-        # Config file
+        # Config file
         instructions_file = str(Path(self.stage_io_dict.get("unique_dir")).joinpath("dmd.in"))
         with open(instructions_file, 'w') as dmdin:
 
@@ -116,11 +116,10 @@ class DMDRun(BiobbObject):
 
         # Command line
         # dmdgoopt < dmd.in > dmd.log
-        self.cmd = [ 
-                self.binary_path,
-                '<', instructions_file,
-                '>', output_log
-               ]
+        self.cmd = [self.binary_path,
+                    '<', instructions_file,
+                    '>', output_log
+                    ]
 
         # Run Biobb block
         self.run_biobb()
@@ -138,16 +137,18 @@ class DMDRun(BiobbObject):
 
         return self.return_code
 
+
 def dmd_run(input_pdb_path: str,
             output_log_path: str, output_crd_path: str,
             properties: dict = None, **kwargs) -> int:
     """Create :class:`DMDRun <flexserv.dmd_run.DMDRun>`flexserv.dmd_run.DMDRun class and
     execute :meth:`launch() <flexserv.dmd_run.DMDRun.launch>` method"""
 
-    return DMDRun(  input_pdb_path=input_pdb_path,
-                    output_log_path=output_log_path,
-                    output_crd_path=output_crd_path,
-                    properties=properties).launch()
+    return DMDRun(input_pdb_path=input_pdb_path,
+                  output_log_path=output_log_path,
+                  output_crd_path=output_crd_path,
+                  properties=properties).launch()
+
 
 def main():
     parser = argparse.ArgumentParser(description='Generates protein conformational structures using the Discrete Molecular Dynamics method.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
@@ -164,10 +165,11 @@ def main():
     properties = settings.ConfReader(config=args.config).get_prop_dic()
 
     # Specific call
-    dmd_run(        input_pdb_path=args.input_pdb_path,
-                    output_log_path=args.output_log_path,
-                    output_crd_path=args.output_crd_path,
-                    properties=properties)
+    dmd_run(input_pdb_path=args.input_pdb_path,
+            output_log_path=args.output_log_path,
+            output_crd_path=args.output_crd_path,
+            properties=properties)
+
 
 if __name__ == '__main__':
     main()
