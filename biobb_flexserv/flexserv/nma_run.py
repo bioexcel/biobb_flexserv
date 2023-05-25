@@ -19,7 +19,7 @@ class NMARun(BiobbObject):
         output_log_path (str): Output log file. File type: output. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/flexserv/nma_run_out.log>`_. Accepted formats: log (edam:format_2330), out (edam:format_2330), txt (edam:format_2330), o (edam:format_2330).
         output_crd_path (str): Output ensemble. File type: output. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/flexserv/nma_run_out.crd>`_. Accepted formats: crd (edam:format_3878), mdcrd (edam:format_3878), inpcrd (edam:format_3878).
         properties (dict - Python dictionary object containing the tool parameters, not input/output files):
-            * **binary_path** (*str*) - ("bd") BD binary path to be used.
+            * **binary_path** (*str*) - ("diaghess") NMA binary path to be used.
             * **frames** (*int*) - (1000) Number of frames in the final ensemble
             * **nvecs** (*int*) - (50) Number of vectors to take into account for the ensemble generation
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.

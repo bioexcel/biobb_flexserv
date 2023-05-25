@@ -105,7 +105,7 @@
             "properties": {
                 "binary_path": {
                     "type": "string",
-                    "default": "bd",
+                    "default": "diaghess",
                     "wf_prop": false,
                     "description": "BD binary path to be used."
                 },
