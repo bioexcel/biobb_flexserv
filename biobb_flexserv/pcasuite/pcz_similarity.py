@@ -4,7 +4,9 @@
 import argparse
 import json
 import numpy as np
-from pathlib import Path
+import shutil
+from pathlib import PurePath
+from biobb_common.tools import file_utils as fu
 from math import exp
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import settings
@@ -192,30 +194,55 @@ class PCZsimilarity(BiobbObject):
         # Setup Biobb
         if self.check_restart():
             return 0
-        self.stage_files()
+        # self.stage_files()
 
         # Internal file paths
-        try:
-            # Using rel paths to shorten the amount of characters due to fortran path length limitations
-            input_pcz_1 = str(Path(self.stage_io_dict["in"]["input_pcz_path1"]).relative_to(Path.cwd()))
-            input_pcz_2 = str(Path(self.stage_io_dict["in"]["input_pcz_path2"]).relative_to(Path.cwd()))
-            output_json = str(Path(self.stage_io_dict["out"]["output_json_path"]).relative_to(Path.cwd()))
-        except ValueError:
-            # Container or remote case
-            output_json = self.stage_io_dict["out"]["output_json_path"]
+        # try:
+        #     # Using rel paths to shorten the amount of characters due to fortran path length limitations
+        #     input_pcz_1 = str(Path(self.stage_io_dict["in"]["input_pcz_path1"]).relative_to(Path.cwd()))
+        #     input_pcz_2 = str(Path(self.stage_io_dict["in"]["input_pcz_path2"]).relative_to(Path.cwd()))
+        #     output_json = str(Path(self.stage_io_dict["out"]["output_json_path"]).relative_to(Path.cwd()))
+        # except ValueError:
+        #     # Container or remote case
+        #     output_json = self.stage_io_dict["out"]["output_json_path"]
+
+        # Manually creating a Sandbox to avoid issues with input parameters buffer overflow:
+        #   Long strings defining a file path makes Fortran or C compiled programs crash if the string
+        #   declared is shorter than the input parameter path (string) length.
+        #   Generating a temporary folder and working inside this folder (sandbox) fixes this problem.
+        #   The problem was found in Galaxy executions, launching Singularity containers (May 2023).
+
+        # Creating temporary folder
+        self.tmp_folder = fu.create_unique_dir()
+        fu.log('Creating %s temporary folder' % self.tmp_folder, self.out_log)
+
+        shutil.copy2(self.io_dict["in"]["input_pcz_path1"], self.tmp_folder)
+        shutil.copy2(self.io_dict["in"]["input_pcz_path2"], self.tmp_folder)
 
         # Temporary output
-        temp_out_1 = str(Path(self.stage_io_dict.get("unique_dir")).joinpath("output_1.dat"))
-        temp_out_2 = str(Path(self.stage_io_dict.get("unique_dir")).joinpath("output_2.dat"))
+        temp_json = "output.json"
+        temp_out_1 = "output1.dat"
+        temp_out_2 = "output2.dat"
 
         # Command line 1
         # pczdump -i structure.ca.std.pcz --evals -o evals.txt
-        self.cmd = [self.binary_path,   # Evals pcz 1
-                    "-i", input_pcz_1,
+        # self.cmd = [self.binary_path,   # Evals pcz 1
+        #             "-i", input_pcz_1,
+        #             "-o", temp_out_1,
+        #             "--evals", ';',
+        #             self.binary_path,   # Evals pcz 2
+        #             "-i", input_pcz_2,
+        #             "-o", temp_out_2,
+        #             "--evals"
+        #             ]
+
+        self.cmd = ['cd', self.tmp_folder, ';',
+                    self.binary_path,    # Evals pcz 1
+                    "-i", PurePath(self.io_dict["in"]["input_pcz_path1"]).name,
                     "-o", temp_out_1,
                     "--evals", ';',
-                    self.binary_path,   # Evals pcz 2
-                    "-i", input_pcz_2,
+                    self.binary_path,    # Evals pcz 2
+                    "-i", PurePath(self.io_dict["in"]["input_pcz_path2"]).name,
                     "-o", temp_out_2,
                     "--evals"
                     ]
@@ -228,12 +255,12 @@ class PCZsimilarity(BiobbObject):
         info_dict['evals_1'] = []
         info_dict['evals_2'] = []
 
-        with open(temp_out_1, 'r') as file:
+        with open(PurePath(self.tmp_folder).joinpath(temp_out_1), 'r') as file:
             for line in file:
                 info = float(line.strip())
                 info_dict['evals_1'].append(info)
 
-        with open(temp_out_2, 'r') as file:
+        with open(PurePath(self.tmp_folder).joinpath(temp_out_2), 'r') as file:
             for line in file:
                 info = float(line.strip())
                 info_dict['evals_2'].append(info)
@@ -246,23 +273,30 @@ class PCZsimilarity(BiobbObject):
         # Command line 2
         # pczdump -i structure.ca.std.pcz --evals -o evals.txt
         self.cmd = []
+        self.cmd.append('cd')
+        self.cmd.append(self.tmp_folder)
+        self.cmd.append(';')
         for pc in (range(1, num_evals_min+1)):
             # Evecs pcz 1
             self.cmd.append(self.binary_path)
             self.cmd.append("-i")
-            self.cmd.append(input_pcz_1)
+            # self.cmd.append(input_pcz_1)
+            self.cmd.append(PurePath(self.io_dict["in"]["input_pcz_path1"]).name)
             # self.cmd.append("-o evecs_1_pc{}".format(pc))
             self.cmd.append("-o")
-            self.cmd.append(str(Path(self.stage_io_dict.get("unique_dir")).joinpath("evecs_1_pc{}".format(pc))))
+            # self.cmd.append(str(Path(self.stage_io_dict.get("unique_dir")).joinpath("evecs_1_pc{}".format(pc))))
+            self.cmd.append("evecs_1_pc{}".format(pc))
             self.cmd.append("--evec={}".format(pc))
             self.cmd.append(";")
             # Evals pcz 2
             self.cmd.append(self.binary_path)
             self.cmd.append("-i")
-            self.cmd.append(input_pcz_2)
+            # self.cmd.append(input_pcz_2)
+            self.cmd.append(PurePath(self.io_dict["in"]["input_pcz_path2"]).name)
             # self.cmd.append("-o evecs_2_pc{}".format(pc))
             self.cmd.append("-o")
-            self.cmd.append(str(Path(self.stage_io_dict.get("unique_dir")).joinpath("evecs_2_pc{}".format(pc))))
+            # self.cmd.append(str(Path(self.stage_io_dict.get("unique_dir")).joinpath("evecs_2_pc{}".format(pc))))
+            self.cmd.append("evecs_2_pc{}".format(pc))
             self.cmd.append("--evec={}".format(pc))
             self.cmd.append(";")
 
@@ -278,7 +312,8 @@ class PCZsimilarity(BiobbObject):
             pc_id = "pc{}".format(pc)
             info_dict['evecs_1'][pc_id] = []
             info_dict['evecs_2'][pc_id] = []
-            with open(str(Path(self.stage_io_dict.get("unique_dir")).joinpath("evecs_1_pc{}".format(pc))), 'r') as file:
+            # with open(str(Path(self.stage_io_dict.get("unique_dir")).joinpath("evecs_1_pc{}".format(pc))), 'r') as file:
+            with open(PurePath(self.tmp_folder).joinpath("evecs_1_pc{}".format(pc)), 'r') as file:
                 list_evecs = []
                 for line in file:
                     info = line.strip().split(' ')
@@ -288,7 +323,8 @@ class PCZsimilarity(BiobbObject):
                 info_dict['evecs_1'][pc_id] = list_evecs
                 eigenvectors_1.append(list_evecs)
 
-            with open(str(Path(self.stage_io_dict.get("unique_dir")).joinpath("evecs_2_pc{}".format(pc))), 'r') as file:
+            # with open(str(Path(self.stage_io_dict.get("unique_dir")).joinpath("evecs_2_pc{}".format(pc))), 'r') as file:
+            with open(PurePath(self.tmp_folder).joinpath("evecs_2_pc{}".format(pc)), 'r') as file:
                 list_evecs = []
                 for line in file:
                     info = line.strip().split(' ')
@@ -306,15 +342,19 @@ class PCZsimilarity(BiobbObject):
         rwsip = self.get_rwsip(info_dict['evals_1'], eigenvectors_1, info_dict['evals_2'], eigenvectors_2)
         info_dict['similarityIndex_rwsip'] = float("{:.3f}".format(rwsip))
 
-        with open(output_json, 'w') as out_file:
+        with open(PurePath(self.tmp_folder).joinpath(temp_json), 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
 
+        # Copy outputs from temporary folder to output path
+        shutil.copy2(PurePath(self.tmp_folder).joinpath(temp_json), PurePath(self.io_dict["out"]["output_json_path"]))
+
         # Copy files to host
-        self.copy_to_host()
+        # self.copy_to_host()
 
         # remove temporary folder(s)
         self.tmp_files.extend([
-            self.stage_io_dict.get("unique_dir")
+            # self.stage_io_dict.get("unique_dir"),
+            self.tmp_folder
         ])
         self.remove_tmp_files()
 

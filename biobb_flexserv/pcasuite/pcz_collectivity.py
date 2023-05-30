@@ -2,8 +2,10 @@
 
 """Module containing the PCZcollectivity class and the command line interface."""
 import argparse
+import shutil
+from pathlib import PurePath
+from biobb_common.tools import file_utils as fu
 import json
-from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
@@ -78,26 +80,47 @@ class PCZcollectivity(BiobbObject):
         # Setup Biobb
         if self.check_restart():
             return 0
-        self.stage_files()
+        # self.stage_files()
 
         # Internal file paths
-        try:
-            # Using rel paths to shorten the amount of characters due to fortran path length limitations
-            input_pcz = str(Path(self.stage_io_dict["in"]["input_pcz_path"]).relative_to(Path.cwd()))
-            output_json = str(Path(self.stage_io_dict["out"]["output_json_path"]).relative_to(Path.cwd()))
-        except ValueError:
-            # Container or remote case
-            input_pcz = self.stage_io_dict["in"]["input_pcz_path"]
-            output_json = self.stage_io_dict["out"]["output_json_path"]
+        # try:
+        #     # Using rel paths to shorten the amount of characters due to fortran path length limitations
+        #     input_pcz = str(Path(self.stage_io_dict["in"]["input_pcz_path"]).relative_to(Path.cwd()))
+        #     output_json = str(Path(self.stage_io_dict["out"]["output_json_path"]).relative_to(Path.cwd()))
+        # except ValueError:
+        #     # Container or remote case
+        #     input_pcz = self.stage_io_dict["in"]["input_pcz_path"]
+        #     output_json = self.stage_io_dict["out"]["output_json_path"]
+
+        # Manually creating a Sandbox to avoid issues with input parameters buffer overflow:
+        #   Long strings defining a file path makes Fortran or C compiled programs crash if the string
+        #   declared is shorter than the input parameter path (string) length.
+        #   Generating a temporary folder and working inside this folder (sandbox) fixes this problem.
+        #   The problem was found in Galaxy executions, launching Singularity containers (May 2023).
+
+        # Creating temporary folder
+        self.tmp_folder = fu.create_unique_dir()
+        fu.log('Creating %s temporary folder' % self.tmp_folder, self.out_log)
+
+        shutil.copy2(self.io_dict["in"]["input_pcz_path"], self.tmp_folder)
 
         # Temporary output
-        temp_out = str(Path(self.stage_io_dict.get("unique_dir")).joinpath("output.dat"))
+        # temp_out = str(Path(self.stage_io_dict.get("unique_dir")).joinpath("output.dat"))
+        temp_out = "output.dat"
+        temp_json = "output.json"
 
         # Command line
         # pczdump -i structure.ca.std.pcz --collectivity -o pcz.collectivity
-        self.cmd = [self.binary_path,
-                    "-i", input_pcz,
-                    "-o", temp_out,
+        # self.cmd = [self.binary_path,
+        #             "-i", input_pcz,
+        #             "-o", temp_out,
+        #             "--collectivity={}".format(self.eigenvector)
+        #             ]
+
+        self.cmd = ['cd', self.tmp_folder, ';',
+                    self.binary_path,
+                    '-i', PurePath(self.io_dict["in"]["input_pcz_path"]).name,
+                    '-o', temp_out,
                     "--collectivity={}".format(self.eigenvector)
                     ]
 
@@ -110,20 +133,24 @@ class PCZcollectivity(BiobbObject):
         #  0.147202
         info_dict = {}
         info_dict['collectivity'] = []
-        with open(temp_out, 'r') as file:
+        with open(PurePath(self.tmp_folder).joinpath(temp_out), 'r') as file:
             for line in file:
                 info = float(line.strip())
                 info_dict['collectivity'].append(info)
 
-        with open(output_json, 'w') as out_file:
+        with open(PurePath(self.tmp_folder).joinpath(temp_json), 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
 
+        # Copy outputs from temporary folder to output path
+        shutil.copy2(PurePath(self.tmp_folder).joinpath(temp_json), PurePath(self.io_dict["out"]["output_json_path"]))
+
         # Copy files to host
-        self.copy_to_host()
+        # self.copy_to_host()
 
         # remove temporary folder(s)
         self.tmp_files.extend([
-            self.stage_io_dict.get("unique_dir")
+            # self.stage_io_dict.get("unique_dir"),
+            self.tmp_folder
         ])
         self.remove_tmp_files()
 

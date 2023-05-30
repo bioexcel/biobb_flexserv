@@ -2,6 +2,7 @@
 
 """Module containing the nma_run class and the command line interface."""
 import argparse
+import os
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import settings
@@ -99,7 +100,10 @@ class NMARun(BiobbObject):
         # diaghess
         # mc-eigen.pl eigenvec.dat > file.proj
         # pca_anim_mc.pl -pdb structure.ca.pdb -evec eigenvec.dat -i file.proj -n 50 -pout traj.crd
-        self.cmd = ["nmanu.pl ",
+        conda_path = os.getenv("CONDA_PREFIX")
+        nmanu = conda_path + "/bin/nmanu.pl"
+        self.cmd = ["perl ",
+                    nmanu,
                     input_pdb,
                     "hessian.dat 1 0 40;",
                     self.binary_path,
