@@ -13,7 +13,19 @@ Command:
 ```python
 pcz_animate -h
 ```
-    /bin/sh: pcz_animate: command not found
+    usage: pcz_animate [-h] [--config CONFIG] --input_pcz_path INPUT_PCZ_PATH --output_crd_path OUTPUT_CRD_PATH
+    
+    Extract PCA animations from a compressed PCZ file.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --config CONFIG       Configuration file
+    
+    required arguments:
+      --input_pcz_path INPUT_PCZ_PATH
+                            Input compressed trajectory file. Accepted formats: pcz.
+      --output_crd_path OUTPUT_CRD_PATH
+                            Output animated trajectory file. Accepted formats: crd, mdcrd, inpcrd, pdb.
 ### I / O Arguments
 Syntax: input_argument (datatype) : Definition
 
@@ -63,7 +75,21 @@ Command:
 ```python
 dmd_run -h
 ```
-    /bin/sh: dmd_run: command not found
+    usage: dmd_run [-h] [--config CONFIG] --input_pdb_path INPUT_PDB_PATH --output_log_path OUTPUT_LOG_PATH --output_crd_path OUTPUT_CRD_PATH
+    
+    Generates protein conformational structures using the Discrete Molecular Dynamics method.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --config CONFIG       Configuration file
+    
+    required arguments:
+      --input_pdb_path INPUT_PDB_PATH
+                            Input PDB file. Accepted formats: pdb.
+      --output_log_path OUTPUT_LOG_PATH
+                            Output log file. Accepted formats: log, out, txt.
+      --output_crd_path OUTPUT_CRD_PATH
+                            Output ensemble file. Accepted formats: crd, mdcrd, inpcrd.
 ### I / O Arguments
 Syntax: input_argument (datatype) : Definition
 
@@ -113,7 +139,19 @@ Command:
 ```python
 pcz_evecs -h
 ```
-    /bin/sh: pcz_evecs: command not found
+    usage: pcz_evecs [-h] [--config CONFIG] --input_pcz_path INPUT_PCZ_PATH --output_json_path OUTPUT_JSON_PATH
+    
+    Extract PCA Eigen Vectors from a compressed PCZ file.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --config CONFIG       Configuration file
+    
+    required arguments:
+      --input_pcz_path INPUT_PCZ_PATH
+                            Input compressed trajectory file. Accepted formats: pcz.
+      --output_json_path OUTPUT_JSON_PATH
+                            Output json file with PCA evecs. Accepted formats: json.
 ### I / O Arguments
 Syntax: input_argument (datatype) : Definition
 
@@ -160,7 +198,21 @@ Command:
 ```python
 pcz_similarity -h
 ```
-    /bin/sh: pcz_similarity: command not found
+    usage: pcz_similarity [-h] [--config CONFIG] --input_pcz_path1 INPUT_PCZ_PATH1 --input_pcz_path2 INPUT_PCZ_PATH2 --output_json_path OUTPUT_JSON_PATH
+    
+    Compute PCA Similarity from a given pair of compressed PCZ files.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --config CONFIG       Configuration file
+    
+    required arguments:
+      --input_pcz_path1 INPUT_PCZ_PATH1
+                            Input compressed trajectory file 1. Accepted formats: pcz.
+      --input_pcz_path2 INPUT_PCZ_PATH2
+                            Input compressed trajectory file 2. Accepted formats: pcz.
+      --output_json_path OUTPUT_JSON_PATH
+                            Output json file with PCA similarity. Accepted formats: json.
 ### I / O Arguments
 Syntax: input_argument (datatype) : Definition
 
@@ -185,7 +237,21 @@ Command:
 ```python
 pcz_bfactor -h
 ```
-    /bin/sh: pcz_bfactor: command not found
+    usage: pcz_bfactor [-h] [--config CONFIG] --input_pcz_path INPUT_PCZ_PATH --output_dat_path OUTPUT_DAT_PATH [--output_pdb_path OUTPUT_PDB_PATH]
+    
+    Extract residue bfactors x PCA mode from a compressed PCZ file.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --config CONFIG       Configuration file
+    
+    required arguments:
+      --input_pcz_path INPUT_PCZ_PATH
+                            Input compressed trajectory file. Accepted formats: pcz.
+      --output_dat_path OUTPUT_DAT_PATH
+                            Output Bfactor x residue x PCA mode file. Accepted formats: dat, txt, csv.
+      --output_pdb_path OUTPUT_PDB_PATH
+                            Output PDB with Bfactor x residue x PCA mode file. Accepted formats: pdb.
 ### I / O Arguments
 Syntax: input_argument (datatype) : Definition
 
@@ -236,7 +302,21 @@ Command:
 ```python
 nma_run -h
 ```
-    /bin/sh: nma_run: command not found
+    usage: nma_run [-h] [--config CONFIG] --input_pdb_path INPUT_PDB_PATH --output_log_path OUTPUT_LOG_PATH --output_crd_path OUTPUT_CRD_PATH
+    
+    Generates protein conformational structures using the Normal Mode Analysis method.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --config CONFIG       Configuration file
+    
+    required arguments:
+      --input_pdb_path INPUT_PDB_PATH
+                            Input PDB file. Accepted formats: pdb.
+      --output_log_path OUTPUT_LOG_PATH
+                            Output log file. Accepted formats: log, out, txt.
+      --output_crd_path OUTPUT_CRD_PATH
+                            Output ensemble file. Accepted formats: crd, mdcrd, inpcrd.
 ### I / O Arguments
 Syntax: input_argument (datatype) : Definition
 
@@ -285,7 +365,19 @@ Command:
 ```python
 pcz_lindemann -h
 ```
-    /bin/sh: pcz_lindemann: command not found
+    usage: pcz_lindemann [-h] [--config CONFIG] --input_pcz_path INPUT_PCZ_PATH --output_json_path OUTPUT_JSON_PATH
+    
+    Extract Lindemann coefficients from a compressed PCZ file.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --config CONFIG       Configuration file
+    
+    required arguments:
+      --input_pcz_path INPUT_PCZ_PATH
+                            Input compressed trajectory file. Accepted formats: pcz.
+      --output_json_path OUTPUT_JSON_PATH
+                            Output json file with Lindemann coefficient report. Accepted formats: json.
 ### I / O Arguments
 Syntax: input_argument (datatype) : Definition
 
@@ -310,7 +402,19 @@ Command:
 ```python
 pcz_stiffness -h
 ```
-    /bin/sh: pcz_stiffness: command not found
+    usage: pcz_stiffness [-h] [--config CONFIG] --input_pcz_path INPUT_PCZ_PATH --output_json_path OUTPUT_JSON_PATH
+    
+    Extract PCA Stiffness from a compressed PCZ file.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --config CONFIG       Configuration file
+    
+    required arguments:
+      --input_pcz_path INPUT_PCZ_PATH
+                            Input compressed trajectory file. Accepted formats: pcz.
+      --output_json_path OUTPUT_JSON_PATH
+                            Output json file with PCA stiffness. Accepted formats: json.
 ### I / O Arguments
 Syntax: input_argument (datatype) : Definition
 
@@ -358,7 +462,19 @@ Command:
 ```python
 pcz_collectivity -h
 ```
-    /bin/sh: pcz_collectivity: command not found
+    usage: pcz_collectivity [-h] [--config CONFIG] --input_pcz_path INPUT_PCZ_PATH --output_json_path OUTPUT_JSON_PATH
+    
+    Extract PCA collectivity (numerical measure of how many atoms are affected by a given mode) from a compressed PCZ file.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --config CONFIG       Configuration file
+    
+    required arguments:
+      --input_pcz_path INPUT_PCZ_PATH
+                            Input compressed trajectory file. Accepted formats: pcz.
+      --output_json_path OUTPUT_JSON_PATH
+                            Output json file with PCA collectivity. Accepted formats: json.
 ### I / O Arguments
 Syntax: input_argument (datatype) : Definition
 
@@ -405,7 +521,21 @@ Command:
 ```python
 pcz_zip -h
 ```
-    /bin/sh: pcz_zip: command not found
+    usage: pcz_zip [-h] [--config CONFIG] --input_pdb_path INPUT_PDB_PATH --input_crd_path INPUT_CRD_PATH --output_pcz_path OUTPUT_PCZ_PATH
+    
+    Compress Molecular Dynamics (MD) trajectories using Principal Component Analysis (PCA) algorithms.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --config CONFIG       Configuration file
+    
+    required arguments:
+      --input_pdb_path INPUT_PDB_PATH
+                            Input PDB file. Accepted formats: pdb.
+      --input_crd_path INPUT_CRD_PATH
+                            Input trajectory file. Accepted formats: crd, mdcrd, inpcrd.
+      --output_pcz_path OUTPUT_PCZ_PATH
+                            Output compressed trajectory file. Accepted formats: pcz.
 ### I / O Arguments
 Syntax: input_argument (datatype) : Definition
 
@@ -456,7 +586,19 @@ Command:
 ```python
 pcz_hinges -h
 ```
-    /bin/sh: pcz_hinges: command not found
+    usage: pcz_hinges [-h] [--config CONFIG] --input_pcz_path INPUT_PCZ_PATH --output_json_path OUTPUT_JSON_PATH
+    
+    Compute possible hinge regions (residues around which large protein movements are organized) of a molecule from a compressed PCZ file.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --config CONFIG       Configuration file
+    
+    required arguments:
+      --input_pcz_path INPUT_PCZ_PATH
+                            Input compressed trajectory file. Accepted formats: pcz.
+      --output_json_path OUTPUT_JSON_PATH
+                            Output hinge regions x PCA mode file. Accepted formats: json.
 ### I / O Arguments
 Syntax: input_argument (datatype) : Definition
 
@@ -506,7 +648,19 @@ Command:
 ```python
 pcz_info -h
 ```
-    /bin/sh: pcz_info: command not found
+    usage: pcz_info [-h] [--config CONFIG] --input_pcz_path INPUT_PCZ_PATH --output_json_path OUTPUT_JSON_PATH
+    
+    Extract PCA info from a compressed PCZ file.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --config CONFIG       Configuration file
+    
+    required arguments:
+      --input_pcz_path INPUT_PCZ_PATH
+                            Input compressed trajectory file. Accepted formats: pcz.
+      --output_json_path OUTPUT_JSON_PATH
+                            Output json file with PCA info such as number of components, variance and dimensionality. Accepted formats: json.
 ### I / O Arguments
 Syntax: input_argument (datatype) : Definition
 
@@ -530,7 +684,21 @@ Command:
 ```python
 bd_run -h
 ```
-    /bin/sh: bd_run: command not found
+    usage: bd_run [-h] [--config CONFIG] --input_pdb_path INPUT_PDB_PATH --output_log_path OUTPUT_LOG_PATH --output_crd_path OUTPUT_CRD_PATH
+    
+    Generates protein conformational structures using the Brownian Dynamics method.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --config CONFIG       Configuration file
+    
+    required arguments:
+      --input_pdb_path INPUT_PDB_PATH
+                            Input PDB file. Accepted formats: pdb.
+      --output_log_path OUTPUT_LOG_PATH
+                            Output log file. Accepted formats: log, out, txt.
+      --output_crd_path OUTPUT_CRD_PATH
+                            Output ensemble file. Accepted formats: crd, mdcrd, inpcrd.
 ### I / O Arguments
 Syntax: input_argument (datatype) : Definition
 
@@ -582,7 +750,19 @@ Command:
 ```python
 pcz_unzip -h
 ```
-    /bin/sh: pcz_unzip: command not found
+    usage: pcz_unzip [-h] [--config CONFIG] --input_pcz_path INPUT_PCZ_PATH --output_crd_path OUTPUT_CRD_PATH
+    
+    Uncompress Molecular Dynamics (MD) compressed trajectories using Principal Component Analysis (PCA) algorithms.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --config CONFIG       Configuration file
+    
+    required arguments:
+      --input_pcz_path INPUT_PCZ_PATH
+                            Input compressed trajectory file. Accepted formats: pcz.
+      --output_crd_path OUTPUT_CRD_PATH
+                            Output trajectory file. Accepted formats: crd, mdcrd, inpcrd, pdb.
 ### I / O Arguments
 Syntax: input_argument (datatype) : Definition
 
