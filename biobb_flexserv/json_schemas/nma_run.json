@@ -107,7 +107,7 @@
                     "type": "string",
                     "default": "diaghess",
                     "wf_prop": false,
-                    "description": "BD binary path to be used."
+                    "description": "NMA binary path to be used."
                 },
                 "frames": {
                     "type": "integer",

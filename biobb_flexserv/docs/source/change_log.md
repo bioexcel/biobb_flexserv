@@ -1,5 +1,12 @@
 # Biobb FlexServ changelog
 
+## What's new in version [4.0.1](https://github.com/bioexcel/biobb_flexserv/releases/tag/v4.0.1)?
+The version 4.0.1 fixes a some bugs bug in Python code. 
+
+### New features
+
+* Bug fixes
+
 ## What's new in version [4.0.0](https://github.com/bioexcel/biobb_flexserv/releases/tag/v4.0.0)?
 In version 4.0.0 the dependency biobb_common has been updated to 4.0.0 version.
 
