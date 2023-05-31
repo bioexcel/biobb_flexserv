@@ -253,9 +253,9 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
 }
 </script>
     <h1>report.html</h1>
-    <p>Report generated on 31-May-2023 at 10:37:29 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.2.0</p>
+    <p>Report generated on 31-May-2023 at 10:41:14 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.2.0</p>
     <h2>Summary</h2>
-    <p>14 tests ran in 3.25 seconds. </p>
+    <p>14 tests ran in 3.32 seconds. </p>
     <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">14 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">0 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
     <h2>Results</h2>
     <table id="results-table">
@@ -271,17 +271,17 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">biobb_flexserv/test/unitests/test_flexserv/test_bd_run.py::TestBDRun::test_bd_run</td>
-          <td class="col-duration">0.44</td>
+          <td class="col-duration">0.45</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:37:26,288 [MainThread  ] [INFO ]  Executing biobb_flexserv.flexserv.bd_run Version: 4.0.1
-2023-05-31 10:37:26,289 [MainThread  ] [INFO ]  Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/bd_run/dd4322c2-0ae7-45e0-9191-6ebe4145617c
-2023-05-31 10:37:26,289 [MainThread  ] [INFO ]  bd dd4322c2-0ae7-45e0-9191-6ebe4145617c/structure.ca.pdb 10000 1e-15 100 40 3.8 dd4322c2-0ae7-45e0-9191-6ebe4145617c/bd_run_out.crd &gt; dd4322c2-0ae7-45e0-9191-6ebe4145617c/bd_run_out.log
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:41:11,607 [MainThread  ] [INFO ]  Executing biobb_flexserv.flexserv.bd_run Version: 4.0.2
+2023-05-31 10:41:11,608 [MainThread  ] [INFO ]  Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/bd_run/c51e8c7a-8894-4bef-ad61-9e2c4b65a42c
+2023-05-31 10:41:11,608 [MainThread  ] [INFO ]  bd c51e8c7a-8894-4bef-ad61-9e2c4b65a42c/structure.ca.pdb 10000 1e-15 100 40 3.8 c51e8c7a-8894-4bef-ad61-9e2c4b65a42c/bd_run_out.crd &gt; c51e8c7a-8894-4bef-ad61-9e2c4b65a42c/bd_run_out.log
 
-2023-05-31 10:37:26,705 [MainThread  ] [INFO ]  Exit code 0
+2023-05-31 10:41:12,029 [MainThread  ] [INFO ]  Exit code 0
 
-2023-05-31 10:37:26,706 [MainThread  ] [INFO ]  Removed: [&#x27;/tmp/biobb/unitests/bd_run/dd4322c2-0ae7-45e0-9191-6ebe4145617c&#x27;]
+2023-05-31 10:41:12,031 [MainThread  ] [INFO ]  Removed: [&#x27;/tmp/biobb/unitests/bd_run/c51e8c7a-8894-4bef-ad61-9e2c4b65a42c&#x27;]
 Checking if empty file: /tmp/biobb/unitests/bd_run/bd_run_out.crd
 Checking if empty file: /tmp/biobb/unitests/bd_run/bd_run_out.log
 Comparing: 
@@ -294,13 +294,13 @@ Comparing:
         File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/flexserv/bd_run_out.log
         File_A hash: b&#x27;u\xef4\x02\x8c\xdb\x92S\x18\n\xa2N6\xb5\xf2{\xb7\x96RED\xe7[\xdd\xd3\xa1\xcb\x06\xb91\xfb\x80&#x27;
         File_B hash: b&#x27;u\xef4\x02\x8c\xdb\x92S\x18\n\xa2N6\xb5\xf2{\xb7\x96RED\xe7[\xdd\xd3\xa1\xcb\x06\xb91\xfb\x80&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/bd_run/bd_run_log.out:file_utils.py:346 Executing biobb_flexserv.flexserv.bd_run Version: 4.0.1
-INFO     /tmp/biobb/unitests/bd_run/bd_run_log.out:file_utils.py:346 Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/bd_run/dd4322c2-0ae7-45e0-9191-6ebe4145617c
-INFO     /tmp/biobb/unitests/bd_run/bd_run_log.out:cmd_wrapper.py:32 bd dd4322c2-0ae7-45e0-9191-6ebe4145617c/structure.ca.pdb 10000 1e-15 100 40 3.8 dd4322c2-0ae7-45e0-9191-6ebe4145617c/bd_run_out.crd &gt; dd4322c2-0ae7-45e0-9191-6ebe4145617c/bd_run_out.log
+<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/bd_run/bd_run_log.out:file_utils.py:346 Executing biobb_flexserv.flexserv.bd_run Version: 4.0.2
+INFO     /tmp/biobb/unitests/bd_run/bd_run_log.out:file_utils.py:346 Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/bd_run/c51e8c7a-8894-4bef-ad61-9e2c4b65a42c
+INFO     /tmp/biobb/unitests/bd_run/bd_run_log.out:cmd_wrapper.py:32 bd c51e8c7a-8894-4bef-ad61-9e2c4b65a42c/structure.ca.pdb 10000 1e-15 100 40 3.8 c51e8c7a-8894-4bef-ad61-9e2c4b65a42c/bd_run_out.crd &gt; c51e8c7a-8894-4bef-ad61-9e2c4b65a42c/bd_run_out.log
 
 INFO     /tmp/biobb/unitests/bd_run/bd_run_log.out:cmd_wrapper.py:49 Exit code 0
 
-INFO     /tmp/biobb/unitests/bd_run/bd_run_log.out:file_utils.py:346 Removed: [&#x27;/tmp/biobb/unitests/bd_run/dd4322c2-0ae7-45e0-9191-6ebe4145617c&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
+INFO     /tmp/biobb/unitests/bd_run/bd_run_log.out:file_utils.py:346 Removed: [&#x27;/tmp/biobb/unitests/bd_run/c51e8c7a-8894-4bef-ad61-9e2c4b65a42c&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
 Removing: /tmp/biobb/unitests
 <br/></div></td></tr></tbody>
       <tbody class="passed results-table-row">
@@ -311,65 +311,65 @@ Removing: /tmp/biobb/unitests
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:37:26,756 [MainThread  ] [INFO ]  Executing biobb_flexserv.flexserv.dmd_run Version: 4.0.1
-2023-05-31 10:37:26,756 [MainThread  ] [INFO ]  Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/dmd_run/eb84bf2a-c3a0-4e1f-b595-919f326dc44a
-2023-05-31 10:37:26,756 [MainThread  ] [INFO ]  dmdgoopt &lt; /tmp/biobb/unitests/dmd_run/eb84bf2a-c3a0-4e1f-b595-919f326dc44a/dmd.in &gt; eb84bf2a-c3a0-4e1f-b595-919f326dc44a/dmd_run_out.log
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:41:12,082 [MainThread  ] [INFO ]  Executing biobb_flexserv.flexserv.dmd_run Version: 4.0.2
+2023-05-31 10:41:12,082 [MainThread  ] [INFO ]  Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/dmd_run/5f11e45d-6582-4755-8186-f15452d3f0d1
+2023-05-31 10:41:12,083 [MainThread  ] [INFO ]  dmdgoopt &lt; /tmp/biobb/unitests/dmd_run/5f11e45d-6582-4755-8186-f15452d3f0d1/dmd.in &gt; 5f11e45d-6582-4755-8186-f15452d3f0d1/dmd_run_out.log
 
-2023-05-31 10:37:27,097 [MainThread  ] [INFO ]  Exit code 0
+2023-05-31 10:41:12,419 [MainThread  ] [INFO ]  Exit code 0
 
-2023-05-31 10:37:27,097 [MainThread  ] [INFO ]  Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG IEEE_DENORMAL
+2023-05-31 10:41:12,419 [MainThread  ] [INFO ]  Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG IEEE_DENORMAL
 
-2023-05-31 10:37:27,098 [MainThread  ] [INFO ]  Removed: [&#x27;/tmp/biobb/unitests/dmd_run/eb84bf2a-c3a0-4e1f-b595-919f326dc44a&#x27;]
+2023-05-31 10:41:12,420 [MainThread  ] [INFO ]  Removed: [&#x27;/tmp/biobb/unitests/dmd_run/5f11e45d-6582-4755-8186-f15452d3f0d1&#x27;]
 Checking if empty file: /tmp/biobb/unitests/dmd_run/dmd_run_out.crd
 Comparing: 
         File_A: /tmp/biobb/unitests/dmd_run/dmd_run_out.crd
         File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/flexserv/dmd_run_out.crd
         File_A hash: b&#x27;\xb4Q\xf2\xe0H\xbe\xeb\xe4Gl\xf7m\x97N\xec\x8b\xfa\\j\xdd\x1c\xc2\x95W1J\xf8\x9c\xebW\xd5\xf5&#x27;
         File_B hash: b&#x27;\xb4Q\xf2\xe0H\xbe\xeb\xe4Gl\xf7m\x97N\xec\x8b\xfa\\j\xdd\x1c\xc2\x95W1J\xf8\x9c\xebW\xd5\xf5&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/dmd_run/dmd_run_log.out:file_utils.py:346 Executing biobb_flexserv.flexserv.dmd_run Version: 4.0.1
-INFO     /tmp/biobb/unitests/dmd_run/dmd_run_log.out:file_utils.py:346 Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/dmd_run/eb84bf2a-c3a0-4e1f-b595-919f326dc44a
-INFO     /tmp/biobb/unitests/dmd_run/dmd_run_log.out:cmd_wrapper.py:32 dmdgoopt &lt; /tmp/biobb/unitests/dmd_run/eb84bf2a-c3a0-4e1f-b595-919f326dc44a/dmd.in &gt; eb84bf2a-c3a0-4e1f-b595-919f326dc44a/dmd_run_out.log
+<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/dmd_run/dmd_run_log.out:file_utils.py:346 Executing biobb_flexserv.flexserv.dmd_run Version: 4.0.2
+INFO     /tmp/biobb/unitests/dmd_run/dmd_run_log.out:file_utils.py:346 Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/dmd_run/5f11e45d-6582-4755-8186-f15452d3f0d1
+INFO     /tmp/biobb/unitests/dmd_run/dmd_run_log.out:cmd_wrapper.py:32 dmdgoopt &lt; /tmp/biobb/unitests/dmd_run/5f11e45d-6582-4755-8186-f15452d3f0d1/dmd.in &gt; 5f11e45d-6582-4755-8186-f15452d3f0d1/dmd_run_out.log
 
 INFO     /tmp/biobb/unitests/dmd_run/dmd_run_log.out:cmd_wrapper.py:49 Exit code 0
 
 INFO     /tmp/biobb/unitests/dmd_run/dmd_run_log.err:cmd_wrapper.py:59 Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG IEEE_DENORMAL
 
-INFO     /tmp/biobb/unitests/dmd_run/dmd_run_log.out:file_utils.py:346 Removed: [&#x27;/tmp/biobb/unitests/dmd_run/eb84bf2a-c3a0-4e1f-b595-919f326dc44a&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
+INFO     /tmp/biobb/unitests/dmd_run/dmd_run_log.out:file_utils.py:346 Removed: [&#x27;/tmp/biobb/unitests/dmd_run/5f11e45d-6582-4755-8186-f15452d3f0d1&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
 Removing: /tmp/biobb/unitests
 <br/></div></td></tr></tbody>
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">biobb_flexserv/test/unitests/test_flexserv/test_nma_run.py::TestNMARun::test_nma_run</td>
-          <td class="col-duration">0.72</td>
+          <td class="col-duration">0.81</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:37:27,125 [MainThread  ] [INFO ]  Executing biobb_flexserv.flexserv.nma_run Version: 4.0.1
-2023-05-31 10:37:27,125 [MainThread  ] [INFO ]  Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/nma_run/46130841-85bb-4bca-94bc-00b61db7540d
-2023-05-31 10:37:27,126 [MainThread  ] [INFO ]  perl  /home/user/micromamba/envs/test_environment/bin/nmanu.pl 46130841-85bb-4bca-94bc-00b61db7540d/structure.ca.pdb hessian.dat 1 0 40; diaghess ; perl /home/user/micromamba/envs/test_environment/bin/mc-eigen-mdweb.pl eigenvec.dat  100  &gt; file.proj ; perl /home/user/micromamba/envs/test_environment/bin/pca_anim_mc.pl -pdb 46130841-85bb-4bca-94bc-00b61db7540d/structure.ca.pdb  -evec eigenvec.dat -i file.proj -n  50  -pout 46130841-85bb-4bca-94bc-00b61db7540d/nma_run_out.crd &gt; 46130841-85bb-4bca-94bc-00b61db7540d/nma_run_out.log
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:41:12,447 [MainThread  ] [INFO ]  Executing biobb_flexserv.flexserv.nma_run Version: 4.0.2
+2023-05-31 10:41:12,447 [MainThread  ] [INFO ]  Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/nma_run/65b95846-3b5e-438a-8bf3-07b00f08c018
+2023-05-31 10:41:12,448 [MainThread  ] [INFO ]  perl  /home/user/micromamba/envs/test_environment/bin/nmanu.pl 65b95846-3b5e-438a-8bf3-07b00f08c018/structure.ca.pdb hessian.dat 1 0 40; diaghess ; perl /home/user/micromamba/envs/test_environment/bin/mc-eigen-mdweb.pl eigenvec.dat  100  &gt; file.proj ; perl /home/user/micromamba/envs/test_environment/bin/pca_anim_mc.pl -pdb 65b95846-3b5e-438a-8bf3-07b00f08c018/structure.ca.pdb  -evec eigenvec.dat -i file.proj -n  50  -pout 65b95846-3b5e-438a-8bf3-07b00f08c018/nma_run_out.crd &gt; 65b95846-3b5e-438a-8bf3-07b00f08c018/nma_run_out.log
 
-2023-05-31 10:37:27,826 [MainThread  ] [INFO ]  Exit code 0
+2023-05-31 10:41:13,177 [MainThread  ] [INFO ]  Exit code 0
 
-2023-05-31 10:37:27,826 [MainThread  ] [INFO ]  Number of interactions 3570
+2023-05-31 10:41:13,239 [MainThread  ] [INFO ]  Number of interactions 3570
 Number of non-zero elements 32640
 Matrix trace 8651.23364900726
 The dimension:    255
 return info from dsyev:      0
 ptraj based evectors in: eigenvec.dat        
 
-2023-05-31 10:37:27,826 [MainThread  ] [INFO ]  Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+2023-05-31 10:41:13,239 [MainThread  ] [INFO ]  Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
 
-2023-05-31 10:37:27,827 [MainThread  ] [INFO ]  Removed: [&#x27;/tmp/biobb/unitests/nma_run/46130841-85bb-4bca-94bc-00b61db7540d&#x27;]
+2023-05-31 10:41:13,240 [MainThread  ] [INFO ]  Removed: [&#x27;/tmp/biobb/unitests/nma_run/65b95846-3b5e-438a-8bf3-07b00f08c018&#x27;]
 Checking if empty file: /tmp/biobb/unitests/nma_run/nma_run_out.crd
 Comparing: 
         File_A: /tmp/biobb/unitests/nma_run/nma_run_out.crd
         File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/flexserv/nma_run_out.crd
         File_A hash: b&#x27;\x8cVl\xedI\xb9N\xffd\xce[\xda\xb7hsF+\xf7\xb7Q\\\x1c\xd6#R\x95n{\xfa\xc2\xbc\xd6&#x27;
         File_B hash: b&#x27;\x8cVl\xedI\xb9N\xffd\xce[\xda\xb7hsF+\xf7\xb7Q\\\x1c\xd6#R\x95n{\xfa\xc2\xbc\xd6&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/nma_run/nma_run_log.out:file_utils.py:346 Executing biobb_flexserv.flexserv.nma_run Version: 4.0.1
-INFO     /tmp/biobb/unitests/nma_run/nma_run_log.out:file_utils.py:346 Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/nma_run/46130841-85bb-4bca-94bc-00b61db7540d
-INFO     /tmp/biobb/unitests/nma_run/nma_run_log.out:cmd_wrapper.py:32 perl  /home/user/micromamba/envs/test_environment/bin/nmanu.pl 46130841-85bb-4bca-94bc-00b61db7540d/structure.ca.pdb hessian.dat 1 0 40; diaghess ; perl /home/user/micromamba/envs/test_environment/bin/mc-eigen-mdweb.pl eigenvec.dat  100  &gt; file.proj ; perl /home/user/micromamba/envs/test_environment/bin/pca_anim_mc.pl -pdb 46130841-85bb-4bca-94bc-00b61db7540d/structure.ca.pdb  -evec eigenvec.dat -i file.proj -n  50  -pout 46130841-85bb-4bca-94bc-00b61db7540d/nma_run_out.crd &gt; 46130841-85bb-4bca-94bc-00b61db7540d/nma_run_out.log
+<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/nma_run/nma_run_log.out:file_utils.py:346 Executing biobb_flexserv.flexserv.nma_run Version: 4.0.2
+INFO     /tmp/biobb/unitests/nma_run/nma_run_log.out:file_utils.py:346 Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/nma_run/65b95846-3b5e-438a-8bf3-07b00f08c018
+INFO     /tmp/biobb/unitests/nma_run/nma_run_log.out:cmd_wrapper.py:32 perl  /home/user/micromamba/envs/test_environment/bin/nmanu.pl 65b95846-3b5e-438a-8bf3-07b00f08c018/structure.ca.pdb hessian.dat 1 0 40; diaghess ; perl /home/user/micromamba/envs/test_environment/bin/mc-eigen-mdweb.pl eigenvec.dat  100  &gt; file.proj ; perl /home/user/micromamba/envs/test_environment/bin/pca_anim_mc.pl -pdb 65b95846-3b5e-438a-8bf3-07b00f08c018/structure.ca.pdb  -evec eigenvec.dat -i file.proj -n  50  -pout 65b95846-3b5e-438a-8bf3-07b00f08c018/nma_run_out.crd &gt; 65b95846-3b5e-438a-8bf3-07b00f08c018/nma_run_out.log
 
 INFO     /tmp/biobb/unitests/nma_run/nma_run_log.out:cmd_wrapper.py:49 Exit code 0
 
@@ -382,71 +382,71 @@ ptraj based evectors in: eigenvec.dat
 
 INFO     /tmp/biobb/unitests/nma_run/nma_run_log.err:cmd_wrapper.py:59 Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
 
-INFO     /tmp/biobb/unitests/nma_run/nma_run_log.out:file_utils.py:346 Removed: [&#x27;/tmp/biobb/unitests/nma_run/46130841-85bb-4bca-94bc-00b61db7540d&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
+INFO     /tmp/biobb/unitests/nma_run/nma_run_log.out:file_utils.py:346 Removed: [&#x27;/tmp/biobb/unitests/nma_run/65b95846-3b5e-438a-8bf3-07b00f08c018&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
 Removing: /tmp/biobb/unitests
 <br/></div></td></tr></tbody>
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcaunzip.py::TestPCZunzip::test_pczunzip</td>
-          <td class="col-duration">0.16</td>
+          <td class="col-duration">0.12</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:37:27,854 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_unzip Version: 4.0.1
-2023-05-31 10:37:27,854 [MainThread  ] [INFO ]  Creating 608eac65-1255-4bb6-a532-e0fa505b1c26 temporary folder
-2023-05-31 10:37:27,854 [MainThread  ] [INFO ]  cd 608eac65-1255-4bb6-a532-e0fa505b1c26 ; pcaunzip -i pcazip.pcz -o pcazip.crd
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:41:13,267 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_unzip Version: 4.0.2
+2023-05-31 10:41:13,267 [MainThread  ] [INFO ]  Creating 2f7c6283-afa2-410c-bb87-97b38c7fb22b temporary folder
+2023-05-31 10:41:13,267 [MainThread  ] [INFO ]  cd 2f7c6283-afa2-410c-bb87-97b38c7fb22b ; pcaunzip -i pcazip.pcz -o pcazip.crd
 
-2023-05-31 10:37:27,981 [MainThread  ] [INFO ]  Exit code 0
+2023-05-31 10:41:13,360 [MainThread  ] [INFO ]  Exit code 0
 
-2023-05-31 10:37:27,981 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
+2023-05-31 10:41:13,360 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
 
-2023-05-31 10:37:27,984 [MainThread  ] [INFO ]  Removed: [&#x27;608eac65-1255-4bb6-a532-e0fa505b1c26&#x27;]
+2023-05-31 10:41:13,362 [MainThread  ] [INFO ]  Removed: [&#x27;2f7c6283-afa2-410c-bb87-97b38c7fb22b&#x27;]
 Checking if empty file: /tmp/biobb/unitests/pcz_unzip/pcazip.crd
 Comparing: 
         File_A: /tmp/biobb/unitests/pcz_unzip/pcazip.crd
         File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcazip.crd
         File_A hash: b&#x27;6\x80\x81\xbc\x91(\xb2n\x8a\xdf\x90\xa0\xdcB\xe4\xb9\x01\x08V*\x84\xf9\xcbD\xc4\xc8u\xc7\xed\xf5o\x0c&#x27;
         File_B hash: b&#x27;6\x80\x81\xbc\x91(\xb2n\x8a\xdf\x90\xa0\xdcB\xe4\xb9\x01\x08V*\x84\xf9\xcbD\xc4\xc8u\xc7\xed\xf5o\x0c&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_unzip/pcz_unzip_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_unzip Version: 4.0.1
-INFO     /tmp/biobb/unitests/pcz_unzip/pcz_unzip_log.out:file_utils.py:346 Creating 608eac65-1255-4bb6-a532-e0fa505b1c26 temporary folder
-INFO     /tmp/biobb/unitests/pcz_unzip/pcz_unzip_log.out:cmd_wrapper.py:32 cd 608eac65-1255-4bb6-a532-e0fa505b1c26 ; pcaunzip -i pcazip.pcz -o pcazip.crd
+<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_unzip/pcz_unzip_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_unzip Version: 4.0.2
+INFO     /tmp/biobb/unitests/pcz_unzip/pcz_unzip_log.out:file_utils.py:346 Creating 2f7c6283-afa2-410c-bb87-97b38c7fb22b temporary folder
+INFO     /tmp/biobb/unitests/pcz_unzip/pcz_unzip_log.out:cmd_wrapper.py:32 cd 2f7c6283-afa2-410c-bb87-97b38c7fb22b ; pcaunzip -i pcazip.pcz -o pcazip.crd
 
 INFO     /tmp/biobb/unitests/pcz_unzip/pcz_unzip_log.out:cmd_wrapper.py:49 Exit code 0
 
 INFO     /tmp/biobb/unitests/pcz_unzip/pcz_unzip_log.err:cmd_wrapper.py:59 Warning: No selection made, computing data with all atoms
 
-INFO     /tmp/biobb/unitests/pcz_unzip/pcz_unzip_log.out:file_utils.py:346 Removed: [&#x27;608eac65-1255-4bb6-a532-e0fa505b1c26&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
+INFO     /tmp/biobb/unitests/pcz_unzip/pcz_unzip_log.out:file_utils.py:346 Removed: [&#x27;2f7c6283-afa2-410c-bb87-97b38c7fb22b&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
 Removing: /tmp/biobb/unitests
 <br/></div></td></tr></tbody>
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcazip.py::TestPCZzip::test_pczzip</td>
-          <td class="col-duration">0.13</td>
+          <td class="col-duration">0.15</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:37:28,025 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_zip Version: 4.0.1
-2023-05-31 10:37:28,025 [MainThread  ] [INFO ]  Creating 43fd2c5a-d96d-417b-a11f-6084a9d13970 temporary folder
-2023-05-31 10:37:28,026 [MainThread  ] [INFO ]  cd 43fd2c5a-d96d-417b-a11f-6084a9d13970 ; pcazip -p structure.ca.pdb -i traj.crd -o pcazip.pcz -q 90
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:41:13,398 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_zip Version: 4.0.2
+2023-05-31 10:41:13,398 [MainThread  ] [INFO ]  Creating e11fdd85-c291-47c5-913a-f2d7d70148af temporary folder
+2023-05-31 10:41:13,400 [MainThread  ] [INFO ]  cd e11fdd85-c291-47c5-913a-f2d7d70148af ; pcazip -p structure.ca.pdb -i traj.crd -o pcazip.pcz -q 90
 
-2023-05-31 10:37:28,130 [MainThread  ] [INFO ]  Exit code 0
+2023-05-31 10:41:13,530 [MainThread  ] [INFO ]  Exit code 0
 
-2023-05-31 10:37:28,131 [MainThread  ] [INFO ]  Removed: [&#x27;43fd2c5a-d96d-417b-a11f-6084a9d13970&#x27;]
+2023-05-31 10:41:13,531 [MainThread  ] [INFO ]  Removed: [&#x27;e11fdd85-c291-47c5-913a-f2d7d70148af&#x27;]
 Checking if empty file: /tmp/biobb/unitests/pcz_zip/pcazip.pcz
 Comparing: 
         File_A: /tmp/biobb/unitests/pcz_zip/pcazip.pcz
         File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcazip.pcz
         File_A hash: b&#x27;`!\x1b,o\r\x84/\xa8Mh\xc4\xfem\xee)\xb2{\xa1\xb1\x80\xcc\xaf\x80\xcf^\\\x01D\xfe:\xf9&#x27;
         File_B hash: b&#x27;`!\x1b,o\r\x84/\xa8Mh\xc4\xfem\xee)\xb2{\xa1\xb1\x80\xcc\xaf\x80\xcf^\\\x01D\xfe:\xf9&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_zip/pcz_zip_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_zip Version: 4.0.1
-INFO     /tmp/biobb/unitests/pcz_zip/pcz_zip_log.out:file_utils.py:346 Creating 43fd2c5a-d96d-417b-a11f-6084a9d13970 temporary folder
-INFO     /tmp/biobb/unitests/pcz_zip/pcz_zip_log.out:cmd_wrapper.py:32 cd 43fd2c5a-d96d-417b-a11f-6084a9d13970 ; pcazip -p structure.ca.pdb -i traj.crd -o pcazip.pcz -q 90
+<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_zip/pcz_zip_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_zip Version: 4.0.2
+INFO     /tmp/biobb/unitests/pcz_zip/pcz_zip_log.out:file_utils.py:346 Creating e11fdd85-c291-47c5-913a-f2d7d70148af temporary folder
+INFO     /tmp/biobb/unitests/pcz_zip/pcz_zip_log.out:cmd_wrapper.py:32 cd e11fdd85-c291-47c5-913a-f2d7d70148af ; pcazip -p structure.ca.pdb -i traj.crd -o pcazip.pcz -q 90
 
 INFO     /tmp/biobb/unitests/pcz_zip/pcz_zip_log.out:cmd_wrapper.py:49 Exit code 0
 
-INFO     /tmp/biobb/unitests/pcz_zip/pcz_zip_log.out:file_utils.py:346 Removed: [&#x27;43fd2c5a-d96d-417b-a11f-6084a9d13970&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
+INFO     /tmp/biobb/unitests/pcz_zip/pcz_zip_log.out:file_utils.py:346 Removed: [&#x27;e11fdd85-c291-47c5-913a-f2d7d70148af&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
 Removing: /tmp/biobb/unitests
 <br/></div></td></tr></tbody>
       <tbody class="passed results-table-row">
@@ -457,15 +457,15 @@ Removing: /tmp/biobb/unitests
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:37:28,156 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_animate Version: 4.0.1
-2023-05-31 10:37:28,156 [MainThread  ] [INFO ]  Creating 1932a040-8f00-4b88-89a6-237b22275ea4 temporary folder
-2023-05-31 10:37:28,156 [MainThread  ] [INFO ]  cd 1932a040-8f00-4b88-89a6-237b22275ea4 ; pczdump -i pcazip.pcz -o pcazip_anim1.pdb --anim=1 --pdb
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:41:13,556 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_animate Version: 4.0.2
+2023-05-31 10:41:13,557 [MainThread  ] [INFO ]  Creating c59b9b9d-169f-4280-9415-05350bb7c82f temporary folder
+2023-05-31 10:41:13,557 [MainThread  ] [INFO ]  cd c59b9b9d-169f-4280-9415-05350bb7c82f ; pczdump -i pcazip.pcz -o pcazip_anim1.pdb --anim=1 --pdb
 
-2023-05-31 10:37:28,166 [MainThread  ] [INFO ]  Exit code 0
+2023-05-31 10:41:13,566 [MainThread  ] [INFO ]  Exit code 0
 
-2023-05-31 10:37:28,166 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
+2023-05-31 10:41:13,566 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
 
-2023-05-31 10:37:28,167 [MainThread  ] [INFO ]  Removed: [&#x27;1932a040-8f00-4b88-89a6-237b22275ea4&#x27;]
+2023-05-31 10:41:13,567 [MainThread  ] [INFO ]  Removed: [&#x27;c59b9b9d-169f-4280-9415-05350bb7c82f&#x27;]
 Checking if empty file: /tmp/biobb/unitests/pcz_animate/pcazip_anim1.pdb
 Checking RMSD between:
      PDB_A: /tmp/biobb/unitests/pcz_animate/pcazip_anim1.pdb
@@ -476,40 +476,40 @@ Checking RMSD between:
      Atoms ALIGNED in PDB_B: 85
      RMS: 4.487213366715849e-15
      RMS_CUTOFF: 1
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_animate/pcz_animate_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_animate Version: 4.0.1
-INFO     /tmp/biobb/unitests/pcz_animate/pcz_animate_log.out:file_utils.py:346 Creating 1932a040-8f00-4b88-89a6-237b22275ea4 temporary folder
-INFO     /tmp/biobb/unitests/pcz_animate/pcz_animate_log.out:cmd_wrapper.py:32 cd 1932a040-8f00-4b88-89a6-237b22275ea4 ; pczdump -i pcazip.pcz -o pcazip_anim1.pdb --anim=1 --pdb
+<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_animate/pcz_animate_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_animate Version: 4.0.2
+INFO     /tmp/biobb/unitests/pcz_animate/pcz_animate_log.out:file_utils.py:346 Creating c59b9b9d-169f-4280-9415-05350bb7c82f temporary folder
+INFO     /tmp/biobb/unitests/pcz_animate/pcz_animate_log.out:cmd_wrapper.py:32 cd c59b9b9d-169f-4280-9415-05350bb7c82f ; pczdump -i pcazip.pcz -o pcazip_anim1.pdb --anim=1 --pdb
 
 INFO     /tmp/biobb/unitests/pcz_animate/pcz_animate_log.out:cmd_wrapper.py:49 Exit code 0
 
 INFO     /tmp/biobb/unitests/pcz_animate/pcz_animate_log.err:cmd_wrapper.py:59 Warning: No selection made, computing data with all atoms
 
-INFO     /tmp/biobb/unitests/pcz_animate/pcz_animate_log.out:file_utils.py:346 Removed: [&#x27;1932a040-8f00-4b88-89a6-237b22275ea4&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
+INFO     /tmp/biobb/unitests/pcz_animate/pcz_animate_log.out:file_utils.py:346 Removed: [&#x27;c59b9b9d-169f-4280-9415-05350bb7c82f&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
 Removing: /tmp/biobb/unitests
 <br/></div></td></tr></tbody>
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_bfactor.py::TestPCZbfactor::test_pcz_bfactor</td>
-          <td class="col-duration">0.05</td>
+          <td class="col-duration">0.04</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:37:28,326 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_bfactor Version: 4.0.1
-2023-05-31 10:37:28,326 [MainThread  ] [INFO ]  Creating 5d7461f3-3e2b-4dd1-b99e-27e4f7e0f225 temporary folder
-2023-05-31 10:37:28,326 [MainThread  ] [INFO ]  cd 5d7461f3-3e2b-4dd1-b99e-27e4f7e0f225 ; pczdump -i pcazip.pcz -o bfactors.dat --bfactor --fluc=1
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:41:13,725 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_bfactor Version: 4.0.2
+2023-05-31 10:41:13,726 [MainThread  ] [INFO ]  Creating b7a3d3a6-156a-4b25-9d90-46cfc4fc09dd temporary folder
+2023-05-31 10:41:13,726 [MainThread  ] [INFO ]  cd b7a3d3a6-156a-4b25-9d90-46cfc4fc09dd ; pczdump -i pcazip.pcz -o bfactors.dat --bfactor --fluc=1
 
-2023-05-31 10:37:28,335 [MainThread  ] [INFO ]  Exit code 0
+2023-05-31 10:41:13,735 [MainThread  ] [INFO ]  Exit code 0
 
-2023-05-31 10:37:28,335 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
+2023-05-31 10:41:13,735 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
 
-2023-05-31 10:37:28,335 [MainThread  ] [INFO ]  cd 5d7461f3-3e2b-4dd1-b99e-27e4f7e0f225 ; pczdump -i pcazip.pcz -o bfactors.pdb --bfactor --fluc=1 --pdb
+2023-05-31 10:41:13,735 [MainThread  ] [INFO ]  cd b7a3d3a6-156a-4b25-9d90-46cfc4fc09dd ; pczdump -i pcazip.pcz -o bfactors.pdb --bfactor --fluc=1 --pdb
 
-2023-05-31 10:37:28,345 [MainThread  ] [INFO ]  Exit code 0
+2023-05-31 10:41:13,743 [MainThread  ] [INFO ]  Exit code 0
 
-2023-05-31 10:37:28,345 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
+2023-05-31 10:41:13,743 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
 
-2023-05-31 10:37:28,346 [MainThread  ] [INFO ]  Removed: [&#x27;5d7461f3-3e2b-4dd1-b99e-27e4f7e0f225&#x27;]
+2023-05-31 10:41:13,744 [MainThread  ] [INFO ]  Removed: [&#x27;b7a3d3a6-156a-4b25-9d90-46cfc4fc09dd&#x27;]
 Checking if empty file: /tmp/biobb/unitests/pcz_bfactor/bfactors.dat
 Checking if empty file: /tmp/biobb/unitests/pcz_bfactor/bfactors.pdb
 Comparing: 
@@ -526,21 +526,21 @@ Checking RMSD between:
      Atoms ALIGNED in PDB_B: 85
      RMS: 4.487213366715849e-15
      RMS_CUTOFF: 1
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_bfactor Version: 4.0.1
-INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:file_utils.py:346 Creating 5d7461f3-3e2b-4dd1-b99e-27e4f7e0f225 temporary folder
-INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:cmd_wrapper.py:32 cd 5d7461f3-3e2b-4dd1-b99e-27e4f7e0f225 ; pczdump -i pcazip.pcz -o bfactors.dat --bfactor --fluc=1
+<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_bfactor Version: 4.0.2
+INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:file_utils.py:346 Creating b7a3d3a6-156a-4b25-9d90-46cfc4fc09dd temporary folder
+INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:cmd_wrapper.py:32 cd b7a3d3a6-156a-4b25-9d90-46cfc4fc09dd ; pczdump -i pcazip.pcz -o bfactors.dat --bfactor --fluc=1
 
 INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:cmd_wrapper.py:49 Exit code 0
 
 INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.err:cmd_wrapper.py:59 Warning: No selection made, computing data with all atoms
 
-INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:cmd_wrapper.py:32 cd 5d7461f3-3e2b-4dd1-b99e-27e4f7e0f225 ; pczdump -i pcazip.pcz -o bfactors.pdb --bfactor --fluc=1 --pdb
+INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:cmd_wrapper.py:32 cd b7a3d3a6-156a-4b25-9d90-46cfc4fc09dd ; pczdump -i pcazip.pcz -o bfactors.pdb --bfactor --fluc=1 --pdb
 
 INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:cmd_wrapper.py:49 Exit code 0
 
 INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.err:cmd_wrapper.py:59 Warning: No selection made, computing data with all atoms
 
-INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:file_utils.py:346 Removed: [&#x27;5d7461f3-3e2b-4dd1-b99e-27e4f7e0f225&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
+INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:file_utils.py:346 Removed: [&#x27;b7a3d3a6-156a-4b25-9d90-46cfc4fc09dd&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
 Removing: /tmp/biobb/unitests
 <br/></div></td></tr></tbody>
       <tbody class="passed results-table-row">
@@ -551,30 +551,30 @@ Removing: /tmp/biobb/unitests
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:37:28,379 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_collectivity Version: 4.0.1
-2023-05-31 10:37:28,379 [MainThread  ] [INFO ]  Creating 8407de3f-2f1c-4a58-9886-bb3eb302ebc7 temporary folder
-2023-05-31 10:37:28,379 [MainThread  ] [INFO ]  cd 8407de3f-2f1c-4a58-9886-bb3eb302ebc7 ; pczdump -i pcazip.pcz -o output.dat --collectivity=0
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:41:13,776 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_collectivity Version: 4.0.2
+2023-05-31 10:41:13,776 [MainThread  ] [INFO ]  Creating 95b7c445-08a8-455f-9385-25820fbaf1c4 temporary folder
+2023-05-31 10:41:13,777 [MainThread  ] [INFO ]  cd 95b7c445-08a8-455f-9385-25820fbaf1c4 ; pczdump -i pcazip.pcz -o output.dat --collectivity=0
 
-2023-05-31 10:37:28,386 [MainThread  ] [INFO ]  Exit code 0
+2023-05-31 10:41:13,783 [MainThread  ] [INFO ]  Exit code 0
 
-2023-05-31 10:37:28,386 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
+2023-05-31 10:41:13,784 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
 
-2023-05-31 10:37:28,387 [MainThread  ] [INFO ]  Removed: [&#x27;8407de3f-2f1c-4a58-9886-bb3eb302ebc7&#x27;]
+2023-05-31 10:41:13,785 [MainThread  ] [INFO ]  Removed: [&#x27;95b7c445-08a8-455f-9385-25820fbaf1c4&#x27;]
 Checking if empty file: /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity.json
 Comparing: 
         File_A: /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity.json
         File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcz_collectivity.json
         File_A hash: b&quot;\xc94A\xec1\xf4.\xedV&#x27;\x90J\x7fK\xc8\xdd\xdc\xa4*\x1fs\xe4\x1d\x83\x1d\x16\xd7\x1a\x84\x9a\xe3Z&quot;
         File_B hash: b&quot;\xc94A\xec1\xf4.\xedV&#x27;\x90J\x7fK\xc8\xdd\xdc\xa4*\x1fs\xe4\x1d\x83\x1d\x16\xd7\x1a\x84\x9a\xe3Z&quot;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_collectivity Version: 4.0.1
-INFO     /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity_log.out:file_utils.py:346 Creating 8407de3f-2f1c-4a58-9886-bb3eb302ebc7 temporary folder
-INFO     /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity_log.out:cmd_wrapper.py:32 cd 8407de3f-2f1c-4a58-9886-bb3eb302ebc7 ; pczdump -i pcazip.pcz -o output.dat --collectivity=0
+<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_collectivity Version: 4.0.2
+INFO     /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity_log.out:file_utils.py:346 Creating 95b7c445-08a8-455f-9385-25820fbaf1c4 temporary folder
+INFO     /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity_log.out:cmd_wrapper.py:32 cd 95b7c445-08a8-455f-9385-25820fbaf1c4 ; pczdump -i pcazip.pcz -o output.dat --collectivity=0
 
 INFO     /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity_log.out:cmd_wrapper.py:49 Exit code 0
 
 INFO     /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity_log.err:cmd_wrapper.py:59 Warning: No selection made, computing data with all atoms
 
-INFO     /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity_log.out:file_utils.py:346 Removed: [&#x27;8407de3f-2f1c-4a58-9886-bb3eb302ebc7&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
+INFO     /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity_log.out:file_utils.py:346 Removed: [&#x27;95b7c445-08a8-455f-9385-25820fbaf1c4&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
 Removing: /tmp/biobb/unitests
 <br/></div></td></tr></tbody>
       <tbody class="passed results-table-row">
@@ -585,154 +585,154 @@ Removing: /tmp/biobb/unitests
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:37:28,412 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_evecs Version: 4.0.1
-2023-05-31 10:37:28,412 [MainThread  ] [INFO ]  Creating 30a31de1-5f33-4035-a183-dcd9a7f6151d temporary folder
-2023-05-31 10:37:28,412 [MainThread  ] [INFO ]  cd 30a31de1-5f33-4035-a183-dcd9a7f6151d ; pczdump -i pcazip.pcz -o output.dat --evec=1
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:41:13,809 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_evecs Version: 4.0.2
+2023-05-31 10:41:13,809 [MainThread  ] [INFO ]  Creating eba83a3e-b1e1-4c15-8251-df0bc0f7da40 temporary folder
+2023-05-31 10:41:13,809 [MainThread  ] [INFO ]  cd eba83a3e-b1e1-4c15-8251-df0bc0f7da40 ; pczdump -i pcazip.pcz -o output.dat --evec=1
 
-2023-05-31 10:37:28,419 [MainThread  ] [INFO ]  Exit code 0
+2023-05-31 10:41:13,816 [MainThread  ] [INFO ]  Exit code 0
 
-2023-05-31 10:37:28,419 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
+2023-05-31 10:41:13,816 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
 
-2023-05-31 10:37:28,421 [MainThread  ] [INFO ]  Removed: [&#x27;30a31de1-5f33-4035-a183-dcd9a7f6151d&#x27;]
+2023-05-31 10:41:13,818 [MainThread  ] [INFO ]  Removed: [&#x27;eba83a3e-b1e1-4c15-8251-df0bc0f7da40&#x27;]
 Checking if empty file: /tmp/biobb/unitests/pcz_evecs/pcz_evecs.json
 Comparing: 
         File_A: /tmp/biobb/unitests/pcz_evecs/pcz_evecs.json
         File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcz_evecs.json
         File_A hash: b&#x27;YK\x9b\x1a&lt;\x1b\xfc\x9b\xaf\x02#\x82\x83\x8dY\x94\xa4\xfb\xfe\x86\x81\xe25\x00\x99\x8e!2\xd3\x17\x13\x87&#x27;
         File_B hash: b&#x27;YK\x9b\x1a&lt;\x1b\xfc\x9b\xaf\x02#\x82\x83\x8dY\x94\xa4\xfb\xfe\x86\x81\xe25\x00\x99\x8e!2\xd3\x17\x13\x87&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_evecs/pcz_evecs_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_evecs Version: 4.0.1
-INFO     /tmp/biobb/unitests/pcz_evecs/pcz_evecs_log.out:file_utils.py:346 Creating 30a31de1-5f33-4035-a183-dcd9a7f6151d temporary folder
-INFO     /tmp/biobb/unitests/pcz_evecs/pcz_evecs_log.out:cmd_wrapper.py:32 cd 30a31de1-5f33-4035-a183-dcd9a7f6151d ; pczdump -i pcazip.pcz -o output.dat --evec=1
+<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_evecs/pcz_evecs_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_evecs Version: 4.0.2
+INFO     /tmp/biobb/unitests/pcz_evecs/pcz_evecs_log.out:file_utils.py:346 Creating eba83a3e-b1e1-4c15-8251-df0bc0f7da40 temporary folder
+INFO     /tmp/biobb/unitests/pcz_evecs/pcz_evecs_log.out:cmd_wrapper.py:32 cd eba83a3e-b1e1-4c15-8251-df0bc0f7da40 ; pczdump -i pcazip.pcz -o output.dat --evec=1
 
 INFO     /tmp/biobb/unitests/pcz_evecs/pcz_evecs_log.out:cmd_wrapper.py:49 Exit code 0
 
 INFO     /tmp/biobb/unitests/pcz_evecs/pcz_evecs_log.err:cmd_wrapper.py:59 Warning: No selection made, computing data with all atoms
 
-INFO     /tmp/biobb/unitests/pcz_evecs/pcz_evecs_log.out:file_utils.py:346 Removed: [&#x27;30a31de1-5f33-4035-a183-dcd9a7f6151d&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
+INFO     /tmp/biobb/unitests/pcz_evecs/pcz_evecs_log.out:file_utils.py:346 Removed: [&#x27;eba83a3e-b1e1-4c15-8251-df0bc0f7da40&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
 Removing: /tmp/biobb/unitests
 <br/></div></td></tr></tbody>
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_hinges.py::TestPCZhinges::test_pcz_hinges</td>
-          <td class="col-duration">0.25</td>
+          <td class="col-duration">0.26</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:37:28,447 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_hinges Version: 4.0.1
-2023-05-31 10:37:28,447 [MainThread  ] [INFO ]  Creating ad44cca8-26d7-4c92-8285-c6fa17ee4ed6 temporary folder
-2023-05-31 10:37:28,447 [MainThread  ] [INFO ]  cd ad44cca8-26d7-4c92-8285-c6fa17ee4ed6 ; pczdump -i pcazip.pcz -o output.dat -t 0.3 --hinge=0 &gt;&amp; output.log
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:41:13,843 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_hinges Version: 4.0.2
+2023-05-31 10:41:13,843 [MainThread  ] [INFO ]  Creating 80bce754-82cc-4a27-9b0e-1dda434da1e4 temporary folder
+2023-05-31 10:41:13,843 [MainThread  ] [INFO ]  cd 80bce754-82cc-4a27-9b0e-1dda434da1e4 ; pczdump -i pcazip.pcz -o output.dat -t 0.3 --hinge=0 &gt;&amp; output.log
 
-2023-05-31 10:37:28,682 [MainThread  ] [INFO ]  Exit code 0
+2023-05-31 10:41:14,081 [MainThread  ] [INFO ]  Exit code 0
 
-2023-05-31 10:37:28,684 [MainThread  ] [INFO ]  Removed: [&#x27;ad44cca8-26d7-4c92-8285-c6fa17ee4ed6&#x27;]
+2023-05-31 10:41:14,083 [MainThread  ] [INFO ]  Removed: [&#x27;80bce754-82cc-4a27-9b0e-1dda434da1e4&#x27;]
 Checking if empty file: /tmp/biobb/unitests/pcz_hinges/hinges.json
 Comparing: 
         File_A: /tmp/biobb/unitests/pcz_hinges/hinges.json
         File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/hinges.json
         File_A hash: b&#x27;\xcd\x013\xb1T\x89\rB\xfaq\xa8\xc4\xf6\x95\x19\x04\xc6m0\xb1\xe3\xaa\xd6\xc6D/\xb5\x0e\xe3\xe2\xb1;&#x27;
         File_B hash: b&#x27;\xcd\x013\xb1T\x89\rB\xfaq\xa8\xc4\xf6\x95\x19\x04\xc6m0\xb1\xe3\xaa\xd6\xc6D/\xb5\x0e\xe3\xe2\xb1;&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_hinges/pcz_hinges_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_hinges Version: 4.0.1
-INFO     /tmp/biobb/unitests/pcz_hinges/pcz_hinges_log.out:file_utils.py:346 Creating ad44cca8-26d7-4c92-8285-c6fa17ee4ed6 temporary folder
-INFO     /tmp/biobb/unitests/pcz_hinges/pcz_hinges_log.out:cmd_wrapper.py:32 cd ad44cca8-26d7-4c92-8285-c6fa17ee4ed6 ; pczdump -i pcazip.pcz -o output.dat -t 0.3 --hinge=0 &gt;&amp; output.log
+<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_hinges/pcz_hinges_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_hinges Version: 4.0.2
+INFO     /tmp/biobb/unitests/pcz_hinges/pcz_hinges_log.out:file_utils.py:346 Creating 80bce754-82cc-4a27-9b0e-1dda434da1e4 temporary folder
+INFO     /tmp/biobb/unitests/pcz_hinges/pcz_hinges_log.out:cmd_wrapper.py:32 cd 80bce754-82cc-4a27-9b0e-1dda434da1e4 ; pczdump -i pcazip.pcz -o output.dat -t 0.3 --hinge=0 &gt;&amp; output.log
 
 INFO     /tmp/biobb/unitests/pcz_hinges/pcz_hinges_log.out:cmd_wrapper.py:49 Exit code 0
 
-INFO     /tmp/biobb/unitests/pcz_hinges/pcz_hinges_log.out:file_utils.py:346 Removed: [&#x27;ad44cca8-26d7-4c92-8285-c6fa17ee4ed6&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
+INFO     /tmp/biobb/unitests/pcz_hinges/pcz_hinges_log.out:file_utils.py:346 Removed: [&#x27;80bce754-82cc-4a27-9b0e-1dda434da1e4&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
 Removing: /tmp/biobb/unitests
 <br/></div></td></tr></tbody>
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_info.py::TestPCZinfo::test_pcz_info</td>
-          <td class="col-duration">0.07</td>
+          <td class="col-duration">0.06</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:37:28,738 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_info Version: 4.0.1
-2023-05-31 10:37:28,738 [MainThread  ] [INFO ]  Creating 13de9c70-41d6-4cdf-9f98-5601e4c0a4e8 temporary folder
-2023-05-31 10:37:28,738 [MainThread  ] [INFO ]  cd 13de9c70-41d6-4cdf-9f98-5601e4c0a4e8 ; pczdump -i pcazip.pcz -o output1.dat --info ; pczdump -i pcazip.pcz -o output2.dat --evals
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:41:14,132 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_info Version: 4.0.2
+2023-05-31 10:41:14,133 [MainThread  ] [INFO ]  Creating ca50fa51-7ab5-4f1b-ac6d-7137ef69e995 temporary folder
+2023-05-31 10:41:14,133 [MainThread  ] [INFO ]  cd ca50fa51-7ab5-4f1b-ac6d-7137ef69e995 ; pczdump -i pcazip.pcz -o output1.dat --info ; pczdump -i pcazip.pcz -o output2.dat --evals
 
-2023-05-31 10:37:28,760 [MainThread  ] [INFO ]  Exit code 0
+2023-05-31 10:41:14,145 [MainThread  ] [INFO ]  Exit code 0
 
-2023-05-31 10:37:28,760 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
+2023-05-31 10:41:14,145 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
 Warning: No selection made, computing data with all atoms
 
-2023-05-31 10:37:28,761 [MainThread  ] [INFO ]  Removed: [&#x27;13de9c70-41d6-4cdf-9f98-5601e4c0a4e8&#x27;]
+2023-05-31 10:41:14,146 [MainThread  ] [INFO ]  Removed: [&#x27;ca50fa51-7ab5-4f1b-ac6d-7137ef69e995&#x27;]
 Checking if empty file: /tmp/biobb/unitests/pcz_info/pcz.json
 Comparing: 
         File_A: /tmp/biobb/unitests/pcz_info/pcz.json
         File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcz_info.json
         File_A hash: b&quot;]\xf5$\x87\x84r\x15\xe7-\x83v.\xc0x\xb6|\xd6\x8b\x1dj\xb3\xb5[y\x17&#x27;\xd9\xebW&lt;\xa5%&quot;
         File_B hash: b&quot;]\xf5$\x87\x84r\x15\xe7-\x83v.\xc0x\xb6|\xd6\x8b\x1dj\xb3\xb5[y\x17&#x27;\xd9\xebW&lt;\xa5%&quot;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_info/pcz_info_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_info Version: 4.0.1
-INFO     /tmp/biobb/unitests/pcz_info/pcz_info_log.out:file_utils.py:346 Creating 13de9c70-41d6-4cdf-9f98-5601e4c0a4e8 temporary folder
-INFO     /tmp/biobb/unitests/pcz_info/pcz_info_log.out:cmd_wrapper.py:32 cd 13de9c70-41d6-4cdf-9f98-5601e4c0a4e8 ; pczdump -i pcazip.pcz -o output1.dat --info ; pczdump -i pcazip.pcz -o output2.dat --evals
+<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_info/pcz_info_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_info Version: 4.0.2
+INFO     /tmp/biobb/unitests/pcz_info/pcz_info_log.out:file_utils.py:346 Creating ca50fa51-7ab5-4f1b-ac6d-7137ef69e995 temporary folder
+INFO     /tmp/biobb/unitests/pcz_info/pcz_info_log.out:cmd_wrapper.py:32 cd ca50fa51-7ab5-4f1b-ac6d-7137ef69e995 ; pczdump -i pcazip.pcz -o output1.dat --info ; pczdump -i pcazip.pcz -o output2.dat --evals
 
 INFO     /tmp/biobb/unitests/pcz_info/pcz_info_log.out:cmd_wrapper.py:49 Exit code 0
 
 INFO     /tmp/biobb/unitests/pcz_info/pcz_info_log.err:cmd_wrapper.py:59 Warning: No selection made, computing data with all atoms
 Warning: No selection made, computing data with all atoms
 
-INFO     /tmp/biobb/unitests/pcz_info/pcz_info_log.out:file_utils.py:346 Removed: [&#x27;13de9c70-41d6-4cdf-9f98-5601e4c0a4e8&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
+INFO     /tmp/biobb/unitests/pcz_info/pcz_info_log.out:file_utils.py:346 Removed: [&#x27;ca50fa51-7ab5-4f1b-ac6d-7137ef69e995&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
 Removing: /tmp/biobb/unitests
 <br/></div></td></tr></tbody>
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_lindemann.py::TestPCZlindemann::test_pcz_lindemann</td>
-          <td class="col-duration">0.06</td>
+          <td class="col-duration">0.05</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:37:28,785 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_lindemann Version: 4.0.1
-2023-05-31 10:37:28,785 [MainThread  ] [INFO ]  Creating 5f91c872-4736-48ed-ad3e-748b1153de52 temporary folder
-2023-05-31 10:37:28,786 [MainThread  ] [INFO ]  cd 5f91c872-4736-48ed-ad3e-748b1153de52 ; pczdump -i pcazip.pcz -o output.dat --lindemann
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:41:14,170 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_lindemann Version: 4.0.2
+2023-05-31 10:41:14,170 [MainThread  ] [INFO ]  Creating 9e5743b0-5ac6-4e27-884a-e7ab99fdbe64 temporary folder
+2023-05-31 10:41:14,170 [MainThread  ] [INFO ]  cd 9e5743b0-5ac6-4e27-884a-e7ab99fdbe64 ; pczdump -i pcazip.pcz -o output.dat --lindemann
 
-2023-05-31 10:37:28,822 [MainThread  ] [INFO ]  Exit code 0
+2023-05-31 10:41:14,203 [MainThread  ] [INFO ]  Exit code 0
 
-2023-05-31 10:37:28,822 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
+2023-05-31 10:41:14,203 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
 
-2023-05-31 10:37:28,823 [MainThread  ] [INFO ]  Removed: [&#x27;5f91c872-4736-48ed-ad3e-748b1153de52&#x27;]
+2023-05-31 10:41:14,204 [MainThread  ] [INFO ]  Removed: [&#x27;9e5743b0-5ac6-4e27-884a-e7ab99fdbe64&#x27;]
 Checking if empty file: /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann.json
 Comparing: 
         File_A: /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann.json
         File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcz_lindemann.json
         File_A hash: b&#x27;\xf7\x17x\x10\x99\xe2\xf8,\xba\xc0\x10\xea\xca\xcb\x0e\xb5)b\xe2\x8drFr\xce\xdd\x88\xcf\xcdh\xf6v\xb3&#x27;
         File_B hash: b&#x27;\xf7\x17x\x10\x99\xe2\xf8,\xba\xc0\x10\xea\xca\xcb\x0e\xb5)b\xe2\x8drFr\xce\xdd\x88\xcf\xcdh\xf6v\xb3&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_lindemann Version: 4.0.1
-INFO     /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann_log.out:file_utils.py:346 Creating 5f91c872-4736-48ed-ad3e-748b1153de52 temporary folder
-INFO     /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann_log.out:cmd_wrapper.py:32 cd 5f91c872-4736-48ed-ad3e-748b1153de52 ; pczdump -i pcazip.pcz -o output.dat --lindemann
+<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_lindemann Version: 4.0.2
+INFO     /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann_log.out:file_utils.py:346 Creating 9e5743b0-5ac6-4e27-884a-e7ab99fdbe64 temporary folder
+INFO     /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann_log.out:cmd_wrapper.py:32 cd 9e5743b0-5ac6-4e27-884a-e7ab99fdbe64 ; pczdump -i pcazip.pcz -o output.dat --lindemann
 
 INFO     /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann_log.out:cmd_wrapper.py:49 Exit code 0
 
 INFO     /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann_log.err:cmd_wrapper.py:59 Warning: No selection made, computing data with all atoms
 
-INFO     /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann_log.out:file_utils.py:346 Removed: [&#x27;5f91c872-4736-48ed-ad3e-748b1153de52&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
+INFO     /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann_log.out:file_utils.py:346 Removed: [&#x27;9e5743b0-5ac6-4e27-884a-e7ab99fdbe64&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
 Removing: /tmp/biobb/unitests
 <br/></div></td></tr></tbody>
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_similarity.py::TestPCZsimilarity::test_pcz_similarity</td>
-          <td class="col-duration">0.11</td>
+          <td class="col-duration">0.12</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:37:28,847 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_similarity Version: 4.0.1
-2023-05-31 10:37:28,847 [MainThread  ] [INFO ]  Creating c153509f-4731-4aa2-adf1-f99a6dfd7f21 temporary folder
-2023-05-31 10:37:28,847 [MainThread  ] [INFO ]  cd c153509f-4731-4aa2-adf1-f99a6dfd7f21 ; pczdump -i pcazip.pcz -o output1.dat --evals ; pczdump -i pcazip.pcz -o output2.dat --evals
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:41:14,228 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_similarity Version: 4.0.2
+2023-05-31 10:41:14,228 [MainThread  ] [INFO ]  Creating 30503c8a-f0cc-4629-9541-14990354b88f temporary folder
+2023-05-31 10:41:14,228 [MainThread  ] [INFO ]  cd 30503c8a-f0cc-4629-9541-14990354b88f ; pczdump -i pcazip.pcz -o output1.dat --evals ; pczdump -i pcazip.pcz -o output2.dat --evals
 
-2023-05-31 10:37:28,858 [MainThread  ] [INFO ]  Exit code 0
+2023-05-31 10:41:14,241 [MainThread  ] [INFO ]  Exit code 0
 
-2023-05-31 10:37:28,858 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
+2023-05-31 10:41:14,241 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
 Warning: No selection made, computing data with all atoms
 
-2023-05-31 10:37:28,859 [MainThread  ] [INFO ]  cd c153509f-4731-4aa2-adf1-f99a6dfd7f21 ; pczdump -i pcazip.pcz -o evecs_1_pc1 --evec=1 ; pczdump -i pcazip.pcz -o evecs_2_pc1 --evec=1 ; pczdump -i pcazip.pcz -o evecs_1_pc2 --evec=2 ; pczdump -i pcazip.pcz -o evecs_2_pc2 --evec=2 ; pczdump -i pcazip.pcz -o evecs_1_pc3 --evec=3 ; pczdump -i pcazip.pcz -o evecs_2_pc3 --evec=3 ; pczdump -i pcazip.pcz -o evecs_1_pc4 --evec=4 ; pczdump -i pcazip.pcz -o evecs_2_pc4 --evec=4 ; pczdump -i pcazip.pcz -o evecs_1_pc5 --evec=5 ; pczdump -i pcazip.pcz -o evecs_2_pc5 --evec=5 ; pczdump -i pcazip.pcz -o evecs_1_pc6 --evec=6 ; pczdump -i pcazip.pcz -o evecs_2_pc6 --evec=6 ; pczdump -i pcazip.pcz -o evecs_1_pc7 --evec=7 ; pczdump -i pcazip.pcz -o evecs_2_pc7 --evec=7 ;
+2023-05-31 10:41:14,242 [MainThread  ] [INFO ]  cd 30503c8a-f0cc-4629-9541-14990354b88f ; pczdump -i pcazip.pcz -o evecs_1_pc1 --evec=1 ; pczdump -i pcazip.pcz -o evecs_2_pc1 --evec=1 ; pczdump -i pcazip.pcz -o evecs_1_pc2 --evec=2 ; pczdump -i pcazip.pcz -o evecs_2_pc2 --evec=2 ; pczdump -i pcazip.pcz -o evecs_1_pc3 --evec=3 ; pczdump -i pcazip.pcz -o evecs_2_pc3 --evec=3 ; pczdump -i pcazip.pcz -o evecs_1_pc4 --evec=4 ; pczdump -i pcazip.pcz -o evecs_2_pc4 --evec=4 ; pczdump -i pcazip.pcz -o evecs_1_pc5 --evec=5 ; pczdump -i pcazip.pcz -o evecs_2_pc5 --evec=5 ; pczdump -i pcazip.pcz -o evecs_1_pc6 --evec=6 ; pczdump -i pcazip.pcz -o evecs_2_pc6 --evec=6 ; pczdump -i pcazip.pcz -o evecs_1_pc7 --evec=7 ; pczdump -i pcazip.pcz -o evecs_2_pc7 --evec=7 ;
 
-2023-05-31 10:37:28,919 [MainThread  ] [INFO ]  Exit code 0
+2023-05-31 10:41:14,308 [MainThread  ] [INFO ]  Exit code 0
 
-2023-05-31 10:37:28,919 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
+2023-05-31 10:41:14,308 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
 Warning: No selection made, computing data with all atoms
 Warning: No selection made, computing data with all atoms
 Warning: No selection made, computing data with all atoms
@@ -761,23 +761,23 @@ Warning: No selection made, computing data with all atoms
    9.998640e-01 -1.700000e-04]
  [-4.500000e-05  6.600000e-05  2.810000e-04 -2.060000e-04 -1.250000e-04
   -1.700000e-04  9.998070e-01]]
-2023-05-31 10:37:28,940 [MainThread  ] [INFO ]  Removed: [&#x27;c153509f-4731-4aa2-adf1-f99a6dfd7f21&#x27;]
+2023-05-31 10:41:14,328 [MainThread  ] [INFO ]  Removed: [&#x27;30503c8a-f0cc-4629-9541-14990354b88f&#x27;]
 Checking if empty file: /tmp/biobb/unitests/pcz_similarity/pcz_similarity.json
 Comparing: 
         File_A: /tmp/biobb/unitests/pcz_similarity/pcz_similarity.json
         File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcz_similarity.json
         File_A hash: b&#x27;R\\\x9c\xb7&quot;\x06\xbd\x0c\xa6\xa8^\xb3g\xdc\xbc^9\xb4\x1bw\xc5\xdf\xc9W\xb1\xa6\x80h%\x17n\x16&#x27;
         File_B hash: b&#x27;R\\\x9c\xb7&quot;\x06\xbd\x0c\xa6\xa8^\xb3g\xdc\xbc^9\xb4\x1bw\xc5\xdf\xc9W\xb1\xa6\x80h%\x17n\x16&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_similarity Version: 4.0.1
-INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:file_utils.py:346 Creating c153509f-4731-4aa2-adf1-f99a6dfd7f21 temporary folder
-INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:cmd_wrapper.py:32 cd c153509f-4731-4aa2-adf1-f99a6dfd7f21 ; pczdump -i pcazip.pcz -o output1.dat --evals ; pczdump -i pcazip.pcz -o output2.dat --evals
+<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_similarity Version: 4.0.2
+INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:file_utils.py:346 Creating 30503c8a-f0cc-4629-9541-14990354b88f temporary folder
+INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:cmd_wrapper.py:32 cd 30503c8a-f0cc-4629-9541-14990354b88f ; pczdump -i pcazip.pcz -o output1.dat --evals ; pczdump -i pcazip.pcz -o output2.dat --evals
 
 INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:cmd_wrapper.py:49 Exit code 0
 
 INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.err:cmd_wrapper.py:59 Warning: No selection made, computing data with all atoms
 Warning: No selection made, computing data with all atoms
 
-INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:cmd_wrapper.py:32 cd c153509f-4731-4aa2-adf1-f99a6dfd7f21 ; pczdump -i pcazip.pcz -o evecs_1_pc1 --evec=1 ; pczdump -i pcazip.pcz -o evecs_2_pc1 --evec=1 ; pczdump -i pcazip.pcz -o evecs_1_pc2 --evec=2 ; pczdump -i pcazip.pcz -o evecs_2_pc2 --evec=2 ; pczdump -i pcazip.pcz -o evecs_1_pc3 --evec=3 ; pczdump -i pcazip.pcz -o evecs_2_pc3 --evec=3 ; pczdump -i pcazip.pcz -o evecs_1_pc4 --evec=4 ; pczdump -i pcazip.pcz -o evecs_2_pc4 --evec=4 ; pczdump -i pcazip.pcz -o evecs_1_pc5 --evec=5 ; pczdump -i pcazip.pcz -o evecs_2_pc5 --evec=5 ; pczdump -i pcazip.pcz -o evecs_1_pc6 --evec=6 ; pczdump -i pcazip.pcz -o evecs_2_pc6 --evec=6 ; pczdump -i pcazip.pcz -o evecs_1_pc7 --evec=7 ; pczdump -i pcazip.pcz -o evecs_2_pc7 --evec=7 ;
+INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:cmd_wrapper.py:32 cd 30503c8a-f0cc-4629-9541-14990354b88f ; pczdump -i pcazip.pcz -o evecs_1_pc1 --evec=1 ; pczdump -i pcazip.pcz -o evecs_2_pc1 --evec=1 ; pczdump -i pcazip.pcz -o evecs_1_pc2 --evec=2 ; pczdump -i pcazip.pcz -o evecs_2_pc2 --evec=2 ; pczdump -i pcazip.pcz -o evecs_1_pc3 --evec=3 ; pczdump -i pcazip.pcz -o evecs_2_pc3 --evec=3 ; pczdump -i pcazip.pcz -o evecs_1_pc4 --evec=4 ; pczdump -i pcazip.pcz -o evecs_2_pc4 --evec=4 ; pczdump -i pcazip.pcz -o evecs_1_pc5 --evec=5 ; pczdump -i pcazip.pcz -o evecs_2_pc5 --evec=5 ; pczdump -i pcazip.pcz -o evecs_1_pc6 --evec=6 ; pczdump -i pcazip.pcz -o evecs_2_pc6 --evec=6 ; pczdump -i pcazip.pcz -o evecs_1_pc7 --evec=7 ; pczdump -i pcazip.pcz -o evecs_2_pc7 --evec=7 ;
 
 INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:cmd_wrapper.py:49 Exit code 0
 
@@ -796,7 +796,7 @@ Warning: No selection made, computing data with all atoms
 Warning: No selection made, computing data with all atoms
 Warning: No selection made, computing data with all atoms
 
-INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:file_utils.py:346 Removed: [&#x27;c153509f-4731-4aa2-adf1-f99a6dfd7f21&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
+INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:file_utils.py:346 Removed: [&#x27;30503c8a-f0cc-4629-9541-14990354b88f&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
 Removing: /tmp/biobb/unitests
 <br/></div></td></tr></tbody>
       <tbody class="passed results-table-row">
@@ -807,24 +807,24 @@ Removing: /tmp/biobb/unitests
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:37:28,963 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_stiffness Version: 4.0.1
-2023-05-31 10:37:28,964 [MainThread  ] [INFO ]  Creating 41fa4fac-2144-403a-8520-34a71af5ccce temporary folder
-2023-05-31 10:37:28,964 [MainThread  ] [INFO ]  cd 41fa4fac-2144-403a-8520-34a71af5ccce ; pczdump -i pcazip.pcz -o output.dat --stiff=0 --temperature=300
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-05-31 10:41:14,353 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_stiffness Version: 4.0.2
+2023-05-31 10:41:14,353 [MainThread  ] [INFO ]  Creating 6dcf5f90-bd4b-42a1-aba9-605c57dc548b temporary folder
+2023-05-31 10:41:14,353 [MainThread  ] [INFO ]  cd 6dcf5f90-bd4b-42a1-aba9-605c57dc548b ; pczdump -i pcazip.pcz -o output.dat --stiff=0 --temperature=300
 
-2023-05-31 10:37:29,046 [MainThread  ] [INFO ]  Exit code 0
+2023-05-31 10:41:14,435 [MainThread  ] [INFO ]  Exit code 0
 
-2023-05-31 10:37:29,047 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
+2023-05-31 10:41:14,435 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
 
-2023-05-31 10:37:29,091 [MainThread  ] [INFO ]  Removed: [&#x27;41fa4fac-2144-403a-8520-34a71af5ccce&#x27;]
+2023-05-31 10:41:14,479 [MainThread  ] [INFO ]  Removed: [&#x27;6dcf5f90-bd4b-42a1-aba9-605c57dc548b&#x27;]
 Checking if empty file: /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness.json
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_stiffness Version: 4.0.1
-INFO     /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness_log.out:file_utils.py:346 Creating 41fa4fac-2144-403a-8520-34a71af5ccce temporary folder
-INFO     /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness_log.out:cmd_wrapper.py:32 cd 41fa4fac-2144-403a-8520-34a71af5ccce ; pczdump -i pcazip.pcz -o output.dat --stiff=0 --temperature=300
+<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness_log.out:file_utils.py:346 Executing biobb_flexserv.pcasuite.pcz_stiffness Version: 4.0.2
+INFO     /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness_log.out:file_utils.py:346 Creating 6dcf5f90-bd4b-42a1-aba9-605c57dc548b temporary folder
+INFO     /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness_log.out:cmd_wrapper.py:32 cd 6dcf5f90-bd4b-42a1-aba9-605c57dc548b ; pczdump -i pcazip.pcz -o output.dat --stiff=0 --temperature=300
 
 INFO     /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness_log.out:cmd_wrapper.py:49 Exit code 0
 
 INFO     /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness_log.err:cmd_wrapper.py:59 Warning: No selection made, computing data with all atoms
 
-INFO     /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness_log.out:file_utils.py:346 Removed: [&#x27;41fa4fac-2144-403a-8520-34a71af5ccce&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
+INFO     /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness_log.out:file_utils.py:346 Removed: [&#x27;6dcf5f90-bd4b-42a1-aba9-605c57dc548b&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
 Removing: /tmp/biobb/unitests
 <br/></div></td></tr></tbody></table></body></html>
