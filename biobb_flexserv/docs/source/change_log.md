@@ -1,5 +1,12 @@
 # Biobb FlexServ changelog
 
+## What's new in version [4.0.3](https://github.com/bioexcel/biobb_godmd/releases/tag/v4.0.3)?
+In version 4.0.3 the module pcz_similarity has been fixed.
+
+### New features
+
+* Fixes in pcz_similarity
+
 ## What's new in version [4.0.2](https://github.com/bioexcel/biobb_flexserv/releases/tag/v4.0.2)?
 The version 4.0.2 fixes a some bugs bug in Python code. 
 

@@ -224,6 +224,7 @@ Config input / output arguments for this building block:
 Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
+* **amplifying_factor** (*number*): (0.0) common displacement (dx) along the different eigenvectors. If 0, the result is the absolute similarity index (dot product)..
 * **binary_path** (*string*): (pczdump) pczdump binary path to be used..
 * **remove_tmp** (*boolean*): (True) Remove temporal files..
 * **restart** (*boolean*): (False) Do not execute if output files exist..

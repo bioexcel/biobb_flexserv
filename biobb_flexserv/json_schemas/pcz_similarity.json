@@ -73,6 +73,12 @@
         "properties": {
             "type": "object",
             "properties": {
+                "amplifying_factor": {
+                    "type": "number",
+                    "default": 0.0,
+                    "wf_prop": false,
+                    "description": "common displacement (dx) along the different eigenvectors. If 0, the result is the absolute similarity index (dot product)."
+                },
                 "binary_path": {
                     "type": "string",
                     "default": "pczdump",
