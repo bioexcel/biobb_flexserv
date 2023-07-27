@@ -3620,7 +3620,8 @@
             0.006
         ]
     },
-    "similarityIndex": 0.992,
+    "similarityIndex_WCP": 1.0,
     "similarityIndex_rmsip": 1.0,
-    "similarityIndex_rwsip": 1.0
+    "similarityIndex_rwsip": 1.0,
+    "similarityIndex_dotp": 1.0
 }

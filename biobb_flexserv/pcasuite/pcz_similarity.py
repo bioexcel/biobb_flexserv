@@ -24,6 +24,7 @@ class PCZsimilarity(BiobbObject):
         input_pcz_path2 (str): Input compressed trajectory file 2. File type: input. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/data/pcasuite/pcazip.pcz>`_. Accepted formats: pcz (edam:format_3874).
         output_json_path (str): Output json file with PCA Similarity results. File type: output. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/pcz_similarity.json>`_. Accepted formats: json (edam:format_3464).
         properties (dict - Python dictionary object containing the tool parameters, not input/output files):
+            * **amplifying_factor** (*float*) - ("0.0") common displacement (dx) along the different eigenvectors. If 0, the result is the absolute similarity index (dot product).
             * **binary_path** (*str*) - ("pczdump") pczdump binary path to be used.
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
             * **restart** (*bool*) - (False) [WF property] Do not execute if output files exist.
@@ -66,6 +67,7 @@ class PCZsimilarity(BiobbObject):
 
         # Properties specific for BB
         self.properties = properties
+        self.amplifying_factor = properties.get('amplifying_factor')
         self.binary_path = properties.get('binary_path', 'pczdump')
 
         # Check the properties
@@ -84,15 +86,16 @@ class PCZsimilarity(BiobbObject):
             return False
         return True
 
+    # Weighted Cross Product (WCP).
     # Get the weighted cross product between eigenvectors
     # This is meant to compare PCA results for molecular dynamics structural conformations
     # The number of eigenvectors to be compared may be specified. All (0) by default
     # DISCLAIMER: This code has been translated from a perl script signed by Alberto Perez (13/09/04)
+    # Exploring the Essential Dynamics of B-DNA; Alberto Perez, Jose Ramon Blas, Manuel Rueda,
+    # Jose Maria Lopez-Bes, Xavier de la Cruz and Modesto Orozco. J. Chem. Theory Comput.2005,1.
     def get_similarity_index(self,
                              eigenvalues_1, eigenvectors_1,
-                             eigenvalues_2, eigenvectors_2):
-
-        amplifying_factor = 0
+                             eigenvalues_2, eigenvectors_2, dx=None):
 
         # Check the number of eigenvectors and the number of values in both eigenvectors to match
         if not self.are_compatible(eigenvectors_1, eigenvectors_2):
@@ -108,7 +111,21 @@ class PCZsimilarity(BiobbObject):
             raise SystemExit('Something is wrong with eigenvectors since number of values is not divisor of 3')
         atom_number = int(len(eigenvectors_1[0]) / 3)
 
+        # Amplifying factor: if it is 0 the algorithm is the same as a simple dot product.
+        # The value of the ~10th eigenvalue is usually taken.
+        if dx is not None:
+            amplifying_factor = dx
+        else:
+            amplifying_factor = eigenvalues_1[eigenvectors_number-1]
+
         # Get the denominator
+        # Find new denominator
+        # for ($i=0;$i<$nvec;$i++){
+        #     $cte1+=exp(-1/$val_1[$i]*$ampf);
+        #     $cte2+=exp(-1/$val_2[$i]*$ampf);
+        #     $part1+=exp(-2/$val_1[$i]*$ampf)*exp(-2/$val_1[$i]*$ampf);
+        #     $part2+=exp(-2/$val_2[$i]*$ampf)*exp(-2/$val_2[$i]*$ampf);
+        # }
         cte1 = part1 = cte2 = part2 = 0
         for eigenvalue in eigenvalues_1:
             cte1 += exp(-1 / eigenvalue * amplifying_factor)
@@ -147,6 +164,60 @@ class PCZsimilarity(BiobbObject):
         similarity_index = total_summatory * 2 / denominator
         return similarity_index
 
+    # Weighted Cross Product (WCP).
+    # DF implementation of Alberto's formula
+    # Exploring the Essential Dynamics of B-DNA; Alberto Perez, Jose Ramon Blas, Manuel Rueda,
+    # Jose Maria Lopez-Bes, Xavier de la Cruz and Modesto Orozco. J. Chem. Theory Comput.2005,1.
+    def eigenmsip(self, eigenvalues_1, eigenvectors_1,
+                  eigenvalues_2, eigenvectors_2,
+                  dx=None):
+
+        evals1 = np.array(eigenvalues_1)
+        evals2 = np.array(eigenvalues_2)
+
+        evecs1 = np.array(eigenvectors_1)
+        evecs2 = np.array(eigenvectors_2)
+
+        n_components = len(eigenvectors_1)
+
+        # Amplifying factor: if it is 0 the algorithm is the same as a simple dot product.
+        # The value of the ~10th eigenvalue is usually taken.
+        if dx is not None:
+            amplifying_factor = dx
+        else:
+            amplifying_factor = evals1[n_components-1]
+
+        e1 = np.exp(-(amplifying_factor)**2/evals1)
+        e2 = np.exp(-(amplifying_factor)**2/evals2)
+
+        e1_2 = np.exp(-2*(amplifying_factor)**2/evals1)
+        e2_2 = np.exp(-2*(amplifying_factor)**2/evals2)
+        sume1 = np.sum(e1)
+        sume2 = np.sum(e2)
+
+        denominator = np.sum((e1_2/sume1**2)**2)+np.sum((e2_2/sume2**2)**2)
+
+        # numerator_df = np.square(np.dot(evecs1, evecs2)*np.outer(e1, e2)/(sume1*sume2))
+        # numerator_df = 2 * np.sum(numerator_df)
+
+        val_tmp = 0
+        accum_a = 0
+        c = sume1*sume2
+        for pc in range(0, n_components):
+            for pc2 in range(0, n_components):
+                eve1 = evecs1[pc]
+                eve2 = evecs2[pc2]
+                eva1 = evals1[pc]
+                eva2 = evals2[pc2]
+                a = np.dot(eve1, eve2)
+                b = np.exp(-(amplifying_factor)**2/eva1 - (amplifying_factor)**2/eva2)
+                val_tmp = val_tmp + ((a * b)/c)**2
+                accum_a = accum_a + a
+
+        numerator = 2 * val_tmp
+
+        return numerator/(denominator)
+
     # Get the dot product matrix of two eigenvectors
     def dot_product(self, eigenvectors_1, eigenvectors_2):
         # Check the number of eigenvectors and the number of values in both eigenvectors to match
@@ -156,18 +227,49 @@ class PCZsimilarity(BiobbObject):
         dpm = np.dot(eigenvectors_1, np.transpose(eigenvectors_2))
         return dpm
 
+    # Get the dot product matrix of two eigenvectors (squared and normalized).
+    # Absolute Similarity Index (Hess 2000, 2002)
+    def dot_product_accum(self, eigenvectors_1, eigenvectors_2):
+        n_components = len(eigenvectors_1)
+        # Get the dot product
+        dpm = self.dot_product(eigenvectors_1, eigenvectors_2)
+
+        sso = (dpm * dpm).sum() / n_components
+        # sso = (dpm * dpm).sum() / n_components
+        return sso
+
     # Get the subspace overlap
-    # DANI: Es como el similarity index pero sin utilizar los eigenvalues y sin toda la parte de los weights, creo
+    # Same as before, but with a square root
     def get_subspace_overlap(self, eigenvectors_1, eigenvectors_2):
         # Get the number of eigenvectors
         n_components = len(eigenvectors_1)
         # Get the dot product
         dpm = self.dot_product(eigenvectors_1, eigenvectors_2)
-        print(dpm)
+
         sso = np.sqrt((dpm * dpm).sum() / n_components)
         # sso = (dpm * dpm).sum() / n_components
         return sso
 
+    # Classic RMSip (Root Mean Square Inner Product), gives the same results as the previous function get_subspace_overlap
+    def get_rmsip(self, eigenvectors_1, eigenvectors_2):
+
+        # Get the number of eigenvectors
+        n_components = len(eigenvectors_1)
+
+        accum = 0
+        for pc in range(0, n_components):
+            for pc2 in range(0, n_components):
+                dpm = np.dot(eigenvectors_1[pc], eigenvectors_2[pc2])
+                val = dpm * dpm
+                accum = accum + val
+
+        sso = np.sqrt(accum / n_components)
+        # sso = (dpm * dpm).sum() / n_components
+        return sso
+
+    # RWSIP, Root Weighted Square Inner Product. Same as before, but weighted using the eigen values.
+    # See Edvin Fuglebakk and others, Measuring and comparing structural fluctuation patterns in large protein datasets,
+    # Bioinformatics, Volume 28, Issue 19, October 2012, Pages 2431–2440, https://doi.org/10.1093/bioinformatics/bts445
     def get_rwsip(self,
                   eigenvalues_1, eigenvectors_1,
                   eigenvalues_2, eigenvectors_2):
@@ -178,10 +280,11 @@ class PCZsimilarity(BiobbObject):
         accum = 0
         norm = 0
         for pc in range(0, n_components):
-            dpm = np.dot(eigenvectors_1[pc], np.transpose(eigenvectors_2[pc]))
-            val = dpm * dpm * eigenvalues_1[pc] * eigenvalues_2[pc]
+            for pc2 in range(0, n_components):
+                dpm = np.dot(eigenvectors_1[pc], eigenvectors_2[pc2])
+                val = dpm * dpm * eigenvalues_1[pc] * eigenvalues_2[pc2]
+                accum = accum + val
             norm = norm + eigenvalues_1[pc] * eigenvalues_2[pc]
-            accum = accum + val
 
         sso = np.sqrt(accum / norm)
         # sso = (dpm * dpm).sum() / n_components
@@ -334,13 +437,18 @@ class PCZsimilarity(BiobbObject):
                 info_dict['evecs_2'][pc_id] = list_evecs
                 eigenvectors_2.append(list_evecs)
 
-        simIndex = self.get_similarity_index(info_dict['evals_1'], eigenvectors_1, info_dict['evals_2'], eigenvectors_2)
-        info_dict['similarityIndex'] = float("{:.3f}".format(simIndex))
-        dotProduct = self.get_subspace_overlap(eigenvectors_1, eigenvectors_2)
-        # info_dict['similarityIndex_dotProduct'] = float("{:.3f}".format(dotProduct))
-        info_dict['similarityIndex_rmsip'] = float("{:.3f}".format(dotProduct))
+        # simIndex = self.get_similarity_index(info_dict['evals_1'], eigenvectors_1, info_dict['evals_2'], eigenvectors_2, self.amplifying_factor)
+        # info_dict['similarityIndex_WCP2'] = float("{:.3f}".format(simIndex))
+        # dotProduct = self.get_subspace_overlap(eigenvectors_1, eigenvectors_2)
+        # info_dict['similarityIndex_rmsip2'] = float("{:.3f}".format(dotProduct))
+        eigenmsip = self.eigenmsip(info_dict['evals_1'], eigenvectors_1, info_dict['evals_2'], eigenvectors_2, self.amplifying_factor)
+        info_dict['similarityIndex_WCP'] = float("{:.3f}".format(eigenmsip))
+        rmsip = self.get_rmsip(eigenvectors_1, eigenvectors_2)
+        info_dict['similarityIndex_rmsip'] = float("{:.3f}".format(rmsip))
         rwsip = self.get_rwsip(info_dict['evals_1'], eigenvectors_1, info_dict['evals_2'], eigenvectors_2)
         info_dict['similarityIndex_rwsip'] = float("{:.3f}".format(rwsip))
+        dotp = self.dot_product_accum(eigenvectors_1, eigenvectors_2)
+        info_dict['similarityIndex_dotp'] = float("{:.3f}".format(dotp))
 
         with open(PurePath(self.tmp_folder).joinpath(temp_json), 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
@@ -348,12 +456,8 @@ class PCZsimilarity(BiobbObject):
         # Copy outputs from temporary folder to output path
         shutil.copy2(PurePath(self.tmp_folder).joinpath(temp_json), PurePath(self.io_dict["out"]["output_json_path"]))
 
-        # Copy files to host
-        # self.copy_to_host()
-
         # remove temporary folder(s)
         self.tmp_files.extend([
-            # self.stage_io_dict.get("unique_dir"),
             self.tmp_folder
         ])
         self.remove_tmp_files()
