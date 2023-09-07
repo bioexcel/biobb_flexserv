@@ -4,9 +4,9 @@
     "github": "https://github.com/bioexcel/biobb_flexserv",
     "readthedocs": "https://biobb-flexserv.readthedocs.io/en/latest/",
     "conda": "https://anaconda.org/bioconda/biobb_flexserv",
-    "docker": "https://quay.io/biocontainers/biobb_flexserv:4.0.3--pypl5321hdfd78af_0",
-    "singularity": "https://depot.galaxyproject.org/singularity/biobb_flexserv:4.0.3--pypl5321hdfd78af_0",
-    "version": "4.0.3",
+    "docker": "https://quay.io/biocontainers/biobb_flexserv:4.1.0--pypl5321hdfd78af_0",
+    "singularity": "https://depot.galaxyproject.org/singularity/biobb_flexserv:4.1.0--pypl5321hdfd78af_0",
+    "version": "4.1.0",
     "rest": false,
     "tools" : [
         {
@@ -123,13 +123,14 @@
         }
     ],
     "dep_pypi" : [
-        "install_requires=['biobb_common==4.0.0']",
-        "python_requires='>=3.7,<3.10'"
+        "install_requires=['biobb_common==4.1.0']",
+        "python_requires='>=3.8'"
     ],
     "dep_conda" : [
-        "python >=3.7,<3.10",
-        "biobb_common ==4.0.0",
+        "python >=3.8",
+        "biobb_common ==4.1.0",
         "flexserv ==1.0.2",
+        "pcasuite ==1.0.0",
         "perl"
     ],
     "keywords" : [
