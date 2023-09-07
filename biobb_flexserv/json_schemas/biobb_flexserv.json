@@ -1,6 +1,6 @@
 {
     "_id": "biobb_flexserv",
-    "desc": "Biobb_flexserv is a BioBB category for biomolecular flexibility studies on protein 3D structures",
+    "desc": "Biobb_flexserv is a BioBB category for biomolecular flexibility studies on protein 3D structures.",
     "github": "https://github.com/bioexcel/biobb_flexserv",
     "readthedocs": "https://biobb-flexserv.readthedocs.io/en/latest/",
     "conda": "https://anaconda.org/bioconda/biobb_flexserv",
