@@ -32,7 +32,7 @@ Biobb (BioExcel building blocks) packages are Python building blocks that
 create new layer of compatibility and interoperability over popular
 bioinformatics tools.
 The latest documentation of this package can be found in our readthedocs site:
-[latest API documentation](http://biobb_flexserv.readthedocs.io/en/latest/).
+[latest API documentation](http://biobb-flexserv.readthedocs.io/en/latest/).
 
 ### Version
 v4.1.0 2023.3
