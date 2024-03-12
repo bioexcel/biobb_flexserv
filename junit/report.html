@@ -2,815 +2,769 @@
 <html>
   <head>
     <meta charset="utf-8"/>
-    <title>report.html</title>
-    <link href="assets/style.css" rel="stylesheet" type="text/css"/></head>
-  <body onLoad="init()">
-    <script>/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */
-
-
-function toArray(iter) {
-    if (iter === null) {
-        return null;
-    }
-    return Array.prototype.slice.call(iter);
-}
-
-function find(selector, elem) { // eslint-disable-line no-redeclare
-    if (!elem) {
-        elem = document;
-    }
-    return elem.querySelector(selector);
-}
-
-function findAll(selector, elem) {
-    if (!elem) {
-        elem = document;
-    }
-    return toArray(elem.querySelectorAll(selector));
-}
-
-function sortColumn(elem) {
-    toggleSortStates(elem);
-    const colIndex = toArray(elem.parentNode.childNodes).indexOf(elem);
-    let key;
-    if (elem.classList.contains('result')) {
-        key = keyResult;
-    } else if (elem.classList.contains('links')) {
-        key = keyLink;
-    } else {
-        key = keyAlpha;
-    }
-    sortTable(elem, key(colIndex));
-}
-
-function showAllExtras() { // eslint-disable-line no-unused-vars
-    findAll('.col-result').forEach(showExtras);
-}
-
-function hideAllExtras() { // eslint-disable-line no-unused-vars
-    findAll('.col-result').forEach(hideExtras);
-}
-
-function showExtras(colresultElem) {
-    const extras = colresultElem.parentNode.nextElementSibling;
-    const expandcollapse = colresultElem.firstElementChild;
-    extras.classList.remove('collapsed');
-    expandcollapse.classList.remove('expander');
-    expandcollapse.classList.add('collapser');
-}
-
-function hideExtras(colresultElem) {
-    const extras = colresultElem.parentNode.nextElementSibling;
-    const expandcollapse = colresultElem.firstElementChild;
-    extras.classList.add('collapsed');
-    expandcollapse.classList.remove('collapser');
-    expandcollapse.classList.add('expander');
-}
-
-function showFilters() {
-    let visibleString = getQueryParameter('visible') || 'all';
-    visibleString = visibleString.toLowerCase();
-    const checkedItems = visibleString.split(',');
-
-    const filterItems = document.getElementsByClassName('filter');
-    for (let i = 0; i < filterItems.length; i++) {
-        filterItems[i].hidden = false;
-
-        if (visibleString != 'all') {
-            filterItems[i].checked = checkedItems.includes(filterItems[i].getAttribute('data-test-result'));
-            filterTable(filterItems[i]);
-        }
-    }
-}
-
-function addCollapse() {
-    // Add links for show/hide all
-    const resulttable = find('table#results-table');
-    const showhideall = document.createElement('p');
-    showhideall.innerHTML = '<a href="javascript:showAllExtras()">Show all details</a> / ' +
-                            '<a href="javascript:hideAllExtras()">Hide all details</a>';
-    resulttable.parentElement.insertBefore(showhideall, resulttable);
-
-    // Add show/hide link to each result
-    findAll('.col-result').forEach(function(elem) {
-        const collapsed = getQueryParameter('collapsed') || 'Passed';
-        const extras = elem.parentNode.nextElementSibling;
-        const expandcollapse = document.createElement('span');
-        if (extras.classList.contains('collapsed')) {
-            expandcollapse.classList.add('expander');
-        } else if (collapsed.includes(elem.innerHTML)) {
-            extras.classList.add('collapsed');
-            expandcollapse.classList.add('expander');
-        } else {
-            expandcollapse.classList.add('collapser');
-        }
-        elem.appendChild(expandcollapse);
-
-        elem.addEventListener('click', function(event) {
-            if (event.currentTarget.parentNode.nextElementSibling.classList.contains('collapsed')) {
-                showExtras(event.currentTarget);
-            } else {
-                hideExtras(event.currentTarget);
-            }
-        });
-    });
-}
-
-function getQueryParameter(name) {
-    const match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
-}
-
-function init () { // eslint-disable-line no-unused-vars
-    resetSortHeaders();
-
-    addCollapse();
-
-    showFilters();
-
-    sortColumn(find('.initial-sort'));
-
-    findAll('.sortable').forEach(function(elem) {
-        elem.addEventListener('click',
-            function() {
-                sortColumn(elem);
-            }, false);
-    });
-}
-
-function sortTable(clicked, keyFunc) {
-    const rows = findAll('.results-table-row');
-    const reversed = !clicked.classList.contains('asc');
-    const sortedRows = sort(rows, keyFunc, reversed);
-    /* Whole table is removed here because browsers acts much slower
-     * when appending existing elements.
-     */
-    const thead = document.getElementById('results-table-head');
-    document.getElementById('results-table').remove();
-    const parent = document.createElement('table');
-    parent.id = 'results-table';
-    parent.appendChild(thead);
-    sortedRows.forEach(function(elem) {
-        parent.appendChild(elem);
-    });
-    document.getElementsByTagName('BODY')[0].appendChild(parent);
-}
-
-function sort(items, keyFunc, reversed) {
-    const sortArray = items.map(function(item, i) {
-        return [keyFunc(item), i];
-    });
-
-    sortArray.sort(function(a, b) {
-        const keyA = a[0];
-        const keyB = b[0];
-
-        if (keyA == keyB) return 0;
-
-        if (reversed) {
-            return keyA < keyB ? 1 : -1;
-        } else {
-            return keyA > keyB ? 1 : -1;
-        }
-    });
-
-    return sortArray.map(function(item) {
-        const index = item[1];
-        return items[index];
-    });
-}
-
-function keyAlpha(colIndex) {
-    return function(elem) {
-        return elem.childNodes[1].childNodes[colIndex].firstChild.data.toLowerCase();
-    };
-}
-
-function keyLink(colIndex) {
-    return function(elem) {
-        const dataCell = elem.childNodes[1].childNodes[colIndex].firstChild;
-        return dataCell == null ? '' : dataCell.innerText.toLowerCase();
-    };
-}
-
-function keyResult(colIndex) {
-    return function(elem) {
-        const strings = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed',
-            'Skipped', 'Passed'];
-        return strings.indexOf(elem.childNodes[1].childNodes[colIndex].firstChild.data);
-    };
-}
-
-function resetSortHeaders() {
-    findAll('.sort-icon').forEach(function(elem) {
-        elem.parentNode.removeChild(elem);
-    });
-    findAll('.sortable').forEach(function(elem) {
-        const icon = document.createElement('div');
-        icon.className = 'sort-icon';
-        icon.textContent = 'vvv';
-        elem.insertBefore(icon, elem.firstChild);
-        elem.classList.remove('desc', 'active');
-        elem.classList.add('asc', 'inactive');
-    });
-}
-
-function toggleSortStates(elem) {
-    //if active, toggle between asc and desc
-    if (elem.classList.contains('active')) {
-        elem.classList.toggle('asc');
-        elem.classList.toggle('desc');
-    }
-
-    //if inactive, reset all other functions and add ascending active
-    if (elem.classList.contains('inactive')) {
-        resetSortHeaders();
-        elem.classList.remove('inactive');
-        elem.classList.add('active');
-    }
-}
-
-function isAllRowsHidden(value) {
-    return value.hidden == false;
-}
-
-function filterTable(elem) { // eslint-disable-line no-unused-vars
-    const outcomeAtt = 'data-test-result';
-    const outcome = elem.getAttribute(outcomeAtt);
-    const classOutcome = outcome + ' results-table-row';
-    const outcomeRows = document.getElementsByClassName(classOutcome);
-
-    for(let i = 0; i < outcomeRows.length; i++){
-        outcomeRows[i].hidden = !elem.checked;
-    }
-
-    const rows = findAll('.results-table-row').filter(isAllRowsHidden);
-    const allRowsHidden = rows.length == 0 ? true : false;
-    const notFoundMessage = document.getElementById('not-found-message');
-    notFoundMessage.hidden = !allRowsHidden;
-}
-</script>
-    <h1>report.html</h1>
-    <p>Report generated on 07-Sep-2023 at 13:17:08 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.2.0</p>
-    <h2>Summary</h2>
-    <p>14 tests ran in 3.43 seconds. </p>
-    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">14 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">0 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
-    <h2>Results</h2>
+    <title id="head-title">report.html</title>
+      <link href="assets/style.css" rel="stylesheet" type="text/css"/>
+  </head>
+  <body>
+    <h1 id="title">report.html</h1>
+    <p>Report generated on 12-Mar-2024 at 10:33:24 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a>
+        v4.1.1</p>
+    <div id="environment-header">
+      <h2>Environment</h2>
+    </div>
+    <table id="environment"></table>
+    <!-- TEMPLATES -->
+      <template id="template_environment_row">
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+    </template>
+    <template id="template_results-table__body--empty">
+      <tbody class="results-table-row">
+        <tr id="not-found-message">
+          <td colspan="4">No results found. Check the filters.</th>
+        </tr>
+    </template>
+    <template id="template_results-table__tbody">
+      <tbody class="results-table-row">
+        <tr class="collapsible">
+        </tr>
+        <tr class="extras-row">
+          <td class="extra" colspan="4">
+            <div class="extraHTML"></div>
+            <div class="media">
+              <div class="media-container">
+                  <div class="media-container__nav--left"><</div>
+                  <div class="media-container__viewport">
+                    <img src="" />
+                    <video controls>
+                      <source src="" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="media-container__nav--right">></div>
+                </div>
+                <div class="media__name"></div>
+                <div class="media__counter"></div>
+            </div>
+            <div class="logwrapper">
+              <div class="logexpander"></div>
+              <div class="log"></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </template>
+    <!-- END TEMPLATES -->
+    <div class="summary">
+      <div class="summary__data">
+        <h2>Summary</h2>
+        <div class="additional-summary prefix">
+        </div>
+        <p class="run-count">14 tests took 00:00:03.</p>
+        <p class="filter">(Un)check the boxes to filter the results.</p>
+        <div class="summary__reload">
+          <div class="summary__reload__button hidden" onclick="location.reload()">
+            <div>There are still tests running. <br />Reload this page to get the latest results!</div>
+          </div>
+        </div>
+        <div class="summary__spacer"></div>
+        <div class="controls">
+          <div class="filters">
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="failed" disabled/>
+            <span class="failed">0 Failed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="passed" />
+            <span class="passed">14 Passed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="skipped" disabled/>
+            <span class="skipped">0 Skipped,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xfailed" disabled/>
+            <span class="xfailed">0 Expected failures,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xpassed" disabled/>
+            <span class="xpassed">0 Unexpected passes,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="error" disabled/>
+            <span class="error">0 Errors,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="rerun" disabled/>
+            <span class="rerun">0 Reruns</span>
+          </div>
+          <div class="collapse">
+            <button id="show_all_details">Show all details</button>&nbsp;/&nbsp;<button id="hide_all_details">Hide all details</button>
+          </div>
+        </div>
+      </div>
+      <div class="additional-summary summary">
+      </div>
+      <div class="additional-summary postfix">
+      </div>
+    </div>
     <table id="results-table">
       <thead id="results-table-head">
         <tr>
-          <th class="sortable result initial-sort" col="result">Result</th>
-          <th class="sortable" col="name">Test</th>
-          <th class="sortable" col="duration">Duration</th>
-          <th class="sortable links" col="links">Links</th></tr>
-        <tr hidden="true" id="not-found-message">
-          <th colspan="4">No results found. Try to check the filters</th></tr></thead>
-      <tbody class="passed results-table-row">
-        <tr>
-          <td class="col-result">Passed</td>
-          <td class="col-name">biobb_flexserv/test/unitests/test_flexserv/test_bd_run.py::TestBDRun::test_bd_run</td>
-          <td class="col-duration">0.45</td>
-          <td class="col-links"></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-09-07 13:17:05,191 [MainThread  ] [INFO ]  Executing biobb_flexserv.flexserv.bd_run Version: 4.1.0
-2023-09-07 13:17:05,192 [MainThread  ] [INFO ]  Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/bd_run/e71f07f7-6560-4c85-8b31-c7a7ed578b7c
-2023-09-07 13:17:05,192 [MainThread  ] [INFO ]  bd e71f07f7-6560-4c85-8b31-c7a7ed578b7c/structure.ca.pdb 10000 1e-15 100 40 3.8 e71f07f7-6560-4c85-8b31-c7a7ed578b7c/bd_run_out.crd &gt; e71f07f7-6560-4c85-8b31-c7a7ed578b7c/bd_run_out.log
-
-2023-09-07 13:17:05,620 [MainThread  ] [INFO ]  Exit code 0
-
-2023-09-07 13:17:05,621 [MainThread  ] [INFO ]  Removed: [&#x27;/tmp/biobb/unitests/bd_run/e71f07f7-6560-4c85-8b31-c7a7ed578b7c&#x27;]
-Checking if empty file: /tmp/biobb/unitests/bd_run/bd_run_out.crd
-Checking if empty file: /tmp/biobb/unitests/bd_run/bd_run_out.log
-Comparing: 
-        File_A: /tmp/biobb/unitests/bd_run/bd_run_out.crd
-        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/flexserv/bd_run_out.crd
-        File_A hash: b&quot;\x10\xd4&amp;\x05\t\xb3\xde))\x88:5&#x27;$\xfa\xe0a\x91^\x1f\xa9\x95\xe4\\\xc2k\x1d\xb1\xff\x02\x1f\x8f&quot;
-        File_B hash: b&quot;\x10\xd4&amp;\x05\t\xb3\xde))\x88:5&#x27;$\xfa\xe0a\x91^\x1f\xa9\x95\xe4\\\xc2k\x1d\xb1\xff\x02\x1f\x8f&quot;
-Comparing: 
-        File_A: /tmp/biobb/unitests/bd_run/bd_run_out.log
-        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/flexserv/bd_run_out.log
-        File_A hash: b&#x27;u\xef4\x02\x8c\xdb\x92S\x18\n\xa2N6\xb5\xf2{\xb7\x96RED\xe7[\xdd\xd3\xa1\xcb\x06\xb91\xfb\x80&#x27;
-        File_B hash: b&#x27;u\xef4\x02\x8c\xdb\x92S\x18\n\xa2N6\xb5\xf2{\xb7\x96RED\xe7[\xdd\xd3\xa1\xcb\x06\xb91\xfb\x80&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/bd_run/bd_run_log.out:file_utils.py:390 Executing biobb_flexserv.flexserv.bd_run Version: 4.1.0
-INFO     /tmp/biobb/unitests/bd_run/bd_run_log.out:file_utils.py:390 Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/bd_run/e71f07f7-6560-4c85-8b31-c7a7ed578b7c
-INFO     /tmp/biobb/unitests/bd_run/bd_run_log.out:cmd_wrapper.py:33 bd e71f07f7-6560-4c85-8b31-c7a7ed578b7c/structure.ca.pdb 10000 1e-15 100 40 3.8 e71f07f7-6560-4c85-8b31-c7a7ed578b7c/bd_run_out.crd &gt; e71f07f7-6560-4c85-8b31-c7a7ed578b7c/bd_run_out.log
-
-INFO     /tmp/biobb/unitests/bd_run/bd_run_log.out:cmd_wrapper.py:50 Exit code 0
-
-INFO     /tmp/biobb/unitests/bd_run/bd_run_log.out:file_utils.py:390 Removed: [&#x27;/tmp/biobb/unitests/bd_run/e71f07f7-6560-4c85-8b31-c7a7ed578b7c&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
-Removing: /tmp/biobb/unitests
-<br/></div></td></tr></tbody>
-      <tbody class="passed results-table-row">
-        <tr>
-          <td class="col-result">Passed</td>
-          <td class="col-name">biobb_flexserv/test/unitests/test_flexserv/test_dmd_run.py::TestDMDRun::test_dmd_run</td>
-          <td class="col-duration">0.37</td>
-          <td class="col-links"></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-09-07 13:17:05,673 [MainThread  ] [INFO ]  Executing biobb_flexserv.flexserv.dmd_run Version: 4.1.0
-2023-09-07 13:17:05,674 [MainThread  ] [INFO ]  Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/dmd_run/3ae68136-a19e-4e25-ae30-1bbf74022b2a
-2023-09-07 13:17:05,674 [MainThread  ] [INFO ]  dmdgoopt &lt; /tmp/biobb/unitests/dmd_run/3ae68136-a19e-4e25-ae30-1bbf74022b2a/dmd.in &gt; 3ae68136-a19e-4e25-ae30-1bbf74022b2a/dmd_run_out.log
-
-2023-09-07 13:17:06,016 [MainThread  ] [INFO ]  Exit code 0
-
-2023-09-07 13:17:06,017 [MainThread  ] [INFO ]  Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG
-
-2023-09-07 13:17:06,018 [MainThread  ] [INFO ]  Removed: [&#x27;/tmp/biobb/unitests/dmd_run/3ae68136-a19e-4e25-ae30-1bbf74022b2a&#x27;]
-Checking if empty file: /tmp/biobb/unitests/dmd_run/dmd_run_out.crd
-Comparing: 
-        File_A: /tmp/biobb/unitests/dmd_run/dmd_run_out.crd
-        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/flexserv/dmd_run_out.crd
-        File_A hash: b&#x27;\xb4Q\xf2\xe0H\xbe\xeb\xe4Gl\xf7m\x97N\xec\x8b\xfa\\j\xdd\x1c\xc2\x95W1J\xf8\x9c\xebW\xd5\xf5&#x27;
-        File_B hash: b&#x27;\xb4Q\xf2\xe0H\xbe\xeb\xe4Gl\xf7m\x97N\xec\x8b\xfa\\j\xdd\x1c\xc2\x95W1J\xf8\x9c\xebW\xd5\xf5&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/dmd_run/dmd_run_log.out:file_utils.py:390 Executing biobb_flexserv.flexserv.dmd_run Version: 4.1.0
-INFO     /tmp/biobb/unitests/dmd_run/dmd_run_log.out:file_utils.py:390 Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/dmd_run/3ae68136-a19e-4e25-ae30-1bbf74022b2a
-INFO     /tmp/biobb/unitests/dmd_run/dmd_run_log.out:cmd_wrapper.py:33 dmdgoopt &lt; /tmp/biobb/unitests/dmd_run/3ae68136-a19e-4e25-ae30-1bbf74022b2a/dmd.in &gt; 3ae68136-a19e-4e25-ae30-1bbf74022b2a/dmd_run_out.log
-
-INFO     /tmp/biobb/unitests/dmd_run/dmd_run_log.out:cmd_wrapper.py:50 Exit code 0
-
-INFO     /tmp/biobb/unitests/dmd_run/dmd_run_log.err:cmd_wrapper.py:60 Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG
-
-INFO     /tmp/biobb/unitests/dmd_run/dmd_run_log.out:file_utils.py:390 Removed: [&#x27;/tmp/biobb/unitests/dmd_run/3ae68136-a19e-4e25-ae30-1bbf74022b2a&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
-Removing: /tmp/biobb/unitests
-<br/></div></td></tr></tbody>
-      <tbody class="passed results-table-row">
-        <tr>
-          <td class="col-result">Passed</td>
-          <td class="col-name">biobb_flexserv/test/unitests/test_flexserv/test_nma_run.py::TestNMARun::test_nma_run</td>
-          <td class="col-duration">0.83</td>
-          <td class="col-links"></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-09-07 13:17:06,045 [MainThread  ] [INFO ]  Executing biobb_flexserv.flexserv.nma_run Version: 4.1.0
-2023-09-07 13:17:06,046 [MainThread  ] [INFO ]  Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/nma_run/2fce3809-beb5-48dd-b2dc-33d943a7c416
-2023-09-07 13:17:06,046 [MainThread  ] [INFO ]  perl  /home/user/micromamba/envs/test_environment/bin/nmanu.pl 2fce3809-beb5-48dd-b2dc-33d943a7c416/structure.ca.pdb hessian.dat 1 0 40; diaghess ; perl /home/user/micromamba/envs/test_environment/bin/mc-eigen-mdweb.pl eigenvec.dat  100  &gt; file.proj ; perl /home/user/micromamba/envs/test_environment/bin/pca_anim_mc.pl -pdb 2fce3809-beb5-48dd-b2dc-33d943a7c416/structure.ca.pdb  -evec eigenvec.dat -i file.proj -n  50  -pout 2fce3809-beb5-48dd-b2dc-33d943a7c416/nma_run_out.crd &gt; 2fce3809-beb5-48dd-b2dc-33d943a7c416/nma_run_out.log
-
-2023-09-07 13:17:06,857 [MainThread  ] [INFO ]  Exit code 0
-
-2023-09-07 13:17:06,858 [MainThread  ] [INFO ]  Number of interactions 3570
-Number of non-zero elements 32640
-Matrix trace 8651.23364900726
-The dimension:    255
-return info from dsyev:      0
-ptraj based evectors in: eigenvec.dat        
-
-2023-09-07 13:17:06,858 [MainThread  ] [INFO ]  Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
-
-2023-09-07 13:17:06,859 [MainThread  ] [INFO ]  Removed: [&#x27;/tmp/biobb/unitests/nma_run/2fce3809-beb5-48dd-b2dc-33d943a7c416&#x27;]
-Checking if empty file: /tmp/biobb/unitests/nma_run/nma_run_out.crd
-Comparing: 
-        File_A: /tmp/biobb/unitests/nma_run/nma_run_out.crd
-        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/flexserv/nma_run_out.crd
-        File_A hash: b&#x27;\x8cVl\xedI\xb9N\xffd\xce[\xda\xb7hsF+\xf7\xb7Q\\\x1c\xd6#R\x95n{\xfa\xc2\xbc\xd6&#x27;
-        File_B hash: b&#x27;\x8cVl\xedI\xb9N\xffd\xce[\xda\xb7hsF+\xf7\xb7Q\\\x1c\xd6#R\x95n{\xfa\xc2\xbc\xd6&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/nma_run/nma_run_log.out:file_utils.py:390 Executing biobb_flexserv.flexserv.nma_run Version: 4.1.0
-INFO     /tmp/biobb/unitests/nma_run/nma_run_log.out:file_utils.py:390 Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests/nma_run/2fce3809-beb5-48dd-b2dc-33d943a7c416
-INFO     /tmp/biobb/unitests/nma_run/nma_run_log.out:cmd_wrapper.py:33 perl  /home/user/micromamba/envs/test_environment/bin/nmanu.pl 2fce3809-beb5-48dd-b2dc-33d943a7c416/structure.ca.pdb hessian.dat 1 0 40; diaghess ; perl /home/user/micromamba/envs/test_environment/bin/mc-eigen-mdweb.pl eigenvec.dat  100  &gt; file.proj ; perl /home/user/micromamba/envs/test_environment/bin/pca_anim_mc.pl -pdb 2fce3809-beb5-48dd-b2dc-33d943a7c416/structure.ca.pdb  -evec eigenvec.dat -i file.proj -n  50  -pout 2fce3809-beb5-48dd-b2dc-33d943a7c416/nma_run_out.crd &gt; 2fce3809-beb5-48dd-b2dc-33d943a7c416/nma_run_out.log
-
-INFO     /tmp/biobb/unitests/nma_run/nma_run_log.out:cmd_wrapper.py:50 Exit code 0
-
-INFO     /tmp/biobb/unitests/nma_run/nma_run_log.out:cmd_wrapper.py:52 Number of interactions 3570
-Number of non-zero elements 32640
-Matrix trace 8651.23364900726
-The dimension:    255
-return info from dsyev:      0
-ptraj based evectors in: eigenvec.dat        
-
-INFO     /tmp/biobb/unitests/nma_run/nma_run_log.err:cmd_wrapper.py:60 Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
-
-INFO     /tmp/biobb/unitests/nma_run/nma_run_log.out:file_utils.py:390 Removed: [&#x27;/tmp/biobb/unitests/nma_run/2fce3809-beb5-48dd-b2dc-33d943a7c416&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
-Removing: /tmp/biobb/unitests
-<br/></div></td></tr></tbody>
-      <tbody class="passed results-table-row">
-        <tr>
-          <td class="col-result">Passed</td>
-          <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcaunzip.py::TestPCZunzip::test_pczunzip</td>
-          <td class="col-duration">0.14</td>
-          <td class="col-links"></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-09-07 13:17:06,885 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_unzip Version: 4.1.0
-2023-09-07 13:17:06,885 [MainThread  ] [INFO ]  Creating 5cdbbcd2-681e-4de3-8b72-27b042c621cc temporary folder
-2023-09-07 13:17:06,885 [MainThread  ] [INFO ]  cd 5cdbbcd2-681e-4de3-8b72-27b042c621cc ; pcaunzip -i pcazip.pcz -o pcazip.crd
-
-2023-09-07 13:17:06,995 [MainThread  ] [INFO ]  Exit code 0
-
-2023-09-07 13:17:06,995 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
-
-2023-09-07 13:17:06,998 [MainThread  ] [INFO ]  Removed: [&#x27;5cdbbcd2-681e-4de3-8b72-27b042c621cc&#x27;]
-Checking if empty file: /tmp/biobb/unitests/pcz_unzip/pcazip.crd
-Comparing: 
-        File_A: /tmp/biobb/unitests/pcz_unzip/pcazip.crd
-        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcazip.crd
-        File_A hash: b&#x27;6\x80\x81\xbc\x91(\xb2n\x8a\xdf\x90\xa0\xdcB\xe4\xb9\x01\x08V*\x84\xf9\xcbD\xc4\xc8u\xc7\xed\xf5o\x0c&#x27;
-        File_B hash: b&#x27;6\x80\x81\xbc\x91(\xb2n\x8a\xdf\x90\xa0\xdcB\xe4\xb9\x01\x08V*\x84\xf9\xcbD\xc4\xc8u\xc7\xed\xf5o\x0c&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_unzip/pcz_unzip_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_unzip Version: 4.1.0
-INFO     /tmp/biobb/unitests/pcz_unzip/pcz_unzip_log.out:file_utils.py:390 Creating 5cdbbcd2-681e-4de3-8b72-27b042c621cc temporary folder
-INFO     /tmp/biobb/unitests/pcz_unzip/pcz_unzip_log.out:cmd_wrapper.py:33 cd 5cdbbcd2-681e-4de3-8b72-27b042c621cc ; pcaunzip -i pcazip.pcz -o pcazip.crd
-
-INFO     /tmp/biobb/unitests/pcz_unzip/pcz_unzip_log.out:cmd_wrapper.py:50 Exit code 0
-
-INFO     /tmp/biobb/unitests/pcz_unzip/pcz_unzip_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms
-
-INFO     /tmp/biobb/unitests/pcz_unzip/pcz_unzip_log.out:file_utils.py:390 Removed: [&#x27;5cdbbcd2-681e-4de3-8b72-27b042c621cc&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
-Removing: /tmp/biobb/unitests
-<br/></div></td></tr></tbody>
-      <tbody class="passed results-table-row">
-        <tr>
-          <td class="col-result">Passed</td>
-          <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcazip.py::TestPCZzip::test_pczzip</td>
-          <td class="col-duration">0.19</td>
-          <td class="col-links"></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-09-07 13:17:07,035 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_zip Version: 4.1.0
-2023-09-07 13:17:07,035 [MainThread  ] [INFO ]  Creating f90d58e2-f642-4d21-bc10-bb86fd6d2a71 temporary folder
-2023-09-07 13:17:07,037 [MainThread  ] [INFO ]  cd f90d58e2-f642-4d21-bc10-bb86fd6d2a71 ; pcazip -p structure.ca.pdb -i traj.crd -o pcazip.pcz -q 90
-
-2023-09-07 13:17:07,198 [MainThread  ] [INFO ]  Exit code 0
-
-2023-09-07 13:17:07,200 [MainThread  ] [INFO ]  Removed: [&#x27;f90d58e2-f642-4d21-bc10-bb86fd6d2a71&#x27;]
-Checking if empty file: /tmp/biobb/unitests/pcz_zip/pcazip.pcz
-Comparing: 
-        File_A: /tmp/biobb/unitests/pcz_zip/pcazip.pcz
-        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcazip.pcz
-        File_A hash: b&#x27;`!\x1b,o\r\x84/\xa8Mh\xc4\xfem\xee)\xb2{\xa1\xb1\x80\xcc\xaf\x80\xcf^\\\x01D\xfe:\xf9&#x27;
-        File_B hash: b&#x27;`!\x1b,o\r\x84/\xa8Mh\xc4\xfem\xee)\xb2{\xa1\xb1\x80\xcc\xaf\x80\xcf^\\\x01D\xfe:\xf9&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_zip/pcz_zip_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_zip Version: 4.1.0
-INFO     /tmp/biobb/unitests/pcz_zip/pcz_zip_log.out:file_utils.py:390 Creating f90d58e2-f642-4d21-bc10-bb86fd6d2a71 temporary folder
-INFO     /tmp/biobb/unitests/pcz_zip/pcz_zip_log.out:cmd_wrapper.py:33 cd f90d58e2-f642-4d21-bc10-bb86fd6d2a71 ; pcazip -p structure.ca.pdb -i traj.crd -o pcazip.pcz -q 90
-
-INFO     /tmp/biobb/unitests/pcz_zip/pcz_zip_log.out:cmd_wrapper.py:50 Exit code 0
-
-INFO     /tmp/biobb/unitests/pcz_zip/pcz_zip_log.out:file_utils.py:390 Removed: [&#x27;f90d58e2-f642-4d21-bc10-bb86fd6d2a71&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
-Removing: /tmp/biobb/unitests
-<br/></div></td></tr></tbody>
-      <tbody class="passed results-table-row">
-        <tr>
-          <td class="col-result">Passed</td>
-          <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_animate.py::TestPCZanimate::test_pcz_animate</td>
-          <td class="col-duration">0.17</td>
-          <td class="col-links"></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-09-07 13:17:07,227 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_animate Version: 4.1.0
-2023-09-07 13:17:07,228 [MainThread  ] [INFO ]  Creating 2e36f0d9-000c-4c8c-bfcd-325c574e9967 temporary folder
-2023-09-07 13:17:07,228 [MainThread  ] [INFO ]  cd 2e36f0d9-000c-4c8c-bfcd-325c574e9967 ; pczdump -i pcazip.pcz -o pcazip_anim1.pdb --anim=1 --pdb
-
-2023-09-07 13:17:07,239 [MainThread  ] [INFO ]  Exit code 0
-
-2023-09-07 13:17:07,239 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
-
-2023-09-07 13:17:07,240 [MainThread  ] [INFO ]  Removed: [&#x27;2e36f0d9-000c-4c8c-bfcd-325c574e9967&#x27;]
-Checking if empty file: /tmp/biobb/unitests/pcz_animate/pcazip_anim1.pdb
-Checking RMSD between:
-     PDB_A: /tmp/biobb/unitests/pcz_animate/pcazip_anim1.pdb
-     PDB_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcazip_anim1.pdb
-     Ignoring HETAMT in RMSD
-     Ignoring Hydrogen atoms in RMSD
-     Atoms ALIGNED in PDB_A: 85
-     Atoms ALIGNED in PDB_B: 85
-     RMS: 7.911547607468411e-15
-     RMS_CUTOFF: 1
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_animate/pcz_animate_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_animate Version: 4.1.0
-INFO     /tmp/biobb/unitests/pcz_animate/pcz_animate_log.out:file_utils.py:390 Creating 2e36f0d9-000c-4c8c-bfcd-325c574e9967 temporary folder
-INFO     /tmp/biobb/unitests/pcz_animate/pcz_animate_log.out:cmd_wrapper.py:33 cd 2e36f0d9-000c-4c8c-bfcd-325c574e9967 ; pczdump -i pcazip.pcz -o pcazip_anim1.pdb --anim=1 --pdb
-
-INFO     /tmp/biobb/unitests/pcz_animate/pcz_animate_log.out:cmd_wrapper.py:50 Exit code 0
-
-INFO     /tmp/biobb/unitests/pcz_animate/pcz_animate_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms
-
-INFO     /tmp/biobb/unitests/pcz_animate/pcz_animate_log.out:file_utils.py:390 Removed: [&#x27;2e36f0d9-000c-4c8c-bfcd-325c574e9967&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
-Removing: /tmp/biobb/unitests
-<br/></div></td></tr></tbody>
-      <tbody class="passed results-table-row">
-        <tr>
-          <td class="col-result">Passed</td>
-          <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_bfactor.py::TestPCZbfactor::test_pcz_bfactor</td>
-          <td class="col-duration">0.04</td>
-          <td class="col-links"></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-09-07 13:17:07,402 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_bfactor Version: 4.1.0
-2023-09-07 13:17:07,402 [MainThread  ] [INFO ]  Creating e523366d-13be-4408-bf7c-ee05c4135a95 temporary folder
-2023-09-07 13:17:07,403 [MainThread  ] [INFO ]  cd e523366d-13be-4408-bf7c-ee05c4135a95 ; pczdump -i pcazip.pcz -o bfactors.dat --bfactor --fluc=1
-
-2023-09-07 13:17:07,411 [MainThread  ] [INFO ]  Exit code 0
-
-2023-09-07 13:17:07,412 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
-
-2023-09-07 13:17:07,412 [MainThread  ] [INFO ]  cd e523366d-13be-4408-bf7c-ee05c4135a95 ; pczdump -i pcazip.pcz -o bfactors.pdb --bfactor --fluc=1 --pdb
-
-2023-09-07 13:17:07,419 [MainThread  ] [INFO ]  Exit code 0
-
-2023-09-07 13:17:07,420 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
-
-2023-09-07 13:17:07,420 [MainThread  ] [INFO ]  Removed: [&#x27;e523366d-13be-4408-bf7c-ee05c4135a95&#x27;]
-Checking if empty file: /tmp/biobb/unitests/pcz_bfactor/bfactors.dat
-Checking if empty file: /tmp/biobb/unitests/pcz_bfactor/bfactors.pdb
-Comparing: 
-        File_A: /tmp/biobb/unitests/pcz_bfactor/bfactors.dat
-        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/bfactors.dat
-        File_A hash: b&#x27;\xc2\x1aC\xb6\xce\xa5&amp;G\x9b\xec\xb3\xebM!\xcd\xa3\x1d\x86\x96\xed\xc0 o\xdc+\x97-\xc3\x19\x14\xd0U&#x27;
-        File_B hash: b&#x27;\xc2\x1aC\xb6\xce\xa5&amp;G\x9b\xec\xb3\xebM!\xcd\xa3\x1d\x86\x96\xed\xc0 o\xdc+\x97-\xc3\x19\x14\xd0U&#x27;
-Checking RMSD between:
-     PDB_A: /tmp/biobb/unitests/pcz_bfactor/bfactors.pdb
-     PDB_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/bfactors.pdb
-     Ignoring HETAMT in RMSD
-     Ignoring Hydrogen atoms in RMSD
-     Atoms ALIGNED in PDB_A: 85
-     Atoms ALIGNED in PDB_B: 85
-     RMS: 7.911547607468411e-15
-     RMS_CUTOFF: 1
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_bfactor Version: 4.1.0
-INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:file_utils.py:390 Creating e523366d-13be-4408-bf7c-ee05c4135a95 temporary folder
-INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:cmd_wrapper.py:33 cd e523366d-13be-4408-bf7c-ee05c4135a95 ; pczdump -i pcazip.pcz -o bfactors.dat --bfactor --fluc=1
-
-INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:cmd_wrapper.py:50 Exit code 0
-
-INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms
-
-INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:cmd_wrapper.py:33 cd e523366d-13be-4408-bf7c-ee05c4135a95 ; pczdump -i pcazip.pcz -o bfactors.pdb --bfactor --fluc=1 --pdb
-
-INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:cmd_wrapper.py:50 Exit code 0
-
-INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms
-
-INFO     /tmp/biobb/unitests/pcz_bfactor/pcz_bfactor_log.out:file_utils.py:390 Removed: [&#x27;e523366d-13be-4408-bf7c-ee05c4135a95&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
-Removing: /tmp/biobb/unitests
-<br/></div></td></tr></tbody>
-      <tbody class="passed results-table-row">
-        <tr>
-          <td class="col-result">Passed</td>
-          <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_collectivity.py::TestPCZcollectivity::test_pcz_collectivity</td>
-          <td class="col-duration">0.03</td>
-          <td class="col-links"></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-09-07 13:17:07,451 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_collectivity Version: 4.1.0
-2023-09-07 13:17:07,451 [MainThread  ] [INFO ]  Creating e84c9560-53c5-499e-86ad-44c4ab6b5b81 temporary folder
-2023-09-07 13:17:07,452 [MainThread  ] [INFO ]  cd e84c9560-53c5-499e-86ad-44c4ab6b5b81 ; pczdump -i pcazip.pcz -o output.dat --collectivity=0
-
-2023-09-07 13:17:07,462 [MainThread  ] [INFO ]  Exit code 0
-
-2023-09-07 13:17:07,462 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
-
-2023-09-07 13:17:07,463 [MainThread  ] [INFO ]  Removed: [&#x27;e84c9560-53c5-499e-86ad-44c4ab6b5b81&#x27;]
-Checking if empty file: /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity.json
-Comparing: 
-        File_A: /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity.json
-        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcz_collectivity.json
-        File_A hash: b&quot;\xc94A\xec1\xf4.\xedV&#x27;\x90J\x7fK\xc8\xdd\xdc\xa4*\x1fs\xe4\x1d\x83\x1d\x16\xd7\x1a\x84\x9a\xe3Z&quot;
-        File_B hash: b&quot;\xc94A\xec1\xf4.\xedV&#x27;\x90J\x7fK\xc8\xdd\xdc\xa4*\x1fs\xe4\x1d\x83\x1d\x16\xd7\x1a\x84\x9a\xe3Z&quot;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_collectivity Version: 4.1.0
-INFO     /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity_log.out:file_utils.py:390 Creating e84c9560-53c5-499e-86ad-44c4ab6b5b81 temporary folder
-INFO     /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity_log.out:cmd_wrapper.py:33 cd e84c9560-53c5-499e-86ad-44c4ab6b5b81 ; pczdump -i pcazip.pcz -o output.dat --collectivity=0
-
-INFO     /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity_log.out:cmd_wrapper.py:50 Exit code 0
-
-INFO     /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms
-
-INFO     /tmp/biobb/unitests/pcz_collectivity/pcz_collectivity_log.out:file_utils.py:390 Removed: [&#x27;e84c9560-53c5-499e-86ad-44c4ab6b5b81&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
-Removing: /tmp/biobb/unitests
-<br/></div></td></tr></tbody>
-      <tbody class="passed results-table-row">
-        <tr>
-          <td class="col-result">Passed</td>
-          <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_evecs.py::TestPCZevecs::test_pcz_evecs</td>
-          <td class="col-duration">0.03</td>
-          <td class="col-links"></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-09-07 13:17:07,487 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_evecs Version: 4.1.0
-2023-09-07 13:17:07,487 [MainThread  ] [INFO ]  Creating 05f81df1-9322-4605-bc0a-85900d54c75a temporary folder
-2023-09-07 13:17:07,487 [MainThread  ] [INFO ]  cd 05f81df1-9322-4605-bc0a-85900d54c75a ; pczdump -i pcazip.pcz -o output.dat --evec=1
-
-2023-09-07 13:17:07,494 [MainThread  ] [INFO ]  Exit code 0
-
-2023-09-07 13:17:07,494 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
-
-2023-09-07 13:17:07,496 [MainThread  ] [INFO ]  Removed: [&#x27;05f81df1-9322-4605-bc0a-85900d54c75a&#x27;]
-Checking if empty file: /tmp/biobb/unitests/pcz_evecs/pcz_evecs.json
-Comparing: 
-        File_A: /tmp/biobb/unitests/pcz_evecs/pcz_evecs.json
-        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcz_evecs.json
-        File_A hash: b&#x27;YK\x9b\x1a&lt;\x1b\xfc\x9b\xaf\x02#\x82\x83\x8dY\x94\xa4\xfb\xfe\x86\x81\xe25\x00\x99\x8e!2\xd3\x17\x13\x87&#x27;
-        File_B hash: b&#x27;YK\x9b\x1a&lt;\x1b\xfc\x9b\xaf\x02#\x82\x83\x8dY\x94\xa4\xfb\xfe\x86\x81\xe25\x00\x99\x8e!2\xd3\x17\x13\x87&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_evecs/pcz_evecs_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_evecs Version: 4.1.0
-INFO     /tmp/biobb/unitests/pcz_evecs/pcz_evecs_log.out:file_utils.py:390 Creating 05f81df1-9322-4605-bc0a-85900d54c75a temporary folder
-INFO     /tmp/biobb/unitests/pcz_evecs/pcz_evecs_log.out:cmd_wrapper.py:33 cd 05f81df1-9322-4605-bc0a-85900d54c75a ; pczdump -i pcazip.pcz -o output.dat --evec=1
-
-INFO     /tmp/biobb/unitests/pcz_evecs/pcz_evecs_log.out:cmd_wrapper.py:50 Exit code 0
-
-INFO     /tmp/biobb/unitests/pcz_evecs/pcz_evecs_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms
-
-INFO     /tmp/biobb/unitests/pcz_evecs/pcz_evecs_log.out:file_utils.py:390 Removed: [&#x27;05f81df1-9322-4605-bc0a-85900d54c75a&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
-Removing: /tmp/biobb/unitests
-<br/></div></td></tr></tbody>
-      <tbody class="passed results-table-row">
-        <tr>
-          <td class="col-result">Passed</td>
-          <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_hinges.py::TestPCZhinges::test_pcz_hinges</td>
-          <td class="col-duration">0.29</td>
-          <td class="col-links"></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-09-07 13:17:07,549 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_hinges Version: 4.1.0
-2023-09-07 13:17:07,550 [MainThread  ] [INFO ]  Creating 46a5f6ab-b3a8-425e-b518-cd29f95312dc temporary folder
-2023-09-07 13:17:07,550 [MainThread  ] [INFO ]  cd 46a5f6ab-b3a8-425e-b518-cd29f95312dc ; pczdump -i pcazip.pcz -o output.dat -t 0.3 --hinge=0 &gt;&amp; output.log
-
-2023-09-07 13:17:07,787 [MainThread  ] [INFO ]  Exit code 0
-
-2023-09-07 13:17:07,788 [MainThread  ] [INFO ]  Removed: [&#x27;46a5f6ab-b3a8-425e-b518-cd29f95312dc&#x27;]
-Checking if empty file: /tmp/biobb/unitests/pcz_hinges/hinges.json
-Comparing: 
-        File_A: /tmp/biobb/unitests/pcz_hinges/hinges.json
-        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/hinges.json
-        File_A hash: b&#x27;\xcd\x013\xb1T\x89\rB\xfaq\xa8\xc4\xf6\x95\x19\x04\xc6m0\xb1\xe3\xaa\xd6\xc6D/\xb5\x0e\xe3\xe2\xb1;&#x27;
-        File_B hash: b&#x27;\xcd\x013\xb1T\x89\rB\xfaq\xa8\xc4\xf6\x95\x19\x04\xc6m0\xb1\xe3\xaa\xd6\xc6D/\xb5\x0e\xe3\xe2\xb1;&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_hinges/pcz_hinges_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_hinges Version: 4.1.0
-INFO     /tmp/biobb/unitests/pcz_hinges/pcz_hinges_log.out:file_utils.py:390 Creating 46a5f6ab-b3a8-425e-b518-cd29f95312dc temporary folder
-INFO     /tmp/biobb/unitests/pcz_hinges/pcz_hinges_log.out:cmd_wrapper.py:33 cd 46a5f6ab-b3a8-425e-b518-cd29f95312dc ; pczdump -i pcazip.pcz -o output.dat -t 0.3 --hinge=0 &gt;&amp; output.log
-
-INFO     /tmp/biobb/unitests/pcz_hinges/pcz_hinges_log.out:cmd_wrapper.py:50 Exit code 0
-
-INFO     /tmp/biobb/unitests/pcz_hinges/pcz_hinges_log.out:file_utils.py:390 Removed: [&#x27;46a5f6ab-b3a8-425e-b518-cd29f95312dc&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
-Removing: /tmp/biobb/unitests
-<br/></div></td></tr></tbody>
-      <tbody class="passed results-table-row">
-        <tr>
-          <td class="col-result">Passed</td>
-          <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_info.py::TestPCZinfo::test_pcz_info</td>
-          <td class="col-duration">0.03</td>
-          <td class="col-links"></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-09-07 13:17:07,814 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_info Version: 4.1.0
-2023-09-07 13:17:07,814 [MainThread  ] [INFO ]  Creating 44e5ee7e-e148-4c3b-9b62-ca5ef26cd2bd temporary folder
-2023-09-07 13:17:07,814 [MainThread  ] [INFO ]  cd 44e5ee7e-e148-4c3b-9b62-ca5ef26cd2bd ; pczdump -i pcazip.pcz -o output1.dat --info ; pczdump -i pcazip.pcz -o output2.dat --evals
-
-2023-09-07 13:17:07,828 [MainThread  ] [INFO ]  Exit code 0
-
-2023-09-07 13:17:07,828 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-
-2023-09-07 13:17:07,829 [MainThread  ] [INFO ]  Removed: [&#x27;44e5ee7e-e148-4c3b-9b62-ca5ef26cd2bd&#x27;]
-Checking if empty file: /tmp/biobb/unitests/pcz_info/pcz.json
-Comparing: 
-        File_A: /tmp/biobb/unitests/pcz_info/pcz.json
-        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcz_info.json
-        File_A hash: b&quot;]\xf5$\x87\x84r\x15\xe7-\x83v.\xc0x\xb6|\xd6\x8b\x1dj\xb3\xb5[y\x17&#x27;\xd9\xebW&lt;\xa5%&quot;
-        File_B hash: b&quot;]\xf5$\x87\x84r\x15\xe7-\x83v.\xc0x\xb6|\xd6\x8b\x1dj\xb3\xb5[y\x17&#x27;\xd9\xebW&lt;\xa5%&quot;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_info/pcz_info_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_info Version: 4.1.0
-INFO     /tmp/biobb/unitests/pcz_info/pcz_info_log.out:file_utils.py:390 Creating 44e5ee7e-e148-4c3b-9b62-ca5ef26cd2bd temporary folder
-INFO     /tmp/biobb/unitests/pcz_info/pcz_info_log.out:cmd_wrapper.py:33 cd 44e5ee7e-e148-4c3b-9b62-ca5ef26cd2bd ; pczdump -i pcazip.pcz -o output1.dat --info ; pczdump -i pcazip.pcz -o output2.dat --evals
-
-INFO     /tmp/biobb/unitests/pcz_info/pcz_info_log.out:cmd_wrapper.py:50 Exit code 0
-
-INFO     /tmp/biobb/unitests/pcz_info/pcz_info_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-
-INFO     /tmp/biobb/unitests/pcz_info/pcz_info_log.out:file_utils.py:390 Removed: [&#x27;44e5ee7e-e148-4c3b-9b62-ca5ef26cd2bd&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
-Removing: /tmp/biobb/unitests
-<br/></div></td></tr></tbody>
-      <tbody class="passed results-table-row">
-        <tr>
-          <td class="col-result">Passed</td>
-          <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_lindemann.py::TestPCZlindemann::test_pcz_lindemann</td>
-          <td class="col-duration">0.05</td>
-          <td class="col-links"></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-09-07 13:17:07,853 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_lindemann Version: 4.1.0
-2023-09-07 13:17:07,853 [MainThread  ] [INFO ]  Creating b4aed28d-ea3b-47fb-8d67-292f0ab34157 temporary folder
-2023-09-07 13:17:07,853 [MainThread  ] [INFO ]  cd b4aed28d-ea3b-47fb-8d67-292f0ab34157 ; pczdump -i pcazip.pcz -o output.dat --lindemann
-
-2023-09-07 13:17:07,887 [MainThread  ] [INFO ]  Exit code 0
-
-2023-09-07 13:17:07,888 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
-
-2023-09-07 13:17:07,888 [MainThread  ] [INFO ]  Removed: [&#x27;b4aed28d-ea3b-47fb-8d67-292f0ab34157&#x27;]
-Checking if empty file: /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann.json
-Comparing: 
-        File_A: /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann.json
-        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcz_lindemann.json
-        File_A hash: b&#x27;\xf7\x17x\x10\x99\xe2\xf8,\xba\xc0\x10\xea\xca\xcb\x0e\xb5)b\xe2\x8drFr\xce\xdd\x88\xcf\xcdh\xf6v\xb3&#x27;
-        File_B hash: b&#x27;\xf7\x17x\x10\x99\xe2\xf8,\xba\xc0\x10\xea\xca\xcb\x0e\xb5)b\xe2\x8drFr\xce\xdd\x88\xcf\xcdh\xf6v\xb3&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_lindemann Version: 4.1.0
-INFO     /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann_log.out:file_utils.py:390 Creating b4aed28d-ea3b-47fb-8d67-292f0ab34157 temporary folder
-INFO     /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann_log.out:cmd_wrapper.py:33 cd b4aed28d-ea3b-47fb-8d67-292f0ab34157 ; pczdump -i pcazip.pcz -o output.dat --lindemann
-
-INFO     /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann_log.out:cmd_wrapper.py:50 Exit code 0
-
-INFO     /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms
-
-INFO     /tmp/biobb/unitests/pcz_lindemann/pcz_lindemann_log.out:file_utils.py:390 Removed: [&#x27;b4aed28d-ea3b-47fb-8d67-292f0ab34157&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
-Removing: /tmp/biobb/unitests
-<br/></div></td></tr></tbody>
-      <tbody class="passed results-table-row">
-        <tr>
-          <td class="col-result">Passed</td>
-          <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_similarity.py::TestPCZsimilarity::test_pcz_similarity</td>
-          <td class="col-duration">0.11</td>
-          <td class="col-links"></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-09-07 13:17:07,912 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_similarity Version: 4.1.0
-2023-09-07 13:17:07,912 [MainThread  ] [INFO ]  Creating 877245b3-b839-4ffc-b446-de5189df474d temporary folder
-2023-09-07 13:17:07,913 [MainThread  ] [INFO ]  cd 877245b3-b839-4ffc-b446-de5189df474d ; pczdump -i pcazip.pcz -o output1.dat --evals ; pczdump -i pcazip.pcz -o output2.dat --evals
-
-2023-09-07 13:17:07,925 [MainThread  ] [INFO ]  Exit code 0
-
-2023-09-07 13:17:07,925 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-
-2023-09-07 13:17:07,926 [MainThread  ] [INFO ]  cd 877245b3-b839-4ffc-b446-de5189df474d ; pczdump -i pcazip.pcz -o evecs_1_pc1 --evec=1 ; pczdump -i pcazip.pcz -o evecs_2_pc1 --evec=1 ; pczdump -i pcazip.pcz -o evecs_1_pc2 --evec=2 ; pczdump -i pcazip.pcz -o evecs_2_pc2 --evec=2 ; pczdump -i pcazip.pcz -o evecs_1_pc3 --evec=3 ; pczdump -i pcazip.pcz -o evecs_2_pc3 --evec=3 ; pczdump -i pcazip.pcz -o evecs_1_pc4 --evec=4 ; pczdump -i pcazip.pcz -o evecs_2_pc4 --evec=4 ; pczdump -i pcazip.pcz -o evecs_1_pc5 --evec=5 ; pczdump -i pcazip.pcz -o evecs_2_pc5 --evec=5 ; pczdump -i pcazip.pcz -o evecs_1_pc6 --evec=6 ; pczdump -i pcazip.pcz -o evecs_2_pc6 --evec=6 ; pczdump -i pcazip.pcz -o evecs_1_pc7 --evec=7 ; pczdump -i pcazip.pcz -o evecs_2_pc7 --evec=7 ;
-
-2023-09-07 13:17:07,991 [MainThread  ] [INFO ]  Exit code 0
-
-2023-09-07 13:17:07,991 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-
-2023-09-07 13:17:08,008 [MainThread  ] [INFO ]  Removed: [&#x27;877245b3-b839-4ffc-b446-de5189df474d&#x27;]
-Checking if empty file: /tmp/biobb/unitests/pcz_similarity/pcz_similarity.json
-Comparing: 
-        File_A: /tmp/biobb/unitests/pcz_similarity/pcz_similarity.json
-        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcz_similarity.json
-        File_A hash: b&#x27;k\xf1\xa8kZ_\rzn\xa9\xca\xe6/\xcf\xff:\x80\x0bEn\xd0,\x92\xeaN\xfb\x8d\x8a\xdcB\xe5\xff&#x27;
-        File_B hash: b&#x27;k\xf1\xa8kZ_\rzn\xa9\xca\xe6/\xcf\xff:\x80\x0bEn\xd0,\x92\xeaN\xfb\x8d\x8a\xdcB\xe5\xff&#x27;
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_similarity Version: 4.1.0
-INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:file_utils.py:390 Creating 877245b3-b839-4ffc-b446-de5189df474d temporary folder
-INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:cmd_wrapper.py:33 cd 877245b3-b839-4ffc-b446-de5189df474d ; pczdump -i pcazip.pcz -o output1.dat --evals ; pczdump -i pcazip.pcz -o output2.dat --evals
-
-INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:cmd_wrapper.py:50 Exit code 0
-
-INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-
-INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:cmd_wrapper.py:33 cd 877245b3-b839-4ffc-b446-de5189df474d ; pczdump -i pcazip.pcz -o evecs_1_pc1 --evec=1 ; pczdump -i pcazip.pcz -o evecs_2_pc1 --evec=1 ; pczdump -i pcazip.pcz -o evecs_1_pc2 --evec=2 ; pczdump -i pcazip.pcz -o evecs_2_pc2 --evec=2 ; pczdump -i pcazip.pcz -o evecs_1_pc3 --evec=3 ; pczdump -i pcazip.pcz -o evecs_2_pc3 --evec=3 ; pczdump -i pcazip.pcz -o evecs_1_pc4 --evec=4 ; pczdump -i pcazip.pcz -o evecs_2_pc4 --evec=4 ; pczdump -i pcazip.pcz -o evecs_1_pc5 --evec=5 ; pczdump -i pcazip.pcz -o evecs_2_pc5 --evec=5 ; pczdump -i pcazip.pcz -o evecs_1_pc6 --evec=6 ; pczdump -i pcazip.pcz -o evecs_2_pc6 --evec=6 ; pczdump -i pcazip.pcz -o evecs_1_pc7 --evec=7 ; pczdump -i pcazip.pcz -o evecs_2_pc7 --evec=7 ;
-
-INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:cmd_wrapper.py:50 Exit code 0
-
-INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-Warning: No selection made, computing data with all atoms
-
-INFO     /tmp/biobb/unitests/pcz_similarity/pcz_similarity_log.out:file_utils.py:390 Removed: [&#x27;877245b3-b839-4ffc-b446-de5189df474d&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
-Removing: /tmp/biobb/unitests
-<br/></div></td></tr></tbody>
-      <tbody class="passed results-table-row">
-        <tr>
-          <td class="col-result">Passed</td>
-          <td class="col-name">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_stiffness.py::TestPCZstiffness::test_pcz_stiffness</td>
-          <td class="col-duration">0.14</td>
-          <td class="col-links"></td></tr>
-        <tr>
-          <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2023-09-07 13:17:08,033 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_stiffness Version: 4.1.0
-2023-09-07 13:17:08,033 [MainThread  ] [INFO ]  Creating 3a838dc4-7038-412f-bef2-fafd6e9e6c94 temporary folder
-2023-09-07 13:17:08,034 [MainThread  ] [INFO ]  cd 3a838dc4-7038-412f-bef2-fafd6e9e6c94 ; pczdump -i pcazip.pcz -o output.dat --stiff=0 --temperature=300
-
-2023-09-07 13:17:08,113 [MainThread  ] [INFO ]  Exit code 0
-
-2023-09-07 13:17:08,114 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms
-
-2023-09-07 13:17:08,155 [MainThread  ] [INFO ]  Removed: [&#x27;3a838dc4-7038-412f-bef2-fafd6e9e6c94&#x27;]
-Checking if empty file: /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness.json
-<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_stiffness Version: 4.1.0
-INFO     /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness_log.out:file_utils.py:390 Creating 3a838dc4-7038-412f-bef2-fafd6e9e6c94 temporary folder
-INFO     /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness_log.out:cmd_wrapper.py:33 cd 3a838dc4-7038-412f-bef2-fafd6e9e6c94 ; pczdump -i pcazip.pcz -o output.dat --stiff=0 --temperature=300
-
-INFO     /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness_log.out:cmd_wrapper.py:50 Exit code 0
-
-INFO     /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms
-
-INFO     /tmp/biobb/unitests/pcz_stiffness/pcz_stiffness_log.out:file_utils.py:390 Removed: [&#x27;3a838dc4-7038-412f-bef2-fafd6e9e6c94&#x27;]<br/> ----------------------------Captured stdout teardown---------------------------- <br/>
-Removing: /tmp/biobb/unitests
-<br/></div></td></tr></tbody></table></body></html>
+          <th class="sortable" data-column-type="result">Result</th>
+          <th class="sortable" data-column-type="testId">Test</th>
+          <th class="sortable" data-column-type="duration">Duration</th>
+          <th>Links</th>
+        </tr>
+      </thead>
+    </table>
+  </body>
+  <footer>
+    <div id="data-container" data-jsonblob="{&#34;environment&#34;: {&#34;Python&#34;: &#34;3.10.13&#34;, &#34;Platform&#34;: &#34;Linux-5.4.0-159-generic-x86_64-with-glibc2.31&#34;, &#34;Packages&#34;: {&#34;pytest&#34;: &#34;8.1.1&#34;, &#34;pluggy&#34;: &#34;1.4.0&#34;}, &#34;Plugins&#34;: {&#34;cov&#34;: &#34;4.1.0&#34;, &#34;metadata&#34;: &#34;3.1.1&#34;, &#34;html&#34;: &#34;4.1.1&#34;}, &#34;CI&#34;: &#34;true&#34;}, &#34;tests&#34;: {&#34;biobb_flexserv/test/unitests/test_flexserv/test_bd_run.py::TestBDRun::test_bd_run&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;biobb_flexserv/test/unitests/test_flexserv/test_bd_run.py::TestBDRun::test_bd_run&#34;, &#34;duration&#34;: &#34;556 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;biobb_flexserv/test/unitests/test_flexserv/test_bd_run.py::TestBDRun::test_bd_run&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;556 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n2024-03-12 10:33:21,948 [MainThread  ] [INFO ]  Executing biobb_flexserv.flexserv.bd_run Version: 4.1.0\n2024-03-12 10:33:21,949 [MainThread  ] [INFO ]  Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests_13/bd_run/823887f3-001d-40a3-82db-867703bf2879\n2024-03-12 10:33:21,949 [MainThread  ] [INFO ]  bd 823887f3-001d-40a3-82db-867703bf2879/structure.ca.pdb 10000 1e-15 100 40 3.8 823887f3-001d-40a3-82db-867703bf2879/bd_run_out.crd &amp;gt; 823887f3-001d-40a3-82db-867703bf2879/bd_run_out.log\n\n2024-03-12 10:33:22,360 [MainThread  ] [INFO ]  Exit code 0\n\n2024-03-12 10:33:22,477 [MainThread  ] [INFO ]  Removed: [&amp;#x27;/tmp/biobb/unitests_13/bd_run/823887f3-001d-40a3-82db-867703bf2879&amp;#x27;]\nChecking if empty file: /tmp/biobb/unitests_13/bd_run/bd_run_out.crd\nChecking if empty file: /tmp/biobb/unitests_13/bd_run/bd_run_out.log\nComparing: \n        File_A: /tmp/biobb/unitests_13/bd_run/bd_run_out.crd\n        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/flexserv/bd_run_out.crd\n        File_A hash: b&amp;quot;\\x10\\xd4&amp;amp;\\x05\\t\\xb3\\xde))\\x88:5&amp;#x27;$\\xfa\\xe0a\\x91^\\x1f\\xa9\\x95\\xe4\\\\\\xc2k\\x1d\\xb1\\xff\\x02\\x1f\\x8f&amp;quot;\n        File_B hash: b&amp;quot;\\x10\\xd4&amp;amp;\\x05\\t\\xb3\\xde))\\x88:5&amp;#x27;$\\xfa\\xe0a\\x91^\\x1f\\xa9\\x95\\xe4\\\\\\xc2k\\x1d\\xb1\\xff\\x02\\x1f\\x8f&amp;quot;\nComparing: \n        File_A: /tmp/biobb/unitests_13/bd_run/bd_run_out.log\n        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/flexserv/bd_run_out.log\n        File_A hash: b&amp;#x27;u\\xef4\\x02\\x8c\\xdb\\x92S\\x18\\n\\xa2N6\\xb5\\xf2{\\xb7\\x96RED\\xe7[\\xdd\\xd3\\xa1\\xcb\\x06\\xb91\\xfb\\x80&amp;#x27;\n        File_B hash: b&amp;#x27;u\\xef4\\x02\\x8c\\xdb\\x92S\\x18\\n\\xa2N6\\xb5\\xf2{\\xb7\\x96RED\\xe7[\\xdd\\xd3\\xa1\\xcb\\x06\\xb91\\xfb\\x80&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     /tmp/biobb/unitests_13/bd_run/bd_run_log.out:file_utils.py:390 Executing biobb_flexserv.flexserv.bd_run Version: 4.1.0\nINFO     /tmp/biobb/unitests_13/bd_run/bd_run_log.out:file_utils.py:390 Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests_13/bd_run/823887f3-001d-40a3-82db-867703bf2879\nINFO     /tmp/biobb/unitests_13/bd_run/bd_run_log.out:cmd_wrapper.py:33 bd 823887f3-001d-40a3-82db-867703bf2879/structure.ca.pdb 10000 1e-15 100 40 3.8 823887f3-001d-40a3-82db-867703bf2879/bd_run_out.crd &amp;gt; 823887f3-001d-40a3-82db-867703bf2879/bd_run_out.log\n\nINFO     /tmp/biobb/unitests_13/bd_run/bd_run_log.out:cmd_wrapper.py:50 Exit code 0\n\nINFO     /tmp/biobb/unitests_13/bd_run/bd_run_log.out:file_utils.py:390 Removed: [&amp;#x27;/tmp/biobb/unitests_13/bd_run/823887f3-001d-40a3-82db-867703bf2879&amp;#x27;]\n\n--------------------------- Captured stdout teardown ---------------------------\n\nRemoving: /tmp/biobb/unitests_13\n&#34;}], &#34;biobb_flexserv/test/unitests/test_flexserv/test_dmd_run.py::TestDMDRun::test_dmd_run&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;biobb_flexserv/test/unitests/test_flexserv/test_dmd_run.py::TestDMDRun::test_dmd_run&#34;, &#34;duration&#34;: &#34;364 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;biobb_flexserv/test/unitests/test_flexserv/test_dmd_run.py::TestDMDRun::test_dmd_run&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;364 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n2024-03-12 10:33:22,522 [MainThread  ] [INFO ]  Executing biobb_flexserv.flexserv.dmd_run Version: 4.1.0\n2024-03-12 10:33:22,523 [MainThread  ] [INFO ]  Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests_13/dmd_run/b5659cf6-6d85-4118-9ef5-e4d629ae860b\n2024-03-12 10:33:22,523 [MainThread  ] [INFO ]  dmdgoopt &amp;lt; /tmp/biobb/unitests_13/dmd_run/b5659cf6-6d85-4118-9ef5-e4d629ae860b/dmd.in &amp;gt; b5659cf6-6d85-4118-9ef5-e4d629ae860b/dmd_run_out.log\n\n2024-03-12 10:33:22,855 [MainThread  ] [INFO ]  Exit code 0\n\n2024-03-12 10:33:22,855 [MainThread  ] [INFO ]  Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG\n\n2024-03-12 10:33:22,856 [MainThread  ] [INFO ]  Removed: [&amp;#x27;/tmp/biobb/unitests_13/dmd_run/b5659cf6-6d85-4118-9ef5-e4d629ae860b&amp;#x27;]\nChecking if empty file: /tmp/biobb/unitests_13/dmd_run/dmd_run_out.crd\nComparing: \n        File_A: /tmp/biobb/unitests_13/dmd_run/dmd_run_out.crd\n        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/flexserv/dmd_run_out.crd\n        File_A hash: b&amp;#x27;\\xb4Q\\xf2\\xe0H\\xbe\\xeb\\xe4Gl\\xf7m\\x97N\\xec\\x8b\\xfa\\\\j\\xdd\\x1c\\xc2\\x95W1J\\xf8\\x9c\\xebW\\xd5\\xf5&amp;#x27;\n        File_B hash: b&amp;#x27;\\xb4Q\\xf2\\xe0H\\xbe\\xeb\\xe4Gl\\xf7m\\x97N\\xec\\x8b\\xfa\\\\j\\xdd\\x1c\\xc2\\x95W1J\\xf8\\x9c\\xebW\\xd5\\xf5&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     /tmp/biobb/unitests_13/dmd_run/dmd_run_log.out:file_utils.py:390 Executing biobb_flexserv.flexserv.dmd_run Version: 4.1.0\nINFO     /tmp/biobb/unitests_13/dmd_run/dmd_run_log.out:file_utils.py:390 Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests_13/dmd_run/b5659cf6-6d85-4118-9ef5-e4d629ae860b\nINFO     /tmp/biobb/unitests_13/dmd_run/dmd_run_log.out:cmd_wrapper.py:33 dmdgoopt &amp;lt; /tmp/biobb/unitests_13/dmd_run/b5659cf6-6d85-4118-9ef5-e4d629ae860b/dmd.in &amp;gt; b5659cf6-6d85-4118-9ef5-e4d629ae860b/dmd_run_out.log\n\nINFO     /tmp/biobb/unitests_13/dmd_run/dmd_run_log.out:cmd_wrapper.py:50 Exit code 0\n\nINFO     /tmp/biobb/unitests_13/dmd_run/dmd_run_log.err:cmd_wrapper.py:60 Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG\n\nINFO     /tmp/biobb/unitests_13/dmd_run/dmd_run_log.out:file_utils.py:390 Removed: [&amp;#x27;/tmp/biobb/unitests_13/dmd_run/b5659cf6-6d85-4118-9ef5-e4d629ae860b&amp;#x27;]\n\n--------------------------- Captured stdout teardown ---------------------------\n\nRemoving: /tmp/biobb/unitests_13\n&#34;}], &#34;biobb_flexserv/test/unitests/test_flexserv/test_nma_run.py::TestNMARun::test_nma_run&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;biobb_flexserv/test/unitests/test_flexserv/test_nma_run.py::TestNMARun::test_nma_run&#34;, &#34;duration&#34;: &#34;760 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;biobb_flexserv/test/unitests/test_flexserv/test_nma_run.py::TestNMARun::test_nma_run&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;760 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n2024-03-12 10:33:22,881 [MainThread  ] [INFO ]  Executing biobb_flexserv.flexserv.nma_run Version: 4.1.0\n2024-03-12 10:33:22,881 [MainThread  ] [INFO ]  Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests_13/nma_run/6691fc1f-9b32-4f4b-b2e5-576ffca00779\n2024-03-12 10:33:22,881 [MainThread  ] [INFO ]  perl  /home/user/micromamba/envs/test_environment/bin/nmanu.pl 6691fc1f-9b32-4f4b-b2e5-576ffca00779/structure.ca.pdb hessian.dat 1 0 40; diaghess ; perl /home/user/micromamba/envs/test_environment/bin/mc-eigen-mdweb.pl eigenvec.dat  100  &amp;gt; file.proj ; perl /home/user/micromamba/envs/test_environment/bin/pca_anim_mc.pl -pdb 6691fc1f-9b32-4f4b-b2e5-576ffca00779/structure.ca.pdb  -evec eigenvec.dat -i file.proj -n  50  -pout 6691fc1f-9b32-4f4b-b2e5-576ffca00779/nma_run_out.crd &amp;gt; 6691fc1f-9b32-4f4b-b2e5-576ffca00779/nma_run_out.log\n\n2024-03-12 10:33:23,616 [MainThread  ] [INFO ]  Exit code 0\n\n2024-03-12 10:33:23,616 [MainThread  ] [INFO ]  Number of interactions 3570\nNumber of non-zero elements 32640\nMatrix trace 8651.23364900726\nThe dimension:    255\nreturn info from dsyev:      0\nptraj based evectors in: eigenvec.dat        \n\n2024-03-12 10:33:23,616 [MainThread  ] [INFO ]  Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL\n\n2024-03-12 10:33:23,617 [MainThread  ] [INFO ]  Removed: [&amp;#x27;/tmp/biobb/unitests_13/nma_run/6691fc1f-9b32-4f4b-b2e5-576ffca00779&amp;#x27;]\nChecking if empty file: /tmp/biobb/unitests_13/nma_run/nma_run_out.crd\nComparing: \n        File_A: /tmp/biobb/unitests_13/nma_run/nma_run_out.crd\n        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/flexserv/nma_run_out.crd\n        File_A hash: b&amp;#x27;\\x8cVl\\xedI\\xb9N\\xffd\\xce[\\xda\\xb7hsF+\\xf7\\xb7Q\\\\\\x1c\\xd6#R\\x95n{\\xfa\\xc2\\xbc\\xd6&amp;#x27;\n        File_B hash: b&amp;#x27;\\x8cVl\\xedI\\xb9N\\xffd\\xce[\\xda\\xb7hsF+\\xf7\\xb7Q\\\\\\x1c\\xd6#R\\x95n{\\xfa\\xc2\\xbc\\xd6&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     /tmp/biobb/unitests_13/nma_run/nma_run_log.out:file_utils.py:390 Executing biobb_flexserv.flexserv.nma_run Version: 4.1.0\nINFO     /tmp/biobb/unitests_13/nma_run/nma_run_log.out:file_utils.py:390 Copy: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/data/flexserv/structure.ca.pdb to /tmp/biobb/unitests_13/nma_run/6691fc1f-9b32-4f4b-b2e5-576ffca00779\nINFO     /tmp/biobb/unitests_13/nma_run/nma_run_log.out:cmd_wrapper.py:33 perl  /home/user/micromamba/envs/test_environment/bin/nmanu.pl 6691fc1f-9b32-4f4b-b2e5-576ffca00779/structure.ca.pdb hessian.dat 1 0 40; diaghess ; perl /home/user/micromamba/envs/test_environment/bin/mc-eigen-mdweb.pl eigenvec.dat  100  &amp;gt; file.proj ; perl /home/user/micromamba/envs/test_environment/bin/pca_anim_mc.pl -pdb 6691fc1f-9b32-4f4b-b2e5-576ffca00779/structure.ca.pdb  -evec eigenvec.dat -i file.proj -n  50  -pout 6691fc1f-9b32-4f4b-b2e5-576ffca00779/nma_run_out.crd &amp;gt; 6691fc1f-9b32-4f4b-b2e5-576ffca00779/nma_run_out.log\n\nINFO     /tmp/biobb/unitests_13/nma_run/nma_run_log.out:cmd_wrapper.py:50 Exit code 0\n\nINFO     /tmp/biobb/unitests_13/nma_run/nma_run_log.out:cmd_wrapper.py:52 Number of interactions 3570\nNumber of non-zero elements 32640\nMatrix trace 8651.23364900726\nThe dimension:    255\nreturn info from dsyev:      0\nptraj based evectors in: eigenvec.dat        \n\nINFO     /tmp/biobb/unitests_13/nma_run/nma_run_log.err:cmd_wrapper.py:60 Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL\n\nINFO     /tmp/biobb/unitests_13/nma_run/nma_run_log.out:file_utils.py:390 Removed: [&amp;#x27;/tmp/biobb/unitests_13/nma_run/6691fc1f-9b32-4f4b-b2e5-576ffca00779&amp;#x27;]\n\n--------------------------- Captured stdout teardown ---------------------------\n\nRemoving: /tmp/biobb/unitests_13\n&#34;}], &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcaunzip.py::TestPCZunzip::test_pczunzip&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcaunzip.py::TestPCZunzip::test_pczunzip&#34;, &#34;duration&#34;: &#34;127 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;biobb_flexserv/test/unitests/test_pcasuite/test_pcaunzip.py::TestPCZunzip::test_pczunzip&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;127 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n2024-03-12 10:33:23,642 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_unzip Version: 4.1.0\n2024-03-12 10:33:23,642 [MainThread  ] [INFO ]  Creating 69baeca8-0f1a-4883-be40-a55cbb4e9770 temporary folder\n2024-03-12 10:33:23,642 [MainThread  ] [INFO ]  cd 69baeca8-0f1a-4883-be40-a55cbb4e9770 ; pcaunzip -i pcazip.pcz -o pcazip.crd\n\n2024-03-12 10:33:23,734 [MainThread  ] [INFO ]  Exit code 0\n\n2024-03-12 10:33:23,734 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms\n\n2024-03-12 10:33:23,736 [MainThread  ] [INFO ]  Removed: [&amp;#x27;69baeca8-0f1a-4883-be40-a55cbb4e9770&amp;#x27;]\nChecking if empty file: /tmp/biobb/unitests_13/pcz_unzip/pcazip.crd\nComparing: \n        File_A: /tmp/biobb/unitests_13/pcz_unzip/pcazip.crd\n        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcazip.crd\n        File_A hash: b&amp;#x27;6\\x80\\x81\\xbc\\x91(\\xb2n\\x8a\\xdf\\x90\\xa0\\xdcB\\xe4\\xb9\\x01\\x08V*\\x84\\xf9\\xcbD\\xc4\\xc8u\\xc7\\xed\\xf5o\\x0c&amp;#x27;\n        File_B hash: b&amp;#x27;6\\x80\\x81\\xbc\\x91(\\xb2n\\x8a\\xdf\\x90\\xa0\\xdcB\\xe4\\xb9\\x01\\x08V*\\x84\\xf9\\xcbD\\xc4\\xc8u\\xc7\\xed\\xf5o\\x0c&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     /tmp/biobb/unitests_13/pcz_unzip/pcz_unzip_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_unzip Version: 4.1.0\nINFO     /tmp/biobb/unitests_13/pcz_unzip/pcz_unzip_log.out:file_utils.py:390 Creating 69baeca8-0f1a-4883-be40-a55cbb4e9770 temporary folder\nINFO     /tmp/biobb/unitests_13/pcz_unzip/pcz_unzip_log.out:cmd_wrapper.py:33 cd 69baeca8-0f1a-4883-be40-a55cbb4e9770 ; pcaunzip -i pcazip.pcz -o pcazip.crd\n\nINFO     /tmp/biobb/unitests_13/pcz_unzip/pcz_unzip_log.out:cmd_wrapper.py:50 Exit code 0\n\nINFO     /tmp/biobb/unitests_13/pcz_unzip/pcz_unzip_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms\n\nINFO     /tmp/biobb/unitests_13/pcz_unzip/pcz_unzip_log.out:file_utils.py:390 Removed: [&amp;#x27;69baeca8-0f1a-4883-be40-a55cbb4e9770&amp;#x27;]\n\n--------------------------- Captured stdout teardown ---------------------------\n\nRemoving: /tmp/biobb/unitests_13\n&#34;}], &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcazip.py::TestPCZzip::test_pczzip&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcazip.py::TestPCZzip::test_pczzip&#34;, &#34;duration&#34;: &#34;125 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;biobb_flexserv/test/unitests/test_pcasuite/test_pcazip.py::TestPCZzip::test_pczzip&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;125 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n2024-03-12 10:33:23,769 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_zip Version: 4.1.0\n2024-03-12 10:33:23,770 [MainThread  ] [INFO ]  Creating 21a88e17-f2ca-4cc2-9355-8bede51de044 temporary folder\n2024-03-12 10:33:23,771 [MainThread  ] [INFO ]  cd 21a88e17-f2ca-4cc2-9355-8bede51de044 ; pcazip -p structure.ca.pdb -i traj.crd -o pcazip.pcz -q 90\n\n2024-03-12 10:33:23,872 [MainThread  ] [INFO ]  Exit code 0\n\n2024-03-12 10:33:23,873 [MainThread  ] [INFO ]  Removed: [&amp;#x27;21a88e17-f2ca-4cc2-9355-8bede51de044&amp;#x27;]\nChecking if empty file: /tmp/biobb/unitests_13/pcz_zip/pcazip.pcz\nComparing: \n        File_A: /tmp/biobb/unitests_13/pcz_zip/pcazip.pcz\n        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcazip.pcz\n        File_A hash: b&amp;#x27;`!\\x1b,o\\r\\x84/\\xa8Mh\\xc4\\xfem\\xee)\\xb2{\\xa1\\xb1\\x80\\xcc\\xaf\\x80\\xcf^\\\\\\x01D\\xfe:\\xf9&amp;#x27;\n        File_B hash: b&amp;#x27;`!\\x1b,o\\r\\x84/\\xa8Mh\\xc4\\xfem\\xee)\\xb2{\\xa1\\xb1\\x80\\xcc\\xaf\\x80\\xcf^\\\\\\x01D\\xfe:\\xf9&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     /tmp/biobb/unitests_13/pcz_zip/pcz_zip_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_zip Version: 4.1.0\nINFO     /tmp/biobb/unitests_13/pcz_zip/pcz_zip_log.out:file_utils.py:390 Creating 21a88e17-f2ca-4cc2-9355-8bede51de044 temporary folder\nINFO     /tmp/biobb/unitests_13/pcz_zip/pcz_zip_log.out:cmd_wrapper.py:33 cd 21a88e17-f2ca-4cc2-9355-8bede51de044 ; pcazip -p structure.ca.pdb -i traj.crd -o pcazip.pcz -q 90\n\nINFO     /tmp/biobb/unitests_13/pcz_zip/pcz_zip_log.out:cmd_wrapper.py:50 Exit code 0\n\nINFO     /tmp/biobb/unitests_13/pcz_zip/pcz_zip_log.out:file_utils.py:390 Removed: [&amp;#x27;21a88e17-f2ca-4cc2-9355-8bede51de044&amp;#x27;]\n\n--------------------------- Captured stdout teardown ---------------------------\n\nRemoving: /tmp/biobb/unitests_13\n&#34;}], &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_animate.py::TestPCZanimate::test_pcz_animate&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_animate.py::TestPCZanimate::test_pcz_animate&#34;, &#34;duration&#34;: &#34;146 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_animate.py::TestPCZanimate::test_pcz_animate&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;146 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n2024-03-12 10:33:23,895 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_animate Version: 4.1.0\n2024-03-12 10:33:23,896 [MainThread  ] [INFO ]  Creating 5b72570e-7c1f-4f6d-a997-6a4b2b10a345 temporary folder\n2024-03-12 10:33:23,896 [MainThread  ] [INFO ]  cd 5b72570e-7c1f-4f6d-a997-6a4b2b10a345 ; pczdump -i pcazip.pcz -o pcazip_anim1.pdb --anim=1 --pdb\n\n2024-03-12 10:33:23,905 [MainThread  ] [INFO ]  Exit code 0\n\n2024-03-12 10:33:23,905 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms\n\n2024-03-12 10:33:23,906 [MainThread  ] [INFO ]  Removed: [&amp;#x27;5b72570e-7c1f-4f6d-a997-6a4b2b10a345&amp;#x27;]\nChecking if empty file: /tmp/biobb/unitests_13/pcz_animate/pcazip_anim1.pdb\nChecking RMSD between:\n     PDB_A: /tmp/biobb/unitests_13/pcz_animate/pcazip_anim1.pdb\n     PDB_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcazip_anim1.pdb\n     Ignoring HETAMT in RMSD\n     Ignoring Hydrogen atoms in RMSD\n     Atoms ALIGNED in PDB_A: 85\n     Atoms ALIGNED in PDB_B: 85\n     RMS: 7.911547607468411e-15\n     RMS_CUTOFF: 1\n\n------------------------------ Captured log call -------------------------------\nINFO     /tmp/biobb/unitests_13/pcz_animate/pcz_animate_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_animate Version: 4.1.0\nINFO     /tmp/biobb/unitests_13/pcz_animate/pcz_animate_log.out:file_utils.py:390 Creating 5b72570e-7c1f-4f6d-a997-6a4b2b10a345 temporary folder\nINFO     /tmp/biobb/unitests_13/pcz_animate/pcz_animate_log.out:cmd_wrapper.py:33 cd 5b72570e-7c1f-4f6d-a997-6a4b2b10a345 ; pczdump -i pcazip.pcz -o pcazip_anim1.pdb --anim=1 --pdb\n\nINFO     /tmp/biobb/unitests_13/pcz_animate/pcz_animate_log.out:cmd_wrapper.py:50 Exit code 0\n\nINFO     /tmp/biobb/unitests_13/pcz_animate/pcz_animate_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms\n\nINFO     /tmp/biobb/unitests_13/pcz_animate/pcz_animate_log.out:file_utils.py:390 Removed: [&amp;#x27;5b72570e-7c1f-4f6d-a997-6a4b2b10a345&amp;#x27;]\n\n--------------------------- Captured stdout teardown ---------------------------\n\nRemoving: /tmp/biobb/unitests_13\n&#34;}], &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_bfactor.py::TestPCZbfactor::test_pcz_bfactor&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_bfactor.py::TestPCZbfactor::test_pcz_bfactor&#34;, &#34;duration&#34;: &#34;67 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_bfactor.py::TestPCZbfactor::test_pcz_bfactor&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;67 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n2024-03-12 10:33:24,043 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_bfactor Version: 4.1.0\n2024-03-12 10:33:24,043 [MainThread  ] [INFO ]  Creating 920a84c4-1ac7-4953-a854-7f5faf7f5b5e temporary folder\n2024-03-12 10:33:24,043 [MainThread  ] [INFO ]  cd 920a84c4-1ac7-4953-a854-7f5faf7f5b5e ; pczdump -i pcazip.pcz -o bfactors.dat --bfactor --fluc=1\n\n2024-03-12 10:33:24,053 [MainThread  ] [INFO ]  Exit code 0\n\n2024-03-12 10:33:24,053 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms\n\n2024-03-12 10:33:24,053 [MainThread  ] [INFO ]  cd 920a84c4-1ac7-4953-a854-7f5faf7f5b5e ; pczdump -i pcazip.pcz -o bfactors.pdb --bfactor --fluc=1 --pdb\n\n2024-03-12 10:33:24,060 [MainThread  ] [INFO ]  Exit code 0\n\n2024-03-12 10:33:24,060 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms\n\n2024-03-12 10:33:24,061 [MainThread  ] [INFO ]  Removed: [&amp;#x27;920a84c4-1ac7-4953-a854-7f5faf7f5b5e&amp;#x27;]\nChecking if empty file: /tmp/biobb/unitests_13/pcz_bfactor/bfactors.dat\nChecking if empty file: /tmp/biobb/unitests_13/pcz_bfactor/bfactors.pdb\nComparing: \n        File_A: /tmp/biobb/unitests_13/pcz_bfactor/bfactors.dat\n        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/bfactors.dat\n        File_A hash: b&amp;#x27;\\xc2\\x1aC\\xb6\\xce\\xa5&amp;amp;G\\x9b\\xec\\xb3\\xebM!\\xcd\\xa3\\x1d\\x86\\x96\\xed\\xc0 o\\xdc+\\x97-\\xc3\\x19\\x14\\xd0U&amp;#x27;\n        File_B hash: b&amp;#x27;\\xc2\\x1aC\\xb6\\xce\\xa5&amp;amp;G\\x9b\\xec\\xb3\\xebM!\\xcd\\xa3\\x1d\\x86\\x96\\xed\\xc0 o\\xdc+\\x97-\\xc3\\x19\\x14\\xd0U&amp;#x27;\nChecking RMSD between:\n     PDB_A: /tmp/biobb/unitests_13/pcz_bfactor/bfactors.pdb\n     PDB_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/bfactors.pdb\n     Ignoring HETAMT in RMSD\n     Ignoring Hydrogen atoms in RMSD\n     Atoms ALIGNED in PDB_A: 85\n     Atoms ALIGNED in PDB_B: 85\n     RMS: 7.911547607468411e-15\n     RMS_CUTOFF: 1\n\n------------------------------ Captured log call -------------------------------\nINFO     /tmp/biobb/unitests_13/pcz_bfactor/pcz_bfactor_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_bfactor Version: 4.1.0\nINFO     /tmp/biobb/unitests_13/pcz_bfactor/pcz_bfactor_log.out:file_utils.py:390 Creating 920a84c4-1ac7-4953-a854-7f5faf7f5b5e temporary folder\nINFO     /tmp/biobb/unitests_13/pcz_bfactor/pcz_bfactor_log.out:cmd_wrapper.py:33 cd 920a84c4-1ac7-4953-a854-7f5faf7f5b5e ; pczdump -i pcazip.pcz -o bfactors.dat --bfactor --fluc=1\n\nINFO     /tmp/biobb/unitests_13/pcz_bfactor/pcz_bfactor_log.out:cmd_wrapper.py:50 Exit code 0\n\nINFO     /tmp/biobb/unitests_13/pcz_bfactor/pcz_bfactor_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms\n\nINFO     /tmp/biobb/unitests_13/pcz_bfactor/pcz_bfactor_log.out:cmd_wrapper.py:33 cd 920a84c4-1ac7-4953-a854-7f5faf7f5b5e ; pczdump -i pcazip.pcz -o bfactors.pdb --bfactor --fluc=1 --pdb\n\nINFO     /tmp/biobb/unitests_13/pcz_bfactor/pcz_bfactor_log.out:cmd_wrapper.py:50 Exit code 0\n\nINFO     /tmp/biobb/unitests_13/pcz_bfactor/pcz_bfactor_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms\n\nINFO     /tmp/biobb/unitests_13/pcz_bfactor/pcz_bfactor_log.out:file_utils.py:390 Removed: [&amp;#x27;920a84c4-1ac7-4953-a854-7f5faf7f5b5e&amp;#x27;]\n\n--------------------------- Captured stdout teardown ---------------------------\n\nRemoving: /tmp/biobb/unitests_13\n&#34;}], &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_collectivity.py::TestPCZcollectivity::test_pcz_collectivity&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_collectivity.py::TestPCZcollectivity::test_pcz_collectivity&#34;, &#34;duration&#34;: &#34;31 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_collectivity.py::TestPCZcollectivity::test_pcz_collectivity&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;31 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n2024-03-12 10:33:24,113 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_collectivity Version: 4.1.0\n2024-03-12 10:33:24,114 [MainThread  ] [INFO ]  Creating 4d58fa18-9cee-42c0-a374-95460f9e3f43 temporary folder\n2024-03-12 10:33:24,114 [MainThread  ] [INFO ]  cd 4d58fa18-9cee-42c0-a374-95460f9e3f43 ; pczdump -i pcazip.pcz -o output.dat --collectivity=0\n\n2024-03-12 10:33:24,123 [MainThread  ] [INFO ]  Exit code 0\n\n2024-03-12 10:33:24,123 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms\n\n2024-03-12 10:33:24,124 [MainThread  ] [INFO ]  Removed: [&amp;#x27;4d58fa18-9cee-42c0-a374-95460f9e3f43&amp;#x27;]\nChecking if empty file: /tmp/biobb/unitests_13/pcz_collectivity/pcz_collectivity.json\nComparing: \n        File_A: /tmp/biobb/unitests_13/pcz_collectivity/pcz_collectivity.json\n        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcz_collectivity.json\n        File_A hash: b&amp;quot;\\xc94A\\xec1\\xf4.\\xedV&amp;#x27;\\x90J\\x7fK\\xc8\\xdd\\xdc\\xa4*\\x1fs\\xe4\\x1d\\x83\\x1d\\x16\\xd7\\x1a\\x84\\x9a\\xe3Z&amp;quot;\n        File_B hash: b&amp;quot;\\xc94A\\xec1\\xf4.\\xedV&amp;#x27;\\x90J\\x7fK\\xc8\\xdd\\xdc\\xa4*\\x1fs\\xe4\\x1d\\x83\\x1d\\x16\\xd7\\x1a\\x84\\x9a\\xe3Z&amp;quot;\n\n------------------------------ Captured log call -------------------------------\nINFO     /tmp/biobb/unitests_13/pcz_collectivity/pcz_collectivity_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_collectivity Version: 4.1.0\nINFO     /tmp/biobb/unitests_13/pcz_collectivity/pcz_collectivity_log.out:file_utils.py:390 Creating 4d58fa18-9cee-42c0-a374-95460f9e3f43 temporary folder\nINFO     /tmp/biobb/unitests_13/pcz_collectivity/pcz_collectivity_log.out:cmd_wrapper.py:33 cd 4d58fa18-9cee-42c0-a374-95460f9e3f43 ; pczdump -i pcazip.pcz -o output.dat --collectivity=0\n\nINFO     /tmp/biobb/unitests_13/pcz_collectivity/pcz_collectivity_log.out:cmd_wrapper.py:50 Exit code 0\n\nINFO     /tmp/biobb/unitests_13/pcz_collectivity/pcz_collectivity_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms\n\nINFO     /tmp/biobb/unitests_13/pcz_collectivity/pcz_collectivity_log.out:file_utils.py:390 Removed: [&amp;#x27;4d58fa18-9cee-42c0-a374-95460f9e3f43&amp;#x27;]\n\n--------------------------- Captured stdout teardown ---------------------------\n\nRemoving: /tmp/biobb/unitests_13\n&#34;}], &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_evecs.py::TestPCZevecs::test_pcz_evecs&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_evecs.py::TestPCZevecs::test_pcz_evecs&#34;, &#34;duration&#34;: &#34;32 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_evecs.py::TestPCZevecs::test_pcz_evecs&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;32 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n2024-03-12 10:33:24,146 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_evecs Version: 4.1.0\n2024-03-12 10:33:24,146 [MainThread  ] [INFO ]  Creating 8e8d9582-b524-49f4-a8c7-dd7dc2c164d2 temporary folder\n2024-03-12 10:33:24,146 [MainThread  ] [INFO ]  cd 8e8d9582-b524-49f4-a8c7-dd7dc2c164d2 ; pczdump -i pcazip.pcz -o output.dat --evec=1\n\n2024-03-12 10:33:24,156 [MainThread  ] [INFO ]  Exit code 0\n\n2024-03-12 10:33:24,156 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms\n\n2024-03-12 10:33:24,157 [MainThread  ] [INFO ]  Removed: [&amp;#x27;8e8d9582-b524-49f4-a8c7-dd7dc2c164d2&amp;#x27;]\nChecking if empty file: /tmp/biobb/unitests_13/pcz_evecs/pcz_evecs.json\nComparing: \n        File_A: /tmp/biobb/unitests_13/pcz_evecs/pcz_evecs.json\n        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcz_evecs.json\n        File_A hash: b&amp;#x27;YK\\x9b\\x1a&amp;lt;\\x1b\\xfc\\x9b\\xaf\\x02#\\x82\\x83\\x8dY\\x94\\xa4\\xfb\\xfe\\x86\\x81\\xe25\\x00\\x99\\x8e!2\\xd3\\x17\\x13\\x87&amp;#x27;\n        File_B hash: b&amp;#x27;YK\\x9b\\x1a&amp;lt;\\x1b\\xfc\\x9b\\xaf\\x02#\\x82\\x83\\x8dY\\x94\\xa4\\xfb\\xfe\\x86\\x81\\xe25\\x00\\x99\\x8e!2\\xd3\\x17\\x13\\x87&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     /tmp/biobb/unitests_13/pcz_evecs/pcz_evecs_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_evecs Version: 4.1.0\nINFO     /tmp/biobb/unitests_13/pcz_evecs/pcz_evecs_log.out:file_utils.py:390 Creating 8e8d9582-b524-49f4-a8c7-dd7dc2c164d2 temporary folder\nINFO     /tmp/biobb/unitests_13/pcz_evecs/pcz_evecs_log.out:cmd_wrapper.py:33 cd 8e8d9582-b524-49f4-a8c7-dd7dc2c164d2 ; pczdump -i pcazip.pcz -o output.dat --evec=1\n\nINFO     /tmp/biobb/unitests_13/pcz_evecs/pcz_evecs_log.out:cmd_wrapper.py:50 Exit code 0\n\nINFO     /tmp/biobb/unitests_13/pcz_evecs/pcz_evecs_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms\n\nINFO     /tmp/biobb/unitests_13/pcz_evecs/pcz_evecs_log.out:file_utils.py:390 Removed: [&amp;#x27;8e8d9582-b524-49f4-a8c7-dd7dc2c164d2&amp;#x27;]\n\n--------------------------- Captured stdout teardown ---------------------------\n\nRemoving: /tmp/biobb/unitests_13\n&#34;}], &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_hinges.py::TestPCZhinges::test_pcz_hinges&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_hinges.py::TestPCZhinges::test_pcz_hinges&#34;, &#34;duration&#34;: &#34;259 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_hinges.py::TestPCZhinges::test_pcz_hinges&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;259 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n2024-03-12 10:33:24,179 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_hinges Version: 4.1.0\n2024-03-12 10:33:24,179 [MainThread  ] [INFO ]  Creating 60f0c675-bda4-4283-ae57-9922ee90150f temporary folder\n2024-03-12 10:33:24,179 [MainThread  ] [INFO ]  cd 60f0c675-bda4-4283-ae57-9922ee90150f ; pczdump -i pcazip.pcz -o output.dat -t 0.3 --hinge=0 &amp;gt;&amp;amp; output.log\n\n2024-03-12 10:33:24,417 [MainThread  ] [INFO ]  Exit code 0\n\n2024-03-12 10:33:24,418 [MainThread  ] [INFO ]  Removed: [&amp;#x27;60f0c675-bda4-4283-ae57-9922ee90150f&amp;#x27;]\nChecking if empty file: /tmp/biobb/unitests_13/pcz_hinges/hinges.json\nComparing: \n        File_A: /tmp/biobb/unitests_13/pcz_hinges/hinges.json\n        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/hinges.json\n        File_A hash: b&amp;#x27;\\xcd\\x013\\xb1T\\x89\\rB\\xfaq\\xa8\\xc4\\xf6\\x95\\x19\\x04\\xc6m0\\xb1\\xe3\\xaa\\xd6\\xc6D/\\xb5\\x0e\\xe3\\xe2\\xb1;&amp;#x27;\n        File_B hash: b&amp;#x27;\\xcd\\x013\\xb1T\\x89\\rB\\xfaq\\xa8\\xc4\\xf6\\x95\\x19\\x04\\xc6m0\\xb1\\xe3\\xaa\\xd6\\xc6D/\\xb5\\x0e\\xe3\\xe2\\xb1;&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     /tmp/biobb/unitests_13/pcz_hinges/pcz_hinges_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_hinges Version: 4.1.0\nINFO     /tmp/biobb/unitests_13/pcz_hinges/pcz_hinges_log.out:file_utils.py:390 Creating 60f0c675-bda4-4283-ae57-9922ee90150f temporary folder\nINFO     /tmp/biobb/unitests_13/pcz_hinges/pcz_hinges_log.out:cmd_wrapper.py:33 cd 60f0c675-bda4-4283-ae57-9922ee90150f ; pczdump -i pcazip.pcz -o output.dat -t 0.3 --hinge=0 &amp;gt;&amp;amp; output.log\n\nINFO     /tmp/biobb/unitests_13/pcz_hinges/pcz_hinges_log.out:cmd_wrapper.py:50 Exit code 0\n\nINFO     /tmp/biobb/unitests_13/pcz_hinges/pcz_hinges_log.out:file_utils.py:390 Removed: [&amp;#x27;60f0c675-bda4-4283-ae57-9922ee90150f&amp;#x27;]\n\n--------------------------- Captured stdout teardown ---------------------------\n\nRemoving: /tmp/biobb/unitests_13\n&#34;}], &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_info.py::TestPCZinfo::test_pcz_info&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_info.py::TestPCZinfo::test_pcz_info&#34;, &#34;duration&#34;: &#34;35 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_info.py::TestPCZinfo::test_pcz_info&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;35 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n2024-03-12 10:33:24,439 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_info Version: 4.1.0\n2024-03-12 10:33:24,439 [MainThread  ] [INFO ]  Creating 788d9810-1d35-4aca-b3e9-e26c6ae4b8a6 temporary folder\n2024-03-12 10:33:24,440 [MainThread  ] [INFO ]  cd 788d9810-1d35-4aca-b3e9-e26c6ae4b8a6 ; pczdump -i pcazip.pcz -o output1.dat --info ; pczdump -i pcazip.pcz -o output2.dat --evals\n\n2024-03-12 10:33:24,453 [MainThread  ] [INFO ]  Exit code 0\n\n2024-03-12 10:33:24,453 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\n\n2024-03-12 10:33:24,453 [MainThread  ] [INFO ]  Removed: [&amp;#x27;788d9810-1d35-4aca-b3e9-e26c6ae4b8a6&amp;#x27;]\nChecking if empty file: /tmp/biobb/unitests_13/pcz_info/pcz.json\nComparing: \n        File_A: /tmp/biobb/unitests_13/pcz_info/pcz.json\n        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcz_info.json\n        File_A hash: b&amp;quot;]\\xf5$\\x87\\x84r\\x15\\xe7-\\x83v.\\xc0x\\xb6|\\xd6\\x8b\\x1dj\\xb3\\xb5[y\\x17&amp;#x27;\\xd9\\xebW&amp;lt;\\xa5%&amp;quot;\n        File_B hash: b&amp;quot;]\\xf5$\\x87\\x84r\\x15\\xe7-\\x83v.\\xc0x\\xb6|\\xd6\\x8b\\x1dj\\xb3\\xb5[y\\x17&amp;#x27;\\xd9\\xebW&amp;lt;\\xa5%&amp;quot;\n\n------------------------------ Captured log call -------------------------------\nINFO     /tmp/biobb/unitests_13/pcz_info/pcz_info_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_info Version: 4.1.0\nINFO     /tmp/biobb/unitests_13/pcz_info/pcz_info_log.out:file_utils.py:390 Creating 788d9810-1d35-4aca-b3e9-e26c6ae4b8a6 temporary folder\nINFO     /tmp/biobb/unitests_13/pcz_info/pcz_info_log.out:cmd_wrapper.py:33 cd 788d9810-1d35-4aca-b3e9-e26c6ae4b8a6 ; pczdump -i pcazip.pcz -o output1.dat --info ; pczdump -i pcazip.pcz -o output2.dat --evals\n\nINFO     /tmp/biobb/unitests_13/pcz_info/pcz_info_log.out:cmd_wrapper.py:50 Exit code 0\n\nINFO     /tmp/biobb/unitests_13/pcz_info/pcz_info_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\n\nINFO     /tmp/biobb/unitests_13/pcz_info/pcz_info_log.out:file_utils.py:390 Removed: [&amp;#x27;788d9810-1d35-4aca-b3e9-e26c6ae4b8a6&amp;#x27;]\n\n--------------------------- Captured stdout teardown ---------------------------\n\nRemoving: /tmp/biobb/unitests_13\n&#34;}], &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_lindemann.py::TestPCZlindemann::test_pcz_lindemann&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_lindemann.py::TestPCZlindemann::test_pcz_lindemann&#34;, &#34;duration&#34;: &#34;54 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_lindemann.py::TestPCZlindemann::test_pcz_lindemann&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;54 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n2024-03-12 10:33:24,475 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_lindemann Version: 4.1.0\n2024-03-12 10:33:24,476 [MainThread  ] [INFO ]  Creating e0410407-769c-456e-9d03-5c10ee29c5ed temporary folder\n2024-03-12 10:33:24,476 [MainThread  ] [INFO ]  cd e0410407-769c-456e-9d03-5c10ee29c5ed ; pczdump -i pcazip.pcz -o output.dat --lindemann\n\n2024-03-12 10:33:24,508 [MainThread  ] [INFO ]  Exit code 0\n\n2024-03-12 10:33:24,508 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms\n\n2024-03-12 10:33:24,508 [MainThread  ] [INFO ]  Removed: [&amp;#x27;e0410407-769c-456e-9d03-5c10ee29c5ed&amp;#x27;]\nChecking if empty file: /tmp/biobb/unitests_13/pcz_lindemann/pcz_lindemann.json\nComparing: \n        File_A: /tmp/biobb/unitests_13/pcz_lindemann/pcz_lindemann.json\n        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcz_lindemann.json\n        File_A hash: b&amp;#x27;\\xf7\\x17x\\x10\\x99\\xe2\\xf8,\\xba\\xc0\\x10\\xea\\xca\\xcb\\x0e\\xb5)b\\xe2\\x8drFr\\xce\\xdd\\x88\\xcf\\xcdh\\xf6v\\xb3&amp;#x27;\n        File_B hash: b&amp;#x27;\\xf7\\x17x\\x10\\x99\\xe2\\xf8,\\xba\\xc0\\x10\\xea\\xca\\xcb\\x0e\\xb5)b\\xe2\\x8drFr\\xce\\xdd\\x88\\xcf\\xcdh\\xf6v\\xb3&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     /tmp/biobb/unitests_13/pcz_lindemann/pcz_lindemann_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_lindemann Version: 4.1.0\nINFO     /tmp/biobb/unitests_13/pcz_lindemann/pcz_lindemann_log.out:file_utils.py:390 Creating e0410407-769c-456e-9d03-5c10ee29c5ed temporary folder\nINFO     /tmp/biobb/unitests_13/pcz_lindemann/pcz_lindemann_log.out:cmd_wrapper.py:33 cd e0410407-769c-456e-9d03-5c10ee29c5ed ; pczdump -i pcazip.pcz -o output.dat --lindemann\n\nINFO     /tmp/biobb/unitests_13/pcz_lindemann/pcz_lindemann_log.out:cmd_wrapper.py:50 Exit code 0\n\nINFO     /tmp/biobb/unitests_13/pcz_lindemann/pcz_lindemann_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms\n\nINFO     /tmp/biobb/unitests_13/pcz_lindemann/pcz_lindemann_log.out:file_utils.py:390 Removed: [&amp;#x27;e0410407-769c-456e-9d03-5c10ee29c5ed&amp;#x27;]\n\n--------------------------- Captured stdout teardown ---------------------------\n\nRemoving: /tmp/biobb/unitests_13\n&#34;}], &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_similarity.py::TestPCZsimilarity::test_pcz_similarity&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_similarity.py::TestPCZsimilarity::test_pcz_similarity&#34;, &#34;duration&#34;: &#34;109 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_similarity.py::TestPCZsimilarity::test_pcz_similarity&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;109 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n2024-03-12 10:33:24,530 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_similarity Version: 4.1.0\n2024-03-12 10:33:24,531 [MainThread  ] [INFO ]  Creating 6753fbfa-4e96-4dd2-87ac-d733fd6cb9c6 temporary folder\n2024-03-12 10:33:24,531 [MainThread  ] [INFO ]  cd 6753fbfa-4e96-4dd2-87ac-d733fd6cb9c6 ; pczdump -i pcazip.pcz -o output1.dat --evals ; pczdump -i pcazip.pcz -o output2.dat --evals\n\n2024-03-12 10:33:24,541 [MainThread  ] [INFO ]  Exit code 0\n\n2024-03-12 10:33:24,541 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\n\n2024-03-12 10:33:24,542 [MainThread  ] [INFO ]  cd 6753fbfa-4e96-4dd2-87ac-d733fd6cb9c6 ; pczdump -i pcazip.pcz -o evecs_1_pc1 --evec=1 ; pczdump -i pcazip.pcz -o evecs_2_pc1 --evec=1 ; pczdump -i pcazip.pcz -o evecs_1_pc2 --evec=2 ; pczdump -i pcazip.pcz -o evecs_2_pc2 --evec=2 ; pczdump -i pcazip.pcz -o evecs_1_pc3 --evec=3 ; pczdump -i pcazip.pcz -o evecs_2_pc3 --evec=3 ; pczdump -i pcazip.pcz -o evecs_1_pc4 --evec=4 ; pczdump -i pcazip.pcz -o evecs_2_pc4 --evec=4 ; pczdump -i pcazip.pcz -o evecs_1_pc5 --evec=5 ; pczdump -i pcazip.pcz -o evecs_2_pc5 --evec=5 ; pczdump -i pcazip.pcz -o evecs_1_pc6 --evec=6 ; pczdump -i pcazip.pcz -o evecs_2_pc6 --evec=6 ; pczdump -i pcazip.pcz -o evecs_1_pc7 --evec=7 ; pczdump -i pcazip.pcz -o evecs_2_pc7 --evec=7 ;\n\n2024-03-12 10:33:24,604 [MainThread  ] [INFO ]  Exit code 0\n\n2024-03-12 10:33:24,604 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\n\n2024-03-12 10:33:24,619 [MainThread  ] [INFO ]  Removed: [&amp;#x27;6753fbfa-4e96-4dd2-87ac-d733fd6cb9c6&amp;#x27;]\nChecking if empty file: /tmp/biobb/unitests_13/pcz_similarity/pcz_similarity.json\nComparing: \n        File_A: /tmp/biobb/unitests_13/pcz_similarity/pcz_similarity.json\n        File_B: /home/user/actions-runner/_work/biobb_flexserv/biobb_flexserv/biobb_flexserv/test/reference/pcasuite/pcz_similarity.json\n        File_A hash: b&amp;#x27;k\\xf1\\xa8kZ_\\rzn\\xa9\\xca\\xe6/\\xcf\\xff:\\x80\\x0bEn\\xd0,\\x92\\xeaN\\xfb\\x8d\\x8a\\xdcB\\xe5\\xff&amp;#x27;\n        File_B hash: b&amp;#x27;k\\xf1\\xa8kZ_\\rzn\\xa9\\xca\\xe6/\\xcf\\xff:\\x80\\x0bEn\\xd0,\\x92\\xeaN\\xfb\\x8d\\x8a\\xdcB\\xe5\\xff&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     /tmp/biobb/unitests_13/pcz_similarity/pcz_similarity_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_similarity Version: 4.1.0\nINFO     /tmp/biobb/unitests_13/pcz_similarity/pcz_similarity_log.out:file_utils.py:390 Creating 6753fbfa-4e96-4dd2-87ac-d733fd6cb9c6 temporary folder\nINFO     /tmp/biobb/unitests_13/pcz_similarity/pcz_similarity_log.out:cmd_wrapper.py:33 cd 6753fbfa-4e96-4dd2-87ac-d733fd6cb9c6 ; pczdump -i pcazip.pcz -o output1.dat --evals ; pczdump -i pcazip.pcz -o output2.dat --evals\n\nINFO     /tmp/biobb/unitests_13/pcz_similarity/pcz_similarity_log.out:cmd_wrapper.py:50 Exit code 0\n\nINFO     /tmp/biobb/unitests_13/pcz_similarity/pcz_similarity_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\n\nINFO     /tmp/biobb/unitests_13/pcz_similarity/pcz_similarity_log.out:cmd_wrapper.py:33 cd 6753fbfa-4e96-4dd2-87ac-d733fd6cb9c6 ; pczdump -i pcazip.pcz -o evecs_1_pc1 --evec=1 ; pczdump -i pcazip.pcz -o evecs_2_pc1 --evec=1 ; pczdump -i pcazip.pcz -o evecs_1_pc2 --evec=2 ; pczdump -i pcazip.pcz -o evecs_2_pc2 --evec=2 ; pczdump -i pcazip.pcz -o evecs_1_pc3 --evec=3 ; pczdump -i pcazip.pcz -o evecs_2_pc3 --evec=3 ; pczdump -i pcazip.pcz -o evecs_1_pc4 --evec=4 ; pczdump -i pcazip.pcz -o evecs_2_pc4 --evec=4 ; pczdump -i pcazip.pcz -o evecs_1_pc5 --evec=5 ; pczdump -i pcazip.pcz -o evecs_2_pc5 --evec=5 ; pczdump -i pcazip.pcz -o evecs_1_pc6 --evec=6 ; pczdump -i pcazip.pcz -o evecs_2_pc6 --evec=6 ; pczdump -i pcazip.pcz -o evecs_1_pc7 --evec=7 ; pczdump -i pcazip.pcz -o evecs_2_pc7 --evec=7 ;\n\nINFO     /tmp/biobb/unitests_13/pcz_similarity/pcz_similarity_log.out:cmd_wrapper.py:50 Exit code 0\n\nINFO     /tmp/biobb/unitests_13/pcz_similarity/pcz_similarity_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\nWarning: No selection made, computing data with all atoms\n\nINFO     /tmp/biobb/unitests_13/pcz_similarity/pcz_similarity_log.out:file_utils.py:390 Removed: [&amp;#x27;6753fbfa-4e96-4dd2-87ac-d733fd6cb9c6&amp;#x27;]\n\n--------------------------- Captured stdout teardown ---------------------------\n\nRemoving: /tmp/biobb/unitests_13\n&#34;}], &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_stiffness.py::TestPCZstiffness::test_pcz_stiffness&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_stiffness.py::TestPCZstiffness::test_pcz_stiffness&#34;, &#34;duration&#34;: &#34;140 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;biobb_flexserv/test/unitests/test_pcasuite/test_pcz_stiffness.py::TestPCZstiffness::test_pcz_stiffness&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;140 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n2024-03-12 10:33:24,641 [MainThread  ] [INFO ]  Executing biobb_flexserv.pcasuite.pcz_stiffness Version: 4.1.0\n2024-03-12 10:33:24,641 [MainThread  ] [INFO ]  Creating 614e0c31-0a3d-46e8-959d-0fe3e8b24582 temporary folder\n2024-03-12 10:33:24,641 [MainThread  ] [INFO ]  cd 614e0c31-0a3d-46e8-959d-0fe3e8b24582 ; pczdump -i pcazip.pcz -o output.dat --stiff=0 --temperature=300\n\n2024-03-12 10:33:24,722 [MainThread  ] [INFO ]  Exit code 0\n\n2024-03-12 10:33:24,722 [MainThread  ] [INFO ]  Warning: No selection made, computing data with all atoms\n\n2024-03-12 10:33:24,760 [MainThread  ] [INFO ]  Removed: [&amp;#x27;614e0c31-0a3d-46e8-959d-0fe3e8b24582&amp;#x27;]\nChecking if empty file: /tmp/biobb/unitests_13/pcz_stiffness/pcz_stiffness.json\n\n------------------------------ Captured log call -------------------------------\nINFO     /tmp/biobb/unitests_13/pcz_stiffness/pcz_stiffness_log.out:file_utils.py:390 Executing biobb_flexserv.pcasuite.pcz_stiffness Version: 4.1.0\nINFO     /tmp/biobb/unitests_13/pcz_stiffness/pcz_stiffness_log.out:file_utils.py:390 Creating 614e0c31-0a3d-46e8-959d-0fe3e8b24582 temporary folder\nINFO     /tmp/biobb/unitests_13/pcz_stiffness/pcz_stiffness_log.out:cmd_wrapper.py:33 cd 614e0c31-0a3d-46e8-959d-0fe3e8b24582 ; pczdump -i pcazip.pcz -o output.dat --stiff=0 --temperature=300\n\nINFO     /tmp/biobb/unitests_13/pcz_stiffness/pcz_stiffness_log.out:cmd_wrapper.py:50 Exit code 0\n\nINFO     /tmp/biobb/unitests_13/pcz_stiffness/pcz_stiffness_log.err:cmd_wrapper.py:60 Warning: No selection made, computing data with all atoms\n\nINFO     /tmp/biobb/unitests_13/pcz_stiffness/pcz_stiffness_log.out:file_utils.py:390 Removed: [&amp;#x27;614e0c31-0a3d-46e8-959d-0fe3e8b24582&amp;#x27;]\n\n--------------------------- Captured stdout teardown ---------------------------\n\nRemoving: /tmp/biobb/unitests_13\n&#34;}]}, &#34;renderCollapsed&#34;: [&#34;passed&#34;], &#34;initialSort&#34;: &#34;result&#34;, &#34;title&#34;: &#34;report.html&#34;}"></div>
+    <script>
+      (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const { getCollapsedCategory, setCollapsedIds } = require('./storage.js')
+
+class DataManager {
+    setManager(data) {
+        const collapsedCategories = [...getCollapsedCategory(data.renderCollapsed)]
+        const collapsedIds = []
+        const tests = Object.values(data.tests).flat().map((test, index) => {
+            const collapsed = collapsedCategories.includes(test.result.toLowerCase())
+            const id = `test_${index}`
+            if (collapsed) {
+                collapsedIds.push(id)
+            }
+            return {
+                ...test,
+                id,
+                collapsed,
+            }
+        })
+        const dataBlob = { ...data, tests }
+        this.data = { ...dataBlob }
+        this.renderData = { ...dataBlob }
+        setCollapsedIds(collapsedIds)
+    }
+
+    get allData() {
+        return { ...this.data }
+    }
+
+    resetRender() {
+        this.renderData = { ...this.data }
+    }
+
+    setRender(data) {
+        this.renderData.tests = [...data]
+    }
+
+    toggleCollapsedItem(id) {
+        this.renderData.tests = this.renderData.tests.map((test) =>
+            test.id === id ? { ...test, collapsed: !test.collapsed } : test,
+        )
+    }
+
+    set allCollapsed(collapsed) {
+        this.renderData = { ...this.renderData, tests: [...this.renderData.tests.map((test) => (
+            { ...test, collapsed }
+        ))] }
+    }
+
+    get testSubset() {
+        return [...this.renderData.tests]
+    }
+
+    get environment() {
+        return this.renderData.environment
+    }
+
+    get initialSort() {
+        return this.data.initialSort
+    }
+}
+
+module.exports = {
+    manager: new DataManager(),
+}
+
+},{"./storage.js":8}],2:[function(require,module,exports){
+const mediaViewer = require('./mediaviewer.js')
+const templateEnvRow = document.getElementById('template_environment_row')
+const templateResult = document.getElementById('template_results-table__tbody')
+
+function htmlToElements(html) {
+    const temp = document.createElement('template')
+    temp.innerHTML = html
+    return temp.content.childNodes
+}
+
+const find = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return elem.querySelector(selector)
+}
+
+const findAll = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return [...elem.querySelectorAll(selector)]
+}
+
+const dom = {
+    getStaticRow: (key, value) => {
+        const envRow = templateEnvRow.content.cloneNode(true)
+        const isObj = typeof value === 'object' && value !== null
+        const values = isObj ? Object.keys(value).map((k) => `${k}: ${value[k]}`) : null
+
+        const valuesElement = htmlToElements(
+            values ? `<ul>${values.map((val) => `<li>${val}</li>`).join('')}<ul>` : `<div>${value}</div>`)[0]
+        const td = findAll('td', envRow)
+        td[0].textContent = key
+        td[1].appendChild(valuesElement)
+
+        return envRow
+    },
+    getResultTBody: ({ testId, id, log, extras, resultsTableRow, tableHtml, result, collapsed }) => {
+        const resultBody = templateResult.content.cloneNode(true)
+        resultBody.querySelector('tbody').classList.add(result.toLowerCase())
+        resultBody.querySelector('tbody').id = testId
+        resultBody.querySelector('.collapsible').dataset.id = id
+
+        resultsTableRow.forEach((html) => {
+            const t = document.createElement('template')
+            t.innerHTML = html
+            resultBody.querySelector('.collapsible').appendChild(t.content)
+        })
+
+        if (log) {
+            // Wrap lines starting with "E" with span.error to color those lines red
+            const wrappedLog = log.replace(/^E.*$/gm, (match) => `<span class="error">${match}</span>`)
+            resultBody.querySelector('.log').innerHTML = wrappedLog
+        } else {
+            resultBody.querySelector('.log').remove()
+        }
+
+        if (collapsed) {
+            resultBody.querySelector('.collapsible > td')?.classList.add('collapsed')
+            resultBody.querySelector('.extras-row').classList.add('hidden')
+        } else {
+            resultBody.querySelector('.collapsible > td')?.classList.remove('collapsed')
+        }
+
+        const media = []
+        extras?.forEach(({ name, format_type, content }) => {
+            if (['image', 'video'].includes(format_type)) {
+                media.push({ path: content, name, format_type })
+            }
+
+            if (format_type === 'html') {
+                resultBody.querySelector('.extraHTML').insertAdjacentHTML('beforeend', `<div>${content}</div>`)
+            }
+        })
+        mediaViewer.setup(resultBody, media)
+
+        // Add custom html from the pytest_html_results_table_html hook
+        tableHtml?.forEach((item) => {
+            resultBody.querySelector('td[class="extra"]').insertAdjacentHTML('beforeend', item)
+        })
+
+        return resultBody
+    },
+}
+
+module.exports = {
+    dom,
+    htmlToElements,
+    find,
+    findAll,
+}
+
+},{"./mediaviewer.js":6}],3:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const storageModule = require('./storage.js')
+
+const getFilteredSubSet = (filter) =>
+    manager.allData.tests.filter(({ result }) => filter.includes(result.toLowerCase()))
+
+const doInitFilter = () => {
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+}
+
+const doFilter = (type, show) => {
+    if (show) {
+        storageModule.showCategory(type)
+    } else {
+        storageModule.hideCategory(type)
+    }
+
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+
+    const sortColumn = storageModule.getSort()
+    doSort(sortColumn, true)
+}
+
+module.exports = {
+    doFilter,
+    doInitFilter,
+}
+
+},{"./datamanager.js":1,"./sort.js":7,"./storage.js":8}],4:[function(require,module,exports){
+const { redraw, bindEvents, renderStatic } = require('./main.js')
+const { doInitFilter } = require('./filter.js')
+const { doInitSort } = require('./sort.js')
+const { manager } = require('./datamanager.js')
+const data = JSON.parse(document.getElementById('data-container').dataset.jsonblob)
+
+function init() {
+    manager.setManager(data)
+    doInitFilter()
+    doInitSort()
+    renderStatic()
+    redraw()
+    bindEvents()
+}
+
+init()
+
+},{"./datamanager.js":1,"./filter.js":3,"./main.js":5,"./sort.js":7}],5:[function(require,module,exports){
+const { dom, find, findAll } = require('./dom.js')
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const { doFilter } = require('./filter.js')
+const {
+    getVisible,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    getSortDirection,
+    possibleFilters,
+} = require('./storage.js')
+
+const removeChildren = (node) => {
+    while (node.firstChild) {
+        node.removeChild(node.firstChild)
+    }
+}
+
+const renderStatic = () => {
+    const renderEnvironmentTable = () => {
+        const environment = manager.environment
+        const rows = Object.keys(environment).map((key) => dom.getStaticRow(key, environment[key]))
+        const table = document.getElementById('environment')
+        removeChildren(table)
+        rows.forEach((row) => table.appendChild(row))
+    }
+    renderEnvironmentTable()
+}
+
+const addItemToggleListener = (elem) => {
+    elem.addEventListener('click', ({ target }) => {
+        const id = target.parentElement.dataset.id
+        manager.toggleCollapsedItem(id)
+
+        const collapsedIds = getCollapsedIds()
+        if (collapsedIds.includes(id)) {
+            const updated = collapsedIds.filter((item) => item !== id)
+            setCollapsedIds(updated)
+        } else {
+            collapsedIds.push(id)
+            setCollapsedIds(collapsedIds)
+        }
+        redraw()
+    })
+}
+
+const renderContent = (tests) => {
+    const sortAttr = getSort(manager.initialSort)
+    const sortAsc = JSON.parse(getSortDirection())
+    const rows = tests.map(dom.getResultTBody)
+    const table = document.getElementById('results-table')
+    const tableHeader = document.getElementById('results-table-head')
+
+    const newTable = document.createElement('table')
+    newTable.id = 'results-table'
+
+    // remove all sorting classes and set the relevant
+    findAll('.sortable', tableHeader).forEach((elem) => elem.classList.remove('asc', 'desc'))
+    tableHeader.querySelector(`.sortable[data-column-type="${sortAttr}"]`)?.classList.add(sortAsc ? 'desc' : 'asc')
+    newTable.appendChild(tableHeader)
+
+    if (!rows.length) {
+        const emptyTable = document.getElementById('template_results-table__body--empty').content.cloneNode(true)
+        newTable.appendChild(emptyTable)
+    } else {
+        rows.forEach((row) => {
+            if (!!row) {
+                findAll('.collapsible td:not(.col-links', row).forEach(addItemToggleListener)
+                find('.logexpander', row).addEventListener('click',
+                    (evt) => evt.target.parentNode.classList.toggle('expanded'),
+                )
+                newTable.appendChild(row)
+            }
+        })
+    }
+
+    table.replaceWith(newTable)
+}
+
+const renderDerived = () => {
+    const currentFilter = getVisible()
+    possibleFilters.forEach((result) => {
+        const input = document.querySelector(`input[data-test-result="${result}"]`)
+        input.checked = currentFilter.includes(result)
+    })
+}
+
+const bindEvents = () => {
+    const filterColumn = (evt) => {
+        const { target: element } = evt
+        const { testResult } = element.dataset
+
+        doFilter(testResult, element.checked)
+        const collapsedIds = getCollapsedIds()
+        const updated = manager.renderData.tests.map((test) => {
+            return {
+                ...test,
+                collapsed: collapsedIds.includes(test.id),
+            }
+        })
+        manager.setRender(updated)
+        redraw()
+    }
+
+    const header = document.getElementById('environment-header')
+    header.addEventListener('click', () => {
+        const table = document.getElementById('environment')
+        table.classList.toggle('hidden')
+        header.classList.toggle('collapsed')
+    })
+
+    findAll('input[name="filter_checkbox"]').forEach((elem) => {
+        elem.addEventListener('click', filterColumn)
+    })
+
+    findAll('.sortable').forEach((elem) => {
+        elem.addEventListener('click', (evt) => {
+            const { target: element } = evt
+            const { columnType } = element.dataset
+            doSort(columnType)
+            redraw()
+        })
+    })
+
+    document.getElementById('show_all_details').addEventListener('click', () => {
+        manager.allCollapsed = false
+        setCollapsedIds([])
+        redraw()
+    })
+    document.getElementById('hide_all_details').addEventListener('click', () => {
+        manager.allCollapsed = true
+        const allIds = manager.renderData.tests.map((test) => test.id)
+        setCollapsedIds(allIds)
+        redraw()
+    })
+}
+
+const redraw = () => {
+    const { testSubset } = manager
+
+    renderContent(testSubset)
+    renderDerived()
+}
+
+module.exports = {
+    redraw,
+    bindEvents,
+    renderStatic,
+}
+
+},{"./datamanager.js":1,"./dom.js":2,"./filter.js":3,"./sort.js":7,"./storage.js":8}],6:[function(require,module,exports){
+class MediaViewer {
+    constructor(assets) {
+        this.assets = assets
+        this.index = 0
+    }
+
+    nextActive() {
+        this.index = this.index === this.assets.length - 1 ? 0 : this.index + 1
+        return [this.activeFile, this.index]
+    }
+
+    prevActive() {
+        this.index = this.index === 0 ? this.assets.length - 1 : this.index -1
+        return [this.activeFile, this.index]
+    }
+
+    get currentIndex() {
+        return this.index
+    }
+
+    get activeFile() {
+        return this.assets[this.index]
+    }
+}
+
+
+const setup = (resultBody, assets) => {
+    if (!assets.length) {
+        resultBody.querySelector('.media').classList.add('hidden')
+        return
+    }
+
+    const mediaViewer = new MediaViewer(assets)
+    const container = resultBody.querySelector('.media-container')
+    const leftArrow = resultBody.querySelector('.media-container__nav--left')
+    const rightArrow = resultBody.querySelector('.media-container__nav--right')
+    const mediaName = resultBody.querySelector('.media__name')
+    const counter = resultBody.querySelector('.media__counter')
+    const imageEl = resultBody.querySelector('img')
+    const sourceEl = resultBody.querySelector('source')
+    const videoEl = resultBody.querySelector('video')
+
+    const setImg = (media, index) => {
+        if (media?.format_type === 'image') {
+            imageEl.src = media.path
+
+            imageEl.classList.remove('hidden')
+            videoEl.classList.add('hidden')
+        } else if (media?.format_type === 'video') {
+            sourceEl.src = media.path
+
+            videoEl.classList.remove('hidden')
+            imageEl.classList.add('hidden')
+        }
+
+        mediaName.innerText = media?.name
+        counter.innerText = `${index + 1} / ${assets.length}`
+    }
+    setImg(mediaViewer.activeFile, mediaViewer.currentIndex)
+
+    const moveLeft = () => {
+        const [media, index] = mediaViewer.prevActive()
+        setImg(media, index)
+    }
+    const doRight = () => {
+        const [media, index] = mediaViewer.nextActive()
+        setImg(media, index)
+    }
+    const openImg = () => {
+        window.open(mediaViewer.activeFile.path, '_blank')
+    }
+    if (assets.length === 1) {
+        container.classList.add('media-container--fullscreen')
+    } else {
+        leftArrow.addEventListener('click', moveLeft)
+        rightArrow.addEventListener('click', doRight)
+    }
+    imageEl.addEventListener('click', openImg)
+}
+
+module.exports = {
+    setup,
+}
+
+},{}],7:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const storageModule = require('./storage.js')
+
+const genericSort = (list, key, ascending, customOrder) => {
+    let sorted
+    if (customOrder) {
+        sorted = list.sort((a, b) => {
+            const aValue = a.result.toLowerCase()
+            const bValue = b.result.toLowerCase()
+
+            const aIndex = customOrder.findIndex((item) => item.toLowerCase() === aValue)
+            const bIndex = customOrder.findIndex((item) => item.toLowerCase() === bValue)
+
+            // Compare the indices to determine the sort order
+            return aIndex - bIndex
+        })
+    } else {
+        sorted = list.sort((a, b) => a[key] === b[key] ? 0 : a[key] > b[key] ? 1 : -1)
+    }
+
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const durationSort = (list, ascending) => {
+    const parseDuration = (duration) => {
+        if (duration.includes(':')) {
+            // If it's in the format "HH:mm:ss"
+            const [hours, minutes, seconds] = duration.split(':').map(Number)
+            return (hours * 3600 + minutes * 60 + seconds) * 1000
+        } else {
+            // If it's in the format "nnn ms"
+            return parseInt(duration)
+        }
+    }
+    const sorted = list.sort((a, b) => parseDuration(a['duration']) - parseDuration(b['duration']))
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const doInitSort = () => {
+    const type = storageModule.getSort(manager.initialSort)
+    const ascending = storageModule.getSortDirection()
+    const list = manager.testSubset
+    const initialOrder = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed', 'Skipped', 'Passed']
+
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    if (type?.toLowerCase() === 'original') {
+        manager.setRender(list)
+    } else {
+        let sortedList
+        switch (type) {
+        case 'duration':
+            sortedList = durationSort(list, ascending)
+            break
+        case 'result':
+            sortedList = genericSort(list, type, ascending, initialOrder)
+            break
+        default:
+            sortedList = genericSort(list, type, ascending)
+            break
+        }
+        manager.setRender(sortedList)
+    }
+}
+
+const doSort = (type, skipDirection) => {
+    const newSortType = storageModule.getSort(manager.initialSort) !== type
+    const currentAsc = storageModule.getSortDirection()
+    let ascending
+    if (skipDirection) {
+        ascending = currentAsc
+    } else {
+        ascending = newSortType ? false : !currentAsc
+    }
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    const list = manager.testSubset
+    const sortedList = type === 'duration' ? durationSort(list, ascending) : genericSort(list, type, ascending)
+    manager.setRender(sortedList)
+}
+
+module.exports = {
+    doInitSort,
+    doSort,
+}
+
+},{"./datamanager.js":1,"./storage.js":8}],8:[function(require,module,exports){
+const possibleFilters = [
+    'passed',
+    'skipped',
+    'failed',
+    'error',
+    'xfailed',
+    'xpassed',
+    'rerun',
+]
+
+const getVisible = () => {
+    const url = new URL(window.location.href)
+    const settings = new URLSearchParams(url.search).get('visible')
+    const lower = (item) => {
+        const lowerItem = item.toLowerCase()
+        if (possibleFilters.includes(lowerItem)) {
+            return lowerItem
+        }
+        return null
+    }
+    return settings === null ?
+        possibleFilters :
+        [...new Set(settings?.split(',').map(lower).filter((item) => item))]
+}
+
+const hideCategory = (categoryToHide) => {
+    const url = new URL(window.location.href)
+    const visibleParams = new URLSearchParams(url.search).get('visible')
+    const currentVisible = visibleParams ? visibleParams.split(',') : [...possibleFilters]
+    const settings = [...new Set(currentVisible)].filter((f) => f !== categoryToHide).join(',')
+
+    url.searchParams.set('visible', settings)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const showCategory = (categoryToShow) => {
+    if (typeof window === 'undefined') {
+        return
+    }
+    const url = new URL(window.location.href)
+    const currentVisible = new URLSearchParams(url.search).get('visible')?.split(',').filter(Boolean) ||
+        [...possibleFilters]
+    const settings = [...new Set([categoryToShow, ...currentVisible])]
+    const noFilter = possibleFilters.length === settings.length || !settings.length
+
+    noFilter ? url.searchParams.delete('visible') : url.searchParams.set('visible', settings.join(','))
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getSort = (initialSort) => {
+    const url = new URL(window.location.href)
+    let sort = new URLSearchParams(url.search).get('sort')
+    if (!sort) {
+        sort = initialSort || 'result'
+    }
+    return sort
+}
+
+const setSort = (type) => {
+    const url = new URL(window.location.href)
+    url.searchParams.set('sort', type)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getCollapsedCategory = (renderCollapsed) => {
+    let categories
+    if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href)
+        const collapsedItems = new URLSearchParams(url.search).get('collapsed')
+        switch (true) {
+        case !renderCollapsed && collapsedItems === null:
+            categories = ['passed']
+            break
+        case collapsedItems?.length === 0 || /^["']{2}$/.test(collapsedItems):
+            categories = []
+            break
+        case /^all$/.test(collapsedItems) || collapsedItems === null && /^all$/.test(renderCollapsed):
+            categories = [...possibleFilters]
+            break
+        default:
+            categories = collapsedItems?.split(',').map((item) => item.toLowerCase()) || renderCollapsed
+            break
+        }
+    } else {
+        categories = []
+    }
+    return categories
+}
+
+const getSortDirection = () => JSON.parse(sessionStorage.getItem('sortAsc')) || false
+const setSortDirection = (ascending) => sessionStorage.setItem('sortAsc', ascending)
+
+const getCollapsedIds = () => JSON.parse(sessionStorage.getItem('collapsedIds')) || []
+const setCollapsedIds = (list) => sessionStorage.setItem('collapsedIds', JSON.stringify(list))
+
+module.exports = {
+    getVisible,
+    hideCategory,
+    showCategory,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    setSort,
+    getSortDirection,
+    setSortDirection,
+    getCollapsedCategory,
+    possibleFilters,
+}
+
+},{}]},{},[4]);
+    </script>
+  </footer>
+</html>
