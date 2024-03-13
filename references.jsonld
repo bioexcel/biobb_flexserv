@@ -1,0 +1,28 @@
+{
+  "@context": "http://schema.org",
+  "@id": "https://github.com/bioexcel/biobb_flexserv",
+  "@type": "ItemList",
+  "name": "biobb_flexserv",
+  "itemListElement":[ 
+    {
+      "@type": "SoftwareApplication",
+      "description": "FlexServ is a project aimed to show in an easy and visual way flexibility-related properties of proteins.",
+      "name": "FlexServ",
+      "url": "https://mmb.irbbarcelona.org/FlexServ/",
+      "applicationCategory": "Computational Biology tool",
+      "citation": "https://academic.oup.com/bioinformatics/article/25/13/1709/197147",
+      "license": "https://www.apache.org/licenses/LICENSE-2.0",
+      "softwareVersion": "1.0.2"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "description": "A tool to compress Molecular Dynamics trajectories using Principal Components Analysis.",
+      "name": "PCAsuite",
+      "url": "https://mmb.irbbarcelona.org/software/pcasuite/",
+      "applicationCategory": "Computational Biology tool",
+      "citation": "https://pubmed.ncbi.nlm.nih.gov/26626512/",
+      "license": "https://www.apache.org/licenses/LICENSE-2.0",
+      "softwareVersion": "1.0.0"
+    }
+  ]
+}
