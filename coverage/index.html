@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Coverage report</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
-    <script type="text/javascript" src="coverage_html.js" defer></script>
+    <script src="coverage_html.js" defer></script>
 </head>
 <body class="indexfile">
 <header>
@@ -16,13 +16,13 @@
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
             <label for="help_panel_state">
-                <img id="keyboard_icon" src="keybd_closed.png" alt="Show/hide keyboard shortcuts" />
+                <img id="keyboard_icon" src="keybd_closed.png" alt="Show/hide keyboard shortcuts">
             </label>
             <div id="help_panel">
                 <p class="legend">Shortcuts on this page</p>
                 <div class="keyhelp">
                     <p>
-                        <kbd>n</kbd>
+                        <kbd>f</kbd>
                         <kbd>s</kbd>
                         <kbd>m</kbd>
                         <kbd>x</kbd>
@@ -41,11 +41,20 @@
             </div>
         </aside>
         <form id="filter_container">
-            <input id="filter" type="text" value="" placeholder="filter..." />
+            <input id="filter" type="text" value="" placeholder="filter...">
+            <div>
+                <input id="hide100" type="checkbox" >
+                <label for="hide100">hide covered</label>
+            </div>
         </form>
+        <h2>
+                <a class="button current">Files</a>
+                <a class="button" href="function_index.html">Functions</a>
+                <a class="button" href="class_index.html">Classes</a>
+        </h2>
         <p class="text">
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2024-04-05 12:28 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.5.0">coverage.py v7.5.0</a>,
+            created at 2024-04-30 15:25 +0000
         </p>
     </div>
 </header>
@@ -53,226 +62,226 @@
     <table class="index" data-sortable>
         <thead>
             <tr class="tablehead" title="Click to sort">
-                <th class="name left" aria-sort="none" data-shortcut="n">Module</th>
-                <th aria-sort="none" data-default-sort-order="descending" data-shortcut="s">statements</th>
-                <th aria-sort="none" data-default-sort-order="descending" data-shortcut="m">missing</th>
-                <th aria-sort="none" data-default-sort-order="descending" data-shortcut="x">excluded</th>
-                <th class="right" aria-sort="none" data-shortcut="c">coverage</th>
+                <th class="name left" aria-sort="none" data-shortcut="f">File<span class="arrows"></span></th>
+                <th aria-sort="none" data-default-sort-order="descending" data-shortcut="s">statements<span class="arrows"></span></th>
+                <th aria-sort="none" data-default-sort-order="descending" data-shortcut="m">missing<span class="arrows"></span></th>
+                <th aria-sort="none" data-default-sort-order="descending" data-shortcut="x">excluded<span class="arrows"></span></th>
+                <th class="right" aria-sort="none" data-shortcut="c">coverage<span class="arrows"></span></th>
             </tr>
         </thead>
         <tbody>
-            <tr class="file">
-                <td class="name left"><a href="d_3348fbd124179fbd___init___py.html">biobb_flexserv/__init__.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_3348fbd124179fbd___init___py.html">biobb_flexserv/__init__.py</a></td>
                 <td>3</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="3 3">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_0dcec742a3e83089___init___py.html">biobb_flexserv/flexserv/__init__.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_0dcec742a3e83089___init___py.html">biobb_flexserv/flexserv/__init__.py</a></td>
                 <td>2</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="2 2">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_0dcec742a3e83089_bd_run_py.html">biobb_flexserv/flexserv/bd_run.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_0dcec742a3e83089_bd_run_py.html">biobb_flexserv/flexserv/bd_run.py</a></td>
                 <td>54</td>
                 <td>16</td>
                 <td>0</td>
                 <td class="right" data-ratio="38 54">70%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_0dcec742a3e83089_dmd_run_py.html">biobb_flexserv/flexserv/dmd_run.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_0dcec742a3e83089_dmd_run_py.html">biobb_flexserv/flexserv/dmd_run.py</a></td>
                 <td>68</td>
                 <td>16</td>
                 <td>0</td>
                 <td class="right" data-ratio="52 68">76%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_0dcec742a3e83089_nma_run_py.html">biobb_flexserv/flexserv/nma_run.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_0dcec742a3e83089_nma_run_py.html">biobb_flexserv/flexserv/nma_run.py</a></td>
                 <td>58</td>
                 <td>16</td>
                 <td>0</td>
                 <td class="right" data-ratio="42 58">72%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_c0ebe78e63fb387b___init___py.html">biobb_flexserv/pcasuite/__init__.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_c0ebe78e63fb387b___init___py.html">biobb_flexserv/pcasuite/__init__.py</a></td>
                 <td>2</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="2 2">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_c0ebe78e63fb387b_pcz_animate_py.html">biobb_flexserv/pcasuite/pcz_animate.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_c0ebe78e63fb387b_pcz_animate_py.html">biobb_flexserv/pcasuite/pcz_animate.py</a></td>
                 <td>50</td>
                 <td>11</td>
                 <td>0</td>
                 <td class="right" data-ratio="39 50">78%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_c0ebe78e63fb387b_pcz_bfactor_py.html">biobb_flexserv/pcasuite/pcz_bfactor.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_c0ebe78e63fb387b_pcz_bfactor_py.html">biobb_flexserv/pcasuite/pcz_bfactor.py</a></td>
                 <td>54</td>
                 <td>12</td>
                 <td>0</td>
                 <td class="right" data-ratio="42 54">78%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_c0ebe78e63fb387b_pcz_collectivity_py.html">biobb_flexserv/pcasuite/pcz_collectivity.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_c0ebe78e63fb387b_pcz_collectivity_py.html">biobb_flexserv/pcasuite/pcz_collectivity.py</a></td>
                 <td>58</td>
                 <td>11</td>
                 <td>0</td>
                 <td class="right" data-ratio="47 58">81%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_c0ebe78e63fb387b_pcz_evecs_py.html">biobb_flexserv/pcasuite/pcz_evecs.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_c0ebe78e63fb387b_pcz_evecs_py.html">biobb_flexserv/pcasuite/pcz_evecs.py</a></td>
                 <td>73</td>
                 <td>11</td>
                 <td>0</td>
                 <td class="right" data-ratio="62 73">85%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_c0ebe78e63fb387b_pcz_hinges_py.html">biobb_flexserv/pcasuite/pcz_hinges.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_c0ebe78e63fb387b_pcz_hinges_py.html">biobb_flexserv/pcasuite/pcz_hinges.py</a></td>
                 <td>129</td>
                 <td>57</td>
                 <td>0</td>
                 <td class="right" data-ratio="72 129">56%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_c0ebe78e63fb387b_pcz_info_py.html">biobb_flexserv/pcasuite/pcz_info.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_c0ebe78e63fb387b_pcz_info_py.html">biobb_flexserv/pcasuite/pcz_info.py</a></td>
                 <td>72</td>
                 <td>11</td>
                 <td>0</td>
                 <td class="right" data-ratio="61 72">85%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_c0ebe78e63fb387b_pcz_lindemann_py.html">biobb_flexserv/pcasuite/pcz_lindemann.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_c0ebe78e63fb387b_pcz_lindemann_py.html">biobb_flexserv/pcasuite/pcz_lindemann.py</a></td>
                 <td>59</td>
                 <td>12</td>
                 <td>0</td>
                 <td class="right" data-ratio="47 59">80%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_c0ebe78e63fb387b_pcz_similarity_py.html">biobb_flexserv/pcasuite/pcz_similarity.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_c0ebe78e63fb387b_pcz_similarity_py.html">biobb_flexserv/pcasuite/pcz_similarity.py</a></td>
                 <td>242</td>
                 <td>61</td>
                 <td>0</td>
                 <td class="right" data-ratio="181 242">75%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_c0ebe78e63fb387b_pcz_stiffness_py.html">biobb_flexserv/pcasuite/pcz_stiffness.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_c0ebe78e63fb387b_pcz_stiffness_py.html">biobb_flexserv/pcasuite/pcz_stiffness.py</a></td>
                 <td>74</td>
                 <td>11</td>
                 <td>0</td>
                 <td class="right" data-ratio="63 74">85%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_c0ebe78e63fb387b_pcz_unzip_py.html">biobb_flexserv/pcasuite/pcz_unzip.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_c0ebe78e63fb387b_pcz_unzip_py.html">biobb_flexserv/pcasuite/pcz_unzip.py</a></td>
                 <td>52</td>
                 <td>13</td>
                 <td>0</td>
                 <td class="right" data-ratio="39 52">75%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_c0ebe78e63fb387b_pcz_zip_py.html">biobb_flexserv/pcasuite/pcz_zip.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_c0ebe78e63fb387b_pcz_zip_py.html">biobb_flexserv/pcasuite/pcz_zip.py</a></td>
                 <td>62</td>
                 <td>16</td>
                 <td>0</td>
                 <td class="right" data-ratio="46 62">74%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_e81b62512d552c72_test_bd_run_py.html">biobb_flexserv/test/unitests/test_flexserv/test_bd_run.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_e81b62512d552c72_test_bd_run_py.html">biobb_flexserv/test/unitests/test_flexserv/test_bd_run.py</a></td>
                 <td>13</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="13 13">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_e81b62512d552c72_test_dmd_run_py.html">biobb_flexserv/test/unitests/test_flexserv/test_dmd_run.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_e81b62512d552c72_test_dmd_run_py.html">biobb_flexserv/test/unitests/test_flexserv/test_dmd_run.py</a></td>
                 <td>11</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="11 11">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_e81b62512d552c72_test_nma_run_py.html">biobb_flexserv/test/unitests/test_flexserv/test_nma_run.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_e81b62512d552c72_test_nma_run_py.html">biobb_flexserv/test/unitests/test_flexserv/test_nma_run.py</a></td>
                 <td>11</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="11 11">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_340adff11193d10b_test_pcaunzip_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcaunzip.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_340adff11193d10b_test_pcaunzip_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcaunzip.py</a></td>
                 <td>11</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="11 11">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_340adff11193d10b_test_pcazip_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcazip.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_340adff11193d10b_test_pcazip_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcazip.py</a></td>
                 <td>11</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="11 11">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_340adff11193d10b_test_pcz_animate_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_animate.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_340adff11193d10b_test_pcz_animate_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_animate.py</a></td>
                 <td>11</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="11 11">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_340adff11193d10b_test_pcz_bfactor_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_bfactor.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_340adff11193d10b_test_pcz_bfactor_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_bfactor.py</a></td>
                 <td>13</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="13 13">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_340adff11193d10b_test_pcz_collectivity_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_collectivity.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_340adff11193d10b_test_pcz_collectivity_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_collectivity.py</a></td>
                 <td>11</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="11 11">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_340adff11193d10b_test_pcz_evecs_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_evecs.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_340adff11193d10b_test_pcz_evecs_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_evecs.py</a></td>
                 <td>11</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="11 11">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_340adff11193d10b_test_pcz_hinges_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_hinges.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_340adff11193d10b_test_pcz_hinges_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_hinges.py</a></td>
                 <td>11</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="11 11">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_340adff11193d10b_test_pcz_info_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_info.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_340adff11193d10b_test_pcz_info_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_info.py</a></td>
                 <td>11</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="11 11">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_340adff11193d10b_test_pcz_lindemann_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_lindemann.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_340adff11193d10b_test_pcz_lindemann_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_lindemann.py</a></td>
                 <td>11</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="11 11">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_340adff11193d10b_test_pcz_similarity_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_similarity.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_340adff11193d10b_test_pcz_similarity_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_similarity.py</a></td>
                 <td>11</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="11 11">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_340adff11193d10b_test_pcz_stiffness_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_stiffness.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_340adff11193d10b_test_pcz_stiffness_py.html">biobb_flexserv/test/unitests/test_pcasuite/test_pcz_stiffness.py</a></td>
                 <td>10</td>
                 <td>0</td>
                 <td>0</td>
@@ -296,16 +305,16 @@
 <footer>
     <div class="content">
         <p>
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2024-04-05 12:28 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.5.0">coverage.py v7.5.0</a>,
+            created at 2024-04-30 15:25 +0000
         </p>
     </div>
     <aside class="hidden">
-        <a id="prevFileLink" class="nav" href="d_340adff11193d10b_test_pcz_stiffness_py.html"/>
-        <a id="nextFileLink" class="nav" href="d_3348fbd124179fbd___init___py.html"/>
-        <button type="button" class="button_prev_file" data-shortcut="["/>
-        <button type="button" class="button_next_file" data-shortcut="]"/>
-        <button type="button" class="button_show_hide_help" data-shortcut="?"/>
+        <a id="prevFileLink" class="nav" href="z_340adff11193d10b_test_pcz_stiffness_py.html"></a>
+        <a id="nextFileLink" class="nav" href="z_3348fbd124179fbd___init___py.html"></a>
+        <button type="button" class="button_prev_file" data-shortcut="["></button>
+        <button type="button" class="button_next_file" data-shortcut="]"></button>
+        <button type="button" class="button_show_hide_help" data-shortcut="?"></button>
     </aside>
 </footer>
 </body>
