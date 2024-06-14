@@ -25,6 +25,7 @@ class PCZlindemann(BiobbObject):
             * **mask** (*str*) - ("all atoms") Residue mask, in the format ":resnum1, resnum2, resnum3" (e.g. ":10,21,33"). See https://mmb.irbbarcelona.org/software/pcasuite/ for the complete format specification.
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
             * **restart** (*bool*) - (False) [WF property] Do not execute if output files exist.
+            * **sandbox_path** (*str*) - ("./") [WF property] Parent path to the sandbox directory.
 
     Examples:
         This is a use example of how to use the building block from Python::
@@ -47,6 +48,7 @@ class PCZlindemann(BiobbObject):
             * schema: http://edamontology.org/EDAM.owl
 
     """
+
     def __init__(self, input_pcz_path: str,
                  output_json_path: str, properties: dict = None, **kwargs) -> None:
 
