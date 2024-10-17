@@ -2,6 +2,7 @@
 
 """Module containing the nma_run class and the command line interface."""
 import argparse
+from typing import Optional
 import os
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
@@ -51,7 +52,7 @@ class NMARun(BiobbObject):
     """
 
     def __init__(self, input_pdb_path: str, output_log_path: str,
-                 output_crd_path: str, properties: dict = None, **kwargs) -> None:
+                 output_crd_path: str, properties: Optional[dict] = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -132,7 +133,7 @@ class NMARun(BiobbObject):
 
         # remove temporary folder(s)
         self.tmp_files.extend([
-            self.stage_io_dict.get("unique_dir")
+            self.stage_io_dict.get("unique_dir", "")
         ])
         self.remove_tmp_files()
 
@@ -143,7 +144,7 @@ class NMARun(BiobbObject):
 
 def nma_run(input_pdb_path: str,
             output_log_path: str, output_crd_path: str,
-            properties: dict = None, **kwargs) -> int:
+            properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`NMARun <flexserv.nma_run.NMARun>`flexserv.nma_run.NMARun class and
     execute :meth:`launch() <flexserv.nma_run.NMARun.launch>` method"""
 

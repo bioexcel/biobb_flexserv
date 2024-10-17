@@ -2,6 +2,7 @@
 
 """Module containing the PCZlindemann class and the command line interface."""
 import argparse
+from typing import Optional
 import shutil
 import json
 from pathlib import PurePath
@@ -50,7 +51,7 @@ class PCZlindemann(BiobbObject):
     """
 
     def __init__(self, input_pcz_path: str,
-                 output_json_path: str, properties: dict = None, **kwargs) -> None:
+                 output_json_path: str, properties: Optional[dict] = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -160,7 +161,7 @@ class PCZlindemann(BiobbObject):
 
 
 def pcz_lindemann(input_pcz_path: str, output_json_path: str,
-                  properties: dict = None, **kwargs) -> int:
+                  properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`PCZlindemann <flexserv.pcasuite.pcz_lindemann>`flexserv.pcasuite.PCZlindemann class and
     execute :meth:`launch() <flexserv.pcasuite.pcz_lindemann.launch>` method"""
 

@@ -2,6 +2,7 @@
 
 """Module containing the PCZstiffness class and the command line interface."""
 import argparse
+from typing import Optional
 import shutil
 import json
 import math
@@ -54,7 +55,7 @@ class PCZstiffness(BiobbObject):
     """
 
     def __init__(self, input_pcz_path: str,
-                 output_json_path: str, properties: dict = None, **kwargs) -> None:
+                 output_json_path: str, properties: Optional[dict] = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -180,7 +181,7 @@ class PCZstiffness(BiobbObject):
 
 
 def pcz_stiffness(input_pcz_path: str, output_json_path: str,
-                  properties: dict = None, **kwargs) -> int:
+                  properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`PCZstiffness <flexserv.pcasuite.pcz_stiffness>`flexserv.pcasuite.PCZstiffness class and
     execute :meth:`launch() <flexserv.pcasuite.pcz_stiffness.launch>` method"""
 

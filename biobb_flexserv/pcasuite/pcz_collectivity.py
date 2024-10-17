@@ -2,6 +2,7 @@
 
 """Module containing the PCZcollectivity class and the command line interface."""
 import argparse
+from typing import Optional
 import shutil
 from pathlib import PurePath
 from biobb_common.tools import file_utils as fu
@@ -52,7 +53,7 @@ class PCZcollectivity(BiobbObject):
     """
 
     def __init__(self, input_pcz_path: str,
-                 output_json_path: str, properties: dict = None, **kwargs) -> None:
+                 output_json_path: str, properties: Optional[dict] = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -162,7 +163,7 @@ class PCZcollectivity(BiobbObject):
 
 
 def pcz_collectivity(input_pcz_path: str, output_json_path: str,
-                     properties: dict = None, **kwargs) -> int:
+                     properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`PCZcollectivity <flexserv.pcasuite.pcz_collectivity>`flexserv.pcasuite.PCZcollectivity class and
     execute :meth:`launch() <flexserv.pcasuite.pcz_collectivity.launch>` method"""
 

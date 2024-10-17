@@ -2,6 +2,7 @@
 
 """Module containing the PCZbfactor class and the command line interface."""
 import argparse
+from typing import Optional
 import shutil
 from pathlib import PurePath
 from biobb_common.tools import file_utils as fu
@@ -53,7 +54,7 @@ class PCZbfactor(BiobbObject):
     """
 
     def __init__(self, input_pcz_path: str, output_dat_path: str,
-                 output_pdb_path: str, properties: dict = None, **kwargs) -> None:
+                 output_pdb_path: str, properties: Optional[dict] = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -176,7 +177,7 @@ class PCZbfactor(BiobbObject):
 
 
 def pcz_bfactor(input_pcz_path: str, output_dat_path: str, output_pdb_path: str,
-                properties: dict = None, **kwargs) -> int:
+                properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`PCZbfactor <flexserv.pcasuite.pcz_bfactor>`flexserv.pcasuite.PCZbfactor class and
     execute :meth:`launch() <flexserv.pcasuite.pcz_bfactor.launch>` method"""
 

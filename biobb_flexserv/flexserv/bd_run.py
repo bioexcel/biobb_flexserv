@@ -2,6 +2,7 @@
 
 """Module containing the bd_run class and the command line interface."""
 import argparse
+from typing import Optional
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import settings
@@ -51,7 +52,7 @@ class BDRun(BiobbObject):
     """
 
     def __init__(self, input_pdb_path: str, output_log_path: str,
-                 output_crd_path: str, properties: dict = None, **kwargs) -> None:
+                 output_crd_path: str, properties: Optional[dict] = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -120,7 +121,7 @@ class BDRun(BiobbObject):
 
         # remove temporary folder(s)
         self.tmp_files.extend([
-            self.stage_io_dict.get("unique_dir")
+            self.stage_io_dict.get("unique_dir", "")
         ])
         self.remove_tmp_files()
 
@@ -131,7 +132,7 @@ class BDRun(BiobbObject):
 
 def bd_run(input_pdb_path: str,
            output_log_path: str, output_crd_path: str,
-           properties: dict = None, **kwargs) -> int:
+           properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`BDRun <flexserv.bd_run.BDRun>`flexserv.bd_run.BDRun class and
     execute :meth:`launch() <flexserv.bd_run.BDRun.launch>` method"""
 

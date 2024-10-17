@@ -2,6 +2,7 @@
 
 """Module containing the PCZhinges class and the command line interface."""
 import argparse
+from typing import Optional
 import shutil
 import json
 import re
@@ -53,7 +54,7 @@ class PCZhinges(BiobbObject):
     """
 
     def __init__(self, input_pcz_path: str, output_json_path: str,
-                 properties: dict = None, **kwargs) -> None:
+                 properties: Optional[dict] = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -244,7 +245,7 @@ class PCZhinges(BiobbObject):
 
 
 def pcz_hinges(input_pcz_path: str, output_json_path: str,
-               properties: dict = None, **kwargs) -> int:
+               properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`PCZhinges <flexserv.pcasuite.pcz_hinges>`flexserv.pcasuite.PCZhinges class and
     execute :meth:`launch() <flexserv.pcasuite.pcz_hinges.launch>` method"""
 

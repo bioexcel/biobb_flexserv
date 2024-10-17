@@ -2,6 +2,7 @@
 
 """Module containing the dmd_run class and the command line interface."""
 import argparse
+from typing import Optional
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.configuration import settings
@@ -51,7 +52,7 @@ class DMDRun(BiobbObject):
     """
 
     def __init__(self, input_pdb_path: str, output_log_path: str,
-                 output_crd_path: str, properties: dict = None, **kwargs) -> None:
+                 output_crd_path: str, properties: Optional[dict] = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -131,7 +132,7 @@ class DMDRun(BiobbObject):
 
         # remove temporary folder(s)
         self.tmp_files.extend([
-            self.stage_io_dict.get("unique_dir")
+            self.stage_io_dict.get("unique_dir", "")
         ])
         self.remove_tmp_files()
 
@@ -142,7 +143,7 @@ class DMDRun(BiobbObject):
 
 def dmd_run(input_pdb_path: str,
             output_log_path: str, output_crd_path: str,
-            properties: dict = None, **kwargs) -> int:
+            properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`DMDRun <flexserv.dmd_run.DMDRun>`flexserv.dmd_run.DMDRun class and
     execute :meth:`launch() <flexserv.dmd_run.DMDRun.launch>` method"""
 

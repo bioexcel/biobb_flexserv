@@ -2,6 +2,7 @@
 
 """Module containing the PCZunzip class and the command line interface."""
 import argparse
+from typing import Optional
 import shutil
 from pathlib import PurePath
 from biobb_common.tools import file_utils as fu
@@ -50,7 +51,7 @@ class PCZunzip(BiobbObject):
     """
 
     def __init__(self, input_pcz_path: str,
-                 output_crd_path: str, properties: dict = None, **kwargs) -> None:
+                 output_crd_path: str, properties: Optional[dict] = None, **kwargs) -> None:
 
         properties = properties or {}
 
@@ -147,7 +148,7 @@ class PCZunzip(BiobbObject):
 
 def pcz_unzip(input_pcz_path: str,
               output_crd_path: str,
-              properties: dict = None, **kwargs) -> int:
+              properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`PCZunzip <flexserv.pcasuite.PCZunzip>`flexserv.pcasuite.PCZunzip class and
     execute :meth:`launch() <flexserv.pcasuite.PCZunzip.launch>` method"""
 
