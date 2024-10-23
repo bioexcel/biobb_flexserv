@@ -101,8 +101,8 @@ class PCZinfo(BiobbObject):
         shutil.copy2(self.io_dict["in"]["input_pcz_path"], self.tmp_folder)
 
         # Temporary output
-        # temp_out_1 = str(Path(self.stage_io_dict.get("unique_dir")).joinpath("output1.dat"))
-        # temp_out_2 = str(Path(self.stage_io_dict.get("unique_dir")).joinpath("output2.dat"))
+        # temp_out_1 = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output1.dat"))
+        # temp_out_2 = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output2.dat"))
         temp_out_1 = "output1.dat"
         temp_out_2 = "output2.dat"
         temp_json = "output.json"
@@ -182,7 +182,7 @@ class PCZinfo(BiobbObject):
 
         # remove temporary folder(s)
         self.tmp_files.extend([
-            # self.stage_io_dict.get("unique_dir"),
+            # self.stage_io_dict.get("unique_dir", ""),
             self.tmp_folder
         ])
         self.remove_tmp_files()

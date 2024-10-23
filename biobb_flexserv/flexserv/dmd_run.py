@@ -101,7 +101,7 @@ class DMDRun(BiobbObject):
             output_log = self.stage_io_dict["out"]["output_log_path"]
 
         # Config file
-        instructions_file = str(Path(self.stage_io_dict.get("unique_dir")).joinpath("dmd.in"))
+        instructions_file = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("dmd.in"))
         with open(instructions_file, 'w') as dmdin:
 
             dmdin.write("&INPUT\n")

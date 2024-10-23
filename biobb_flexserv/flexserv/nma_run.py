@@ -104,9 +104,9 @@ class NMARun(BiobbObject):
         # mc-eigen.pl eigenvec.dat > file.proj
         # pca_anim_mc.pl -pdb structure.ca.pdb -evec eigenvec.dat -i file.proj -n 50 -pout traj.crd
         conda_path = os.getenv("CONDA_PREFIX")
-        nmanu = conda_path + "/bin/nmanu.pl"
-        nma_eigen = conda_path + "/bin/mc-eigen-mdweb.pl"
-        pca_anim = conda_path + "/bin/pca_anim_mc.pl"
+        nmanu = str(conda_path) + "/bin/nmanu.pl"
+        nma_eigen = str(conda_path) + "/bin/mc-eigen-mdweb.pl"
+        pca_anim = str(conda_path) + "/bin/pca_anim_mc.pl"
         self.cmd = ["perl ",
                     nmanu,
                     input_pdb,

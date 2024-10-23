@@ -106,7 +106,7 @@ class PCZlindemann(BiobbObject):
         shutil.copy2(self.io_dict["in"]["input_pcz_path"], self.tmp_folder)
 
         # Temporary output
-        # temp_out = str(Path(self.stage_io_dict.get("unique_dir")).joinpath("output.dat"))
+        # temp_out = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output.dat"))
         temp_out = "output.dat"
         temp_json = "output.json"
 
@@ -150,7 +150,7 @@ class PCZlindemann(BiobbObject):
 
         # remove temporary folder(s)
         self.tmp_files.extend([
-            # self.stage_io_dict.get("unique_dir"),
+            # self.stage_io_dict.get("unique_dir", ""),
             self.tmp_folder
         ])
         self.remove_tmp_files()

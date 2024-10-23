@@ -390,7 +390,7 @@ class PCZsimilarity(BiobbObject):
             self.cmd.append(PurePath(self.io_dict["in"]["input_pcz_path1"]).name)
             # self.cmd.append("-o evecs_1_pc{}".format(pc))
             self.cmd.append("-o")
-            # self.cmd.append(str(Path(self.stage_io_dict.get("unique_dir")).joinpath("evecs_1_pc{}".format(pc))))
+            # self.cmd.append(str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("evecs_1_pc{}".format(pc))))
             self.cmd.append("evecs_1_pc{}".format(pc))
             self.cmd.append("--evec={}".format(pc))
             self.cmd.append(";")
@@ -401,7 +401,7 @@ class PCZsimilarity(BiobbObject):
             self.cmd.append(PurePath(self.io_dict["in"]["input_pcz_path2"]).name)
             # self.cmd.append("-o evecs_2_pc{}".format(pc))
             self.cmd.append("-o")
-            # self.cmd.append(str(Path(self.stage_io_dict.get("unique_dir")).joinpath("evecs_2_pc{}".format(pc))))
+            # self.cmd.append(str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("evecs_2_pc{}".format(pc))))
             self.cmd.append("evecs_2_pc{}".format(pc))
             self.cmd.append("--evec={}".format(pc))
             self.cmd.append(";")
@@ -418,7 +418,7 @@ class PCZsimilarity(BiobbObject):
             pc_id = "pc{}".format(pc)
             info_dict['evecs_1'][pc_id] = []
             info_dict['evecs_2'][pc_id] = []
-            # with open(str(Path(self.stage_io_dict.get("unique_dir")).joinpath("evecs_1_pc{}".format(pc))), 'r') as file:
+            # with open(str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("evecs_1_pc{}".format(pc))), 'r') as file:
             with open(PurePath(self.tmp_folder).joinpath("evecs_1_pc{}".format(pc)), 'r') as file:
                 list_evecs = []
                 for line in file:
@@ -429,7 +429,7 @@ class PCZsimilarity(BiobbObject):
                 info_dict['evecs_1'][pc_id] = list_evecs
                 eigenvectors_1.append(list_evecs)
 
-            # with open(str(Path(self.stage_io_dict.get("unique_dir")).joinpath("evecs_2_pc{}".format(pc))), 'r') as file:
+            # with open(str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("evecs_2_pc{}".format(pc))), 'r') as file:
             with open(PurePath(self.tmp_folder).joinpath("evecs_2_pc{}".format(pc)), 'r') as file:
                 list_evecs = []
                 for line in file:
