@@ -1,5 +1,11 @@
 # Biobb FlexServ changelog
 
+## What's new in version [5.0.0](https://github.com/bioexcel/biobb_flexserv/releases/tag/v5.0.0)?
+
+### Changes
+
+* [FEATURE] New sandbox_path property
+
 ## What's new in version [4.2.0](https://github.com/bioexcel/biobb_flexserv/releases/tag/v4.2.0)?
 In version 4.2.0 the dependency biobb_common has been updated to 4.2.0 version.
 
@@ -22,14 +28,14 @@ In version 4.0.3 the module pcz_similarity has been fixed.
 * Fixes in pcz_similarity
 
 ## What's new in version [4.0.2](https://github.com/bioexcel/biobb_flexserv/releases/tag/v4.0.2)?
-The version 4.0.2 fixes a some bugs bug in Python code. 
+The version 4.0.2 fixes a some bugs bug in Python code.
 
 ### New features
 
 * Bug fixes
 
 ## What's new in version [4.0.1](https://github.com/bioexcel/biobb_flexserv/releases/tag/v4.0.1)?
-The version 4.0.1 fixes a some bugs bug in Python code. 
+The version 4.0.1 fixes a some bugs bug in Python code.
 
 ### New features
 
@@ -43,14 +49,14 @@ In version 4.0.0 the dependency biobb_common has been updated to 4.0.0 version.
 * Update to biobb_common 4.0.0 (general)
 
 ## What's new in version [3.9.1](https://github.com/bioexcel/biobb_flexserv/releases/tag/v3.9.1)?
-The version 3.9.1 fixes a bug in Python dependencies. 
+The version 3.9.1 fixes a bug in Python dependencies.
 
 ### New features
 
 * Bug fixes
 
 ## What's new in version [3.9.0](https://github.com/bioexcel/biobb_flexserv/releases/tag/v3.9.0)?
-The version 3.9.0 is the first release of the biobb_flexserv module available in BioConda as a Conda package. 
+The version 3.9.0 is the first release of the biobb_flexserv module available in BioConda as a Conda package.
 
 ### New features
 
