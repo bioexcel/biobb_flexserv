@@ -171,6 +171,8 @@ def pcz_collectivity(input_pcz_path: str, output_json_path: str,
                            output_json_path=output_json_path,
                            properties=properties).launch()
 
+    pcz_collectivity.__doc__ = PCZcollectivity.__doc__
+
 
 def main():
     parser = argparse.ArgumentParser(description='Extract PCA collectivity (numerical measure of how many atoms are affected by a given mode) from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))

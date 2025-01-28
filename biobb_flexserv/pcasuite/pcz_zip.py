@@ -178,6 +178,8 @@ def pcz_zip(input_pdb_path: str, input_crd_path: str,
                   output_pcz_path=output_pcz_path,
                   properties=properties).launch()
 
+    pcz_zip.__doc__ = PCZzip.__doc__
+
 
 def main():
     parser = argparse.ArgumentParser(description='Compress Molecular Dynamics (MD) trajectories using Principal Component Analysis (PCA) algorithms.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))

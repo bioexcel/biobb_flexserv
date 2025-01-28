@@ -189,6 +189,8 @@ def pcz_evecs(input_pcz_path: str, output_json_path: str,
                     output_json_path=output_json_path,
                     properties=properties).launch()
 
+    pcz_evecs.__doc__ = PCZevecs.__doc__
+
 
 def main():
     parser = argparse.ArgumentParser(description='Extract PCA Eigen Vectors from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))

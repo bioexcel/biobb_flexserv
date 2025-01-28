@@ -480,6 +480,8 @@ def pcz_similarity(input_pcz_path1: str, input_pcz_path2: str, output_json_path:
                          output_json_path=output_json_path,
                          properties=properties).launch()
 
+    pcz_similarity.__doc__ = PCZsimilarity.__doc__
+
 
 def main():
     parser = argparse.ArgumentParser(description='Compute PCA Similarity from a given pair of compressed PCZ files.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))

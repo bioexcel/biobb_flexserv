@@ -201,6 +201,8 @@ def pcz_info(input_pcz_path: str, output_json_path: str,
                    output_json_path=output_json_path,
                    properties=properties).launch()
 
+    pcz_info.__doc__ = PCZinfo.__doc__
+
 
 def main():
     parser = argparse.ArgumentParser(description='Extract PCA info from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))

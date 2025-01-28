@@ -189,6 +189,8 @@ def pcz_stiffness(input_pcz_path: str, output_json_path: str,
                         output_json_path=output_json_path,
                         properties=properties).launch()
 
+    pcz_stiffness.__doc__ = PCZstiffness.__doc__
+
 
 def main():
     parser = argparse.ArgumentParser(description='Extract PCA Stiffness from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))

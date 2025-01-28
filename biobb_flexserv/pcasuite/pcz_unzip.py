@@ -156,6 +156,8 @@ def pcz_unzip(input_pcz_path: str,
                     output_crd_path=output_crd_path,
                     properties=properties).launch()
 
+    pcz_unzip.__doc__ = PCZunzip.__doc__
+
 
 def main():
     parser = argparse.ArgumentParser(description='Uncompress Molecular Dynamics (MD) compressed trajectories using Principal Component Analysis (PCA) algorithms.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))

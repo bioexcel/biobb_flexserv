@@ -155,6 +155,8 @@ def pcz_animate(input_pcz_path: str, output_crd_path: str,
                       output_crd_path=output_crd_path,
                       properties=properties).launch()
 
+    pcz_animate.__doc__ = PCZanimate.__doc__
+
 
 def main():
     parser = argparse.ArgumentParser(description='Extract PCA animations from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))

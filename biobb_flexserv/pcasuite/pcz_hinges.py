@@ -253,6 +253,8 @@ def pcz_hinges(input_pcz_path: str, output_json_path: str,
                      output_json_path=output_json_path,
                      properties=properties).launch()
 
+    pcz_hinges.__doc__ = PCZhinges.__doc__
+
 
 def main():
     parser = argparse.ArgumentParser(description='Compute possible hinge regions (residues around which large protein movements are organized) of a molecule from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))

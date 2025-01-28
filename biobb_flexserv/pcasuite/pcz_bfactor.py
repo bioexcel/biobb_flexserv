@@ -186,6 +186,8 @@ def pcz_bfactor(input_pcz_path: str, output_dat_path: str, output_pdb_path: str,
                       output_pdb_path=output_pdb_path,
                       properties=properties).launch()
 
+    pcz_bfactor.__doc__ = PCZbfactor.__doc__
+
 
 def main():
     parser = argparse.ArgumentParser(description='Extract residue bfactors x PCA mode from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
