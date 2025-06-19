@@ -3,7 +3,7 @@
 [![](https://img.shields.io/conda/vn/bioconda/biobb_flexserv?label=Conda)](https://anaconda.org/bioconda/biobb_flexserv)
 [![](https://img.shields.io/conda/dn/bioconda/biobb_flexserv?label=Conda%20Downloads)](https://anaconda.org/bioconda/biobb_flexserv)
 [![](https://img.shields.io/badge/Docker-Quay.io-blue)](https://quay.io/repository/biocontainers/biobb_flexserv?tab=tags)
-[![](https://img.shields.io/badge/Singularity-GalaxyProject-blue)](https://depot.galaxyproject.org/singularity/biobb_flexserv:5.0.0--pypl5321hdfd78af_0)
+[![](https://img.shields.io/badge/Singularity-GalaxyProject-blue)](https://depot.galaxyproject.org/singularity/biobb_flexserv:5.1.0--pypl5321hdfd78af_0)
 
 [![](https://img.shields.io/badge/OS-Unix%20%7C%20MacOS-blue)](https://github.com/bioexcel/biobb_flexserv)
 [![](https://img.shields.io/pypi/pyversions/biobb-flexserv.svg?label=Python%20Versions)](https://pypi.org/project/biobb-flexserv/)
@@ -41,7 +41,7 @@ The latest documentation of this package can be found in our readthedocs site:
 [latest API documentation](http://biobb-flexserv.readthedocs.io/en/latest/).
 
 ### Version
-v5.0.0 2024.1
+v5.1.0 2025.1
 
 ### Installation
 Using PIP:
@@ -51,7 +51,7 @@ Using PIP:
 * Installation:
 
 
-        pip install "biobb_flexserv>=5.0.0"
+        pip install "biobb_flexserv>=5.1.0"
 
 
 * Usage: [Python API documentation](https://biobb-flexserv.readthedocs.io/en/latest/modules.html)
@@ -61,7 +61,7 @@ Using ANACONDA:
 * Installation:
 
 
-        conda install -c bioconda "biobb_flexserv>=5.0.0"
+        conda install -c bioconda "biobb_flexserv>=5.1.0"
 
 
 * Usage: With conda installation BioBBs can be used with the [Python API documentation](https://biobb-flexserv.readthedocs.io/en/latest/modules.html) and the [Command Line documentation](https://biobb-flexserv.readthedocs.io/en/latest/command_line.html)
@@ -71,13 +71,13 @@ Using DOCKER:
 * Installation:
 
 
-        docker pull quay.io/biocontainers/biobb_flexserv:5.0.0--pypl5321hdfd78af_0
+        docker pull quay.io/biocontainers/biobb_flexserv:5.1.0--pypl5321hdfd78af_0
 
 
 * Usage:
 
 
-        docker run quay.io/biocontainers/biobb_flexserv:5.0.0--pypl5321hdfd78af_0
+        docker run quay.io/biocontainers/biobb_flexserv:5.1.0--pypl5321hdfd78af_0
 
 Using SINGULARITY:
 
@@ -86,7 +86,7 @@ Using SINGULARITY:
 * Installation:
 
 
-        singularity pull --name biobb_flexserv.sif https://depot.galaxyproject.org/singularity/biobb_flexserv:5.0.0--pypl5321hdfd78af_0
+        singularity pull --name biobb_flexserv.sif https://depot.galaxyproject.org/singularity/biobb_flexserv:5.1.0--pypl5321hdfd78af_0
 
 
 * Usage:
