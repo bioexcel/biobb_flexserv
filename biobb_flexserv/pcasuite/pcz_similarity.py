@@ -459,7 +459,7 @@ class PCZsimilarity(BiobbObject):
         # Copy outputs from temporary folder to output path
         shutil.copy2(PurePath(self.tmp_folder).joinpath(temp_json), PurePath(self.io_dict["out"]["output_json_path"]))
 
-        # remove temporary folder(s)
+        # Remove temporary folder(s)
         self.tmp_files.extend([
             self.tmp_folder
         ])
@@ -480,7 +480,8 @@ def pcz_similarity(input_pcz_path1: str, input_pcz_path2: str, output_json_path:
                          output_json_path=output_json_path,
                          properties=properties).launch()
 
-    pcz_similarity.__doc__ = PCZsimilarity.__doc__
+
+pcz_similarity.__doc__ = PCZsimilarity.__doc__
 
 
 def main():

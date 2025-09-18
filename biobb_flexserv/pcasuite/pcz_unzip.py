@@ -134,9 +134,8 @@ class PCZunzip(BiobbObject):
         # Copy files to host
         # self.copy_to_host()
 
-        # remove temporary folder(s)
+        # Remove temporary folder(s)
         self.tmp_files.extend([
-            # self.stage_io_dict.get("unique_dir", ""),
             self.tmp_folder
         ])
         self.remove_tmp_files()
@@ -156,7 +155,8 @@ def pcz_unzip(input_pcz_path: str,
                     output_crd_path=output_crd_path,
                     properties=properties).launch()
 
-    pcz_unzip.__doc__ = PCZunzip.__doc__
+
+pcz_unzip.__doc__ = PCZunzip.__doc__
 
 
 def main():

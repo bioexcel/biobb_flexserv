@@ -155,9 +155,8 @@ class PCZzip(BiobbObject):
         # Copy files to host
         # self.copy_to_host()
 
-        # remove temporary folder(s)
+        # Remove temporary folder(s)
         self.tmp_files.extend([
-            # self.stage_io_dict.get("unique_dir", ""),
             self.tmp_folder
         ])
         self.remove_tmp_files()
@@ -178,7 +177,8 @@ def pcz_zip(input_pdb_path: str, input_crd_path: str,
                   output_pcz_path=output_pcz_path,
                   properties=properties).launch()
 
-    pcz_zip.__doc__ = PCZzip.__doc__
+
+pcz_zip.__doc__ = PCZzip.__doc__
 
 
 def main():

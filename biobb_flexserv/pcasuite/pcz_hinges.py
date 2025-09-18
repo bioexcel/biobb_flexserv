@@ -232,9 +232,8 @@ class PCZhinges(BiobbObject):
         # Copy files to host
         # self.copy_to_host()
 
-        # remove temporary folder(s)
+        # Remove temporary folder(s)
         self.tmp_files.extend([
-            # self.stage_io_dict.get("unique_dir", ""),
             self.tmp_folder
         ])
         self.remove_tmp_files()
@@ -253,7 +252,8 @@ def pcz_hinges(input_pcz_path: str, output_json_path: str,
                      output_json_path=output_json_path,
                      properties=properties).launch()
 
-    pcz_hinges.__doc__ = PCZhinges.__doc__
+
+pcz_hinges.__doc__ = PCZhinges.__doc__
 
 
 def main():

@@ -164,9 +164,8 @@ class PCZbfactor(BiobbObject):
         # Copy files to host
         # self.copy_to_host()
 
-        # remove temporary folder(s)
+        # Remove temporary folder(s)
         self.tmp_files.extend([
-            # self.stage_io_dict.get("unique_dir", ""),
             self.tmp_folder
         ])
         self.remove_tmp_files()
@@ -186,7 +185,8 @@ def pcz_bfactor(input_pcz_path: str, output_dat_path: str, output_pdb_path: str,
                       output_pdb_path=output_pdb_path,
                       properties=properties).launch()
 
-    pcz_bfactor.__doc__ = PCZbfactor.__doc__
+
+pcz_bfactor.__doc__ = PCZbfactor.__doc__
 
 
 def main():
