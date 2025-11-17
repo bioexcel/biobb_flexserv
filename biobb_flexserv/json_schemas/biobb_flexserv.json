@@ -7,7 +7,7 @@
     "docker": "https://quay.io/biocontainers/biobb_flexserv:5.1.0--pypl5321hdfd78af_0",
     "singularity": "https://depot.galaxyproject.org/singularity/biobb_flexserv:5.1.0--pypl5321hdfd78af_0",
     "version": "5.1.0",
-    "rest": false,
+    "rest": true,
     "tools": [
         {
             "block": "BDRun",
@@ -15,7 +15,7 @@
             "desc": "Run Brownian Dynamics from FlexServ",
             "exec": "bd_run",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/flexserv.html#module-flexserv.bd_run",
-            "rest": false
+            "rest": true
         },
         {
             "block": "DMDRun",
@@ -23,7 +23,7 @@
             "desc": "Run Discrete Molecular Dynamics from FlexServ",
             "exec": "dmd_run",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/flexserv.html#module-flexserv.dmd_run",
-            "rest": false
+            "rest": true
         },
         {
             "block": "NMARun",
@@ -31,7 +31,7 @@
             "desc": "Run Normal Mode Analysis from FlexServ",
             "exec": "nma_run",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/flexserv.html#module-flexserv.nma_run",
-            "rest": false
+            "rest": true
         },
         {
             "block": "PCZzip",
@@ -39,7 +39,7 @@
             "desc": "Compress MD simulation trajectories with PCA suite",
             "exec": "pcz_zip",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_zip",
-            "rest": false
+            "rest": true
         },
         {
             "block": "PCZunzip",
@@ -47,7 +47,7 @@
             "desc": "Uncompress MD simulation trajectories with PCA suite",
             "exec": "pcz_unzip",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_unzip",
-            "rest": false
+            "rest": true
         },
         {
             "block": "PCZanimate",
@@ -55,7 +55,7 @@
             "desc": "Extract PCA animations from a compressed PCZ file",
             "exec": "pcz_animate",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_animate",
-            "rest": false
+            "rest": true
         },
         {
             "block": "PCZbfactor",
@@ -63,7 +63,7 @@
             "desc": "Extract residue bfactors x PCA mode from a compressed PCZ file",
             "exec": "pcz_bfactor",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_bfactor",
-            "rest": false
+            "rest": true
         },
         {
             "block": "PCZcollectivity",
@@ -71,7 +71,7 @@
             "desc": "Extract PCA collectivity (numerical measure of how many atoms are affected by a given mode) from a compressed PCZ file",
             "exec": "pcz_collectivity",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcc_collectivity",
-            "rest": false
+            "rest": true
         },
         {
             "block": "PCZevecs",
@@ -79,7 +79,7 @@
             "desc": "Extract PCA Eigen Vectors from a compressed PCZ file",
             "exec": "pcz_evecs",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_evecs",
-            "rest": false
+            "rest": true
         },
         {
             "block": "PCZhinges",
@@ -87,7 +87,7 @@
             "desc": "Compute possible hinge regions (residues around which large protein movements are organized) of a molecule from a compressed PCZ file",
             "exec": "pcz_hinges",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_hinges",
-            "rest": false
+            "rest": true
         },
         {
             "block": "PCZinfo",
@@ -95,7 +95,7 @@
             "desc": "Extract PCA info (variance, Dimensionality) from a compressed PCZ file",
             "exec": "pcz_info",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_info",
-            "rest": false
+            "rest": true
         },
         {
             "block": "PCZlindemann",
@@ -103,7 +103,7 @@
             "desc": "ComExtract Lindemann coefficient (an estimate of the solid-liquid behaviour of a protein) from a compressed PCZ file",
             "exec": "pcz_lindemann",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_lindemann",
-            "rest": false
+            "rest": true
         },
         {
             "block": "PCZsimilarity",
@@ -111,7 +111,7 @@
             "desc": "Compute PCA similarity between two given compressed PCZ files",
             "exec": "pcz_similarity",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_similarity",
-            "rest": false
+            "rest": true
         },
         {
             "block": "PCZstiffness",
@@ -119,7 +119,7 @@
             "desc": "Extract PCA stiffness from a compressed PCZ file",
             "exec": "pcz_stiffness",
             "docs": "https://biobb-flexserv.readthedocs.io/en/latest/pcasuite.html#module-pcasuite.pcz_stiffness",
-            "rest": false
+            "rest": true
         }
     ],
     "dep_pypi": [
