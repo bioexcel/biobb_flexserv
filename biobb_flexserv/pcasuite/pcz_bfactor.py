@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 
 """Module containing the PCZbfactor class and the command line interface."""
-import argparse
 from typing import Optional
 import shutil
 from pathlib import PurePath
 from biobb_common.tools import file_utils as fu
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
 
 
@@ -179,36 +177,11 @@ def pcz_bfactor(input_pcz_path: str, output_dat_path: str, output_pdb_path: str,
                 properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`PCZbfactor <flexserv.pcasuite.pcz_bfactor>`flexserv.pcasuite.PCZbfactor class and
     execute :meth:`launch() <flexserv.pcasuite.pcz_bfactor.launch>` method"""
-
-    return PCZbfactor(input_pcz_path=input_pcz_path,
-                      output_dat_path=output_dat_path,
-                      output_pdb_path=output_pdb_path,
-                      properties=properties).launch()
+    return PCZbfactor(**dict(locals())).launch()
 
 
 pcz_bfactor.__doc__ = PCZbfactor.__doc__
-
-
-def main():
-    parser = argparse.ArgumentParser(description='Extract residue bfactors x PCA mode from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
-    parser.add_argument('--config', required=False, help='Configuration file')
-
-    # Specific args
-    required_args = parser.add_argument_group('required arguments')
-    required_args.add_argument('--input_pcz_path', required=True, help='Input compressed trajectory file. Accepted formats: pcz.')
-    required_args.add_argument('--output_dat_path', required=True, help='Output Bfactor x residue x PCA mode file. Accepted formats: dat, txt, csv.')
-    required_args.add_argument('--output_pdb_path', required=False, help='Output PDB with Bfactor x residue x PCA mode file. Accepted formats: pdb.')
-
-    args = parser.parse_args()
-    args.config = args.config or "{}"
-    properties = settings.ConfReader(config=args.config).get_prop_dic()
-
-    # Specific call
-    pcz_bfactor(input_pcz_path=args.input_pcz_path,
-                output_dat_path=args.output_dat_path,
-                output_pdb_path=args.output_pdb_path,
-                properties=properties)
-
+main = PCZbfactor.get_main(pcz_bfactor, "Extract residue bfactors x PCA mode from a compressed PCZ file.")
 
 if __name__ == '__main__':
     main()

@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
 """Module containing the nma_run class and the command line interface."""
-import argparse
 from typing import Optional
 import os
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
 
 
@@ -143,36 +141,11 @@ def nma_run(input_pdb_path: str,
             properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`NMARun <flexserv.nma_run.NMARun>`flexserv.nma_run.NMARun class and
     execute :meth:`launch() <flexserv.nma_run.NMARun.launch>` method"""
-
-    return NMARun(input_pdb_path=input_pdb_path,
-                  output_log_path=output_log_path,
-                  output_crd_path=output_crd_path,
-                  properties=properties).launch()
+    return NMARun(**dict(locals())).launch()
 
 
 nma_run.__doc__ = NMARun.__doc__
-
-
-def main():
-    parser = argparse.ArgumentParser(description='Generates protein conformational structures using the Normal Mode Analysis method.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
-    parser.add_argument('--config', required=False, help='Configuration file')
-
-    # Specific args
-    required_args = parser.add_argument_group('required arguments')
-    required_args.add_argument('--input_pdb_path', required=True, help='Input PDB file. Accepted formats: pdb.')
-    required_args.add_argument('--output_log_path', required=True, help='Output log file. Accepted formats: log, out, txt.')
-    required_args.add_argument('--output_crd_path', required=True, help='Output ensemble file. Accepted formats: crd, mdcrd, inpcrd.')
-
-    args = parser.parse_args()
-    args.config = args.config or "{}"
-    properties = settings.ConfReader(config=args.config).get_prop_dic()
-
-    # Specific call
-    nma_run(input_pdb_path=args.input_pdb_path,
-            output_log_path=args.output_log_path,
-            output_crd_path=args.output_crd_path,
-            properties=properties)
-
+main = NMARun.get_main(nma_run, "Generates protein conformational structures using the Normal Mode Analysis method.")
 
 if __name__ == '__main__':
     main()

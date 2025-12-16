@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 """Module containing the PCZsimilarity class and the command line interface."""
-import argparse
 from typing import Optional
 import json
 import numpy as np
@@ -10,7 +9,6 @@ from pathlib import PurePath
 from biobb_common.tools import file_utils as fu
 from math import exp
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
 
 
@@ -474,36 +472,11 @@ def pcz_similarity(input_pcz_path1: str, input_pcz_path2: str, output_json_path:
                    properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`PCZsimilarity <flexserv.pcasuite.pcz_similarity>`flexserv.pcasuite.PCZsimilarity class and
     execute :meth:`launch() <flexserv.pcasuite.pcz_similarity.launch>` method"""
-
-    return PCZsimilarity(input_pcz_path1=input_pcz_path1,
-                         input_pcz_path2=input_pcz_path2,
-                         output_json_path=output_json_path,
-                         properties=properties).launch()
+    return PCZsimilarity(**dict(locals())).launch()
 
 
 pcz_similarity.__doc__ = PCZsimilarity.__doc__
-
-
-def main():
-    parser = argparse.ArgumentParser(description='Compute PCA Similarity from a given pair of compressed PCZ files.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
-    parser.add_argument('--config', required=False, help='Configuration file')
-
-    # Specific args
-    required_args = parser.add_argument_group('required arguments')
-    required_args.add_argument('--input_pcz_path1', required=True, help='Input compressed trajectory file 1. Accepted formats: pcz.')
-    required_args.add_argument('--input_pcz_path2', required=True, help='Input compressed trajectory file 2. Accepted formats: pcz.')
-    required_args.add_argument('--output_json_path', required=True, help='Output json file with PCA similarity. Accepted formats: json.')
-
-    args = parser.parse_args()
-    args.config = args.config or "{}"
-    properties = settings.ConfReader(config=args.config).get_prop_dic()
-
-    # Specific call
-    pcz_similarity(input_pcz_path1=args.input_pcz_path1,
-                   input_pcz_path2=args.input_pcz_path2,
-                   output_json_path=args.output_json_path,
-                   properties=properties)
-
+main = PCZsimilarity.get_main(pcz_similarity, "Compute PCA Similarity from a given pair of compressed PCZ files.")
 
 if __name__ == '__main__':
     main()

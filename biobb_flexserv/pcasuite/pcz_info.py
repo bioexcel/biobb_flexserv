@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 
 """Module containing the PCZinfo class and the command line interface."""
-import argparse
 from typing import Optional
 import shutil
 import json
 from pathlib import PurePath
 from biobb_common.tools import file_utils as fu
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
 
 
@@ -195,33 +193,11 @@ def pcz_info(input_pcz_path: str, output_json_path: str,
              properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`PCZinfo <flexserv.pcasuite.pcz_info>`flexserv.pcasuite.PCZinfo class and
     execute :meth:`launch() <flexserv.pcasuite.pcz_info.launch>` method"""
-
-    return PCZinfo(input_pcz_path=input_pcz_path,
-                   output_json_path=output_json_path,
-                   properties=properties).launch()
+    return PCZinfo(**dict(locals())).launch()
 
 
 pcz_info.__doc__ = PCZinfo.__doc__
-
-
-def main():
-    parser = argparse.ArgumentParser(description='Extract PCA info from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
-    parser.add_argument('--config', required=False, help='Configuration file')
-
-    # Specific args
-    required_args = parser.add_argument_group('required arguments')
-    required_args.add_argument('--input_pcz_path', required=True, help='Input compressed trajectory file. Accepted formats: pcz.')
-    required_args.add_argument('--output_json_path', required=True, help='Output json file with PCA info such as number of components, variance and dimensionality. Accepted formats: json.')
-
-    args = parser.parse_args()
-    args.config = args.config or "{}"
-    properties = settings.ConfReader(config=args.config).get_prop_dic()
-
-    # Specific call
-    pcz_info(input_pcz_path=args.input_pcz_path,
-             output_json_path=args.output_json_path,
-             properties=properties)
-
+main = PCZinfo.get_main(pcz_info, "Extract PCA info from a compressed PCZ file.")
 
 if __name__ == '__main__':
     main()

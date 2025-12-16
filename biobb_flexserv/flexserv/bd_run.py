@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 
 """Module containing the bd_run class and the command line interface."""
-import argparse
 from typing import Optional
 from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
 
 
@@ -131,36 +129,11 @@ def bd_run(input_pdb_path: str,
            properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`BDRun <flexserv.bd_run.BDRun>`flexserv.bd_run.BDRun class and
     execute :meth:`launch() <flexserv.bd_run.BDRun.launch>` method"""
-
-    return BDRun(input_pdb_path=input_pdb_path,
-                 output_log_path=output_log_path,
-                 output_crd_path=output_crd_path,
-                 properties=properties).launch()
+    return BDRun(**dict(locals())).launch()
 
 
 bd_run.__doc__ = BDRun.__doc__
-
-
-def main():
-    parser = argparse.ArgumentParser(description='Generates protein conformational structures using the Brownian Dynamics method.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
-    parser.add_argument('--config', required=False, help='Configuration file')
-
-    # Specific args
-    required_args = parser.add_argument_group('required arguments')
-    required_args.add_argument('--input_pdb_path', required=True, help='Input PDB file. Accepted formats: pdb.')
-    required_args.add_argument('--output_log_path', required=True, help='Output log file. Accepted formats: log, out, txt.')
-    required_args.add_argument('--output_crd_path', required=True, help='Output ensemble file. Accepted formats: crd, mdcrd, inpcrd.')
-
-    args = parser.parse_args()
-    args.config = args.config or "{}"
-    properties = settings.ConfReader(config=args.config).get_prop_dic()
-
-    # Specific call
-    bd_run(input_pdb_path=args.input_pdb_path,
-           output_log_path=args.output_log_path,
-           output_crd_path=args.output_crd_path,
-           properties=properties)
-
+main = BDRun.get_main(bd_run, "Generates protein conformational structures using the Brownian Dynamics method.")
 
 if __name__ == '__main__':
     main()

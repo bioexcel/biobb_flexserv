@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 """Module containing the PCZhinges class and the command line interface."""
-import argparse
 from typing import Optional
 import shutil
 import json
@@ -9,7 +8,6 @@ import re
 from pathlib import PurePath
 from biobb_common.tools import file_utils as fu
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
 
 
@@ -247,33 +245,11 @@ def pcz_hinges(input_pcz_path: str, output_json_path: str,
                properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`PCZhinges <flexserv.pcasuite.pcz_hinges>`flexserv.pcasuite.PCZhinges class and
     execute :meth:`launch() <flexserv.pcasuite.pcz_hinges.launch>` method"""
-
-    return PCZhinges(input_pcz_path=input_pcz_path,
-                     output_json_path=output_json_path,
-                     properties=properties).launch()
+    return PCZhinges(**dict(locals())).launch()
 
 
 pcz_hinges.__doc__ = PCZhinges.__doc__
-
-
-def main():
-    parser = argparse.ArgumentParser(description='Compute possible hinge regions (residues around which large protein movements are organized) of a molecule from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
-    parser.add_argument('--config', required=False, help='Configuration file')
-
-    # Specific args
-    required_args = parser.add_argument_group('required arguments')
-    required_args.add_argument('--input_pcz_path', required=True, help='Input compressed trajectory file. Accepted formats: pcz.')
-    required_args.add_argument('--output_json_path', required=True, help='Output hinge regions x PCA mode file. Accepted formats: json.')
-
-    args = parser.parse_args()
-    args.config = args.config or "{}"
-    properties = settings.ConfReader(config=args.config).get_prop_dic()
-
-    # Specific call
-    pcz_hinges(input_pcz_path=args.input_pcz_path,
-               output_json_path=args.output_json_path,
-               properties=properties)
-
+main = PCZhinges.get_main(pcz_hinges, "Compute possible hinge regions (residues around which large protein movements are organized) of a molecule from a compressed PCZ file.")
 
 if __name__ == '__main__':
     main()

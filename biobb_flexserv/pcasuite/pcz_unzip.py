@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 
 """Module containing the PCZunzip class and the command line interface."""
-import argparse
 from typing import Optional
 import shutil
 from pathlib import PurePath
 from biobb_common.tools import file_utils as fu
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
 
 
@@ -150,33 +148,11 @@ def pcz_unzip(input_pcz_path: str,
               properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`PCZunzip <flexserv.pcasuite.PCZunzip>`flexserv.pcasuite.PCZunzip class and
     execute :meth:`launch() <flexserv.pcasuite.PCZunzip.launch>` method"""
-
-    return PCZunzip(input_pcz_path=input_pcz_path,
-                    output_crd_path=output_crd_path,
-                    properties=properties).launch()
+    return PCZunzip(**dict(locals())).launch()
 
 
 pcz_unzip.__doc__ = PCZunzip.__doc__
-
-
-def main():
-    parser = argparse.ArgumentParser(description='Uncompress Molecular Dynamics (MD) compressed trajectories using Principal Component Analysis (PCA) algorithms.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
-    parser.add_argument('--config', required=False, help='Configuration file')
-
-    # Specific args
-    required_args = parser.add_argument_group('required arguments')
-    required_args.add_argument('--input_pcz_path', required=True, help='Input compressed trajectory file. Accepted formats: pcz.')
-    required_args.add_argument('--output_crd_path', required=True, help='Output trajectory file. Accepted formats: crd, mdcrd, inpcrd, pdb.')
-
-    args = parser.parse_args()
-    args.config = args.config or "{}"
-    properties = settings.ConfReader(config=args.config).get_prop_dic()
-
-    # Specific call
-    pcz_unzip(input_pcz_path=args.input_pcz_path,
-              output_crd_path=args.output_crd_path,
-              properties=properties)
-
+main = PCZunzip.get_main(pcz_unzip, "Uncompress Molecular Dynamics (MD) compressed trajectories using Principal Component Analysis (PCA) algorithms.")
 
 if __name__ == '__main__':
     main()

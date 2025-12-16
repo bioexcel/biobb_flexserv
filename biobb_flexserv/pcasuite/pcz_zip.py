@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 
 """Module containing the PCAzip class and the command line interface."""
-import argparse
 from typing import Optional
 import shutil
 from pathlib import PurePath
 from biobb_common.tools import file_utils as fu
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
 
 
@@ -171,36 +169,11 @@ def pcz_zip(input_pdb_path: str, input_crd_path: str,
             properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`PCZzip <flexserv.pcasuite.PCZzip>`flexserv.pcasuite.PCZzip class and
     execute :meth:`launch() <flexserv.pcasuite.PCZzip.launch>` method"""
-
-    return PCZzip(input_pdb_path=input_pdb_path,
-                  input_crd_path=input_crd_path,
-                  output_pcz_path=output_pcz_path,
-                  properties=properties).launch()
+    return PCZzip(**dict(locals())).launch()
 
 
 pcz_zip.__doc__ = PCZzip.__doc__
-
-
-def main():
-    parser = argparse.ArgumentParser(description='Compress Molecular Dynamics (MD) trajectories using Principal Component Analysis (PCA) algorithms.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
-    parser.add_argument('--config', required=False, help='Configuration file')
-
-    # Specific args
-    required_args = parser.add_argument_group('required arguments')
-    required_args.add_argument('--input_pdb_path', required=True, help='Input PDB file. Accepted formats: pdb.')
-    required_args.add_argument('--input_crd_path', required=True, help='Input trajectory file. Accepted formats: crd, mdcrd, inpcrd.')
-    required_args.add_argument('--output_pcz_path', required=True, help='Output compressed trajectory file. Accepted formats: pcz.')
-
-    args = parser.parse_args()
-    args.config = args.config or "{}"
-    properties = settings.ConfReader(config=args.config).get_prop_dic()
-
-    # Specific call
-    pcz_zip(input_pdb_path=args.input_pdb_path,
-            input_crd_path=args.input_crd_path,
-            output_pcz_path=args.output_pcz_path,
-            properties=properties)
-
+main = PCZzip.get_main(pcz_zip, "Compress Molecular Dynamics (MD) trajectories using Principal Component Analysis (PCA) algorithms.")
 
 if __name__ == '__main__':
     main()

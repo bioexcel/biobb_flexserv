@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 
 """Module containing the PCZlindemann class and the command line interface."""
-import argparse
 from typing import Optional
 import shutil
 import json
 from pathlib import PurePath
 from biobb_common.tools import file_utils as fu
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.configuration import settings
 from biobb_common.tools.file_utils import launchlogger
 
 
@@ -163,33 +161,11 @@ def pcz_lindemann(input_pcz_path: str, output_json_path: str,
                   properties: Optional[dict] = None, **kwargs) -> int:
     """Create :class:`PCZlindemann <flexserv.pcasuite.pcz_lindemann>`flexserv.pcasuite.PCZlindemann class and
     execute :meth:`launch() <flexserv.pcasuite.pcz_lindemann.launch>` method"""
-
-    return PCZlindemann(input_pcz_path=input_pcz_path,
-                        output_json_path=output_json_path,
-                        properties=properties).launch()
+    return PCZlindemann(**dict(locals())).launch()
 
 
 pcz_lindemann.__doc__ = PCZlindemann.__doc__
-
-
-def main():
-    parser = argparse.ArgumentParser(description='Extract Lindemann coefficients from a compressed PCZ file.', formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, width=99999))
-    parser.add_argument('--config', required=False, help='Configuration file')
-
-    # Specific args
-    required_args = parser.add_argument_group('required arguments')
-    required_args.add_argument('--input_pcz_path', required=True, help='Input compressed trajectory file. Accepted formats: pcz.')
-    required_args.add_argument('--output_json_path', required=True, help='Output json file with Lindemann coefficient report. Accepted formats: json.')
-
-    args = parser.parse_args()
-    args.config = args.config or "{}"
-    properties = settings.ConfReader(config=args.config).get_prop_dic()
-
-    # Specific call
-    pcz_lindemann(input_pcz_path=args.input_pcz_path,
-                  output_json_path=args.output_json_path,
-                  properties=properties)
-
+main = PCZlindemann.get_main(pcz_lindemann, "Extract Lindemann coefficients from a compressed PCZ file.")
 
 if __name__ == '__main__':
     main()
