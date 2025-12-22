@@ -185,10 +185,10 @@ class PCZhinges(BiobbObject):
         #   The problem was found in Galaxy executions, launching Singularity containers (May 2023).
 
         # Creating temporary folder
-        self.tmp_folder = fu.create_unique_dir()
-        fu.log('Creating %s temporary folder' % self.tmp_folder, self.out_log)
+        tmp_folder = fu.create_unique_dir()
+        fu.log('Creating %s temporary folder' % tmp_folder, self.out_log)
 
-        shutil.copy2(self.io_dict["in"]["input_pcz_path"], self.tmp_folder)
+        shutil.copy2(self.io_dict["in"]["input_pcz_path"], tmp_folder)
 
         # Temporary output
         # temp_out = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output.dat"))
@@ -206,7 +206,7 @@ class PCZhinges(BiobbObject):
         #             ">&", "pcz_dump.hinges.log"
         #             ]
 
-        self.cmd = ['cd', self.tmp_folder, ';',
+        self.cmd = ['cd', tmp_folder, ';',
                     self.binary_path,
                     '-i', PurePath(self.io_dict["in"]["input_pcz_path"]).name,
                     '-o', temp_out,
@@ -219,21 +219,19 @@ class PCZhinges(BiobbObject):
         self.run_biobb()
 
         # Parsing output file and extracting results for the given method
-        dict_out = self.parse_output(PurePath(self.tmp_folder).joinpath(temp_out))
+        dict_out = self.parse_output(PurePath(tmp_folder).joinpath(temp_out))
 
-        with open(PurePath(self.tmp_folder).joinpath(temp_json), 'w') as out_file:
+        with open(PurePath(tmp_folder).joinpath(temp_json), 'w') as out_file:
             out_file.write(json.dumps(dict_out, indent=4))
 
         # Copy outputs from temporary folder to output path
-        shutil.copy2(PurePath(self.tmp_folder).joinpath(temp_json), PurePath(self.io_dict["out"]["output_json_path"]))
+        shutil.copy2(PurePath(tmp_folder).joinpath(temp_json), PurePath(self.io_dict["out"]["output_json_path"]))
 
         # Copy files to host
         # self.copy_to_host()
 
         # Remove temporary folder(s)
-        self.tmp_files.extend([
-            self.tmp_folder
-        ])
+        self.tmp_files.append(tmp_folder)
         self.remove_tmp_files()
 
         self.check_arguments(output_files_created=True, raise_exception=False)

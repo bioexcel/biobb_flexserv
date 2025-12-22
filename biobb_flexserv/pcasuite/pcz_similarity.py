@@ -317,11 +317,11 @@ class PCZsimilarity(BiobbObject):
         #   The problem was found in Galaxy executions, launching Singularity containers (May 2023).
 
         # Creating temporary folder
-        self.tmp_folder = fu.create_unique_dir()
-        fu.log('Creating %s temporary folder' % self.tmp_folder, self.out_log)
+        tmp_folder = fu.create_unique_dir()
+        fu.log('Creating %s temporary folder' % tmp_folder, self.out_log)
 
-        shutil.copy2(self.io_dict["in"]["input_pcz_path1"], self.tmp_folder)
-        shutil.copy2(self.io_dict["in"]["input_pcz_path2"], self.tmp_folder)
+        shutil.copy2(self.io_dict["in"]["input_pcz_path1"], tmp_folder)
+        shutil.copy2(self.io_dict["in"]["input_pcz_path2"], tmp_folder)
 
         # Temporary output
         temp_json = "output.json"
@@ -340,7 +340,7 @@ class PCZsimilarity(BiobbObject):
         #             "--evals"
         #             ]
 
-        self.cmd = ['cd', self.tmp_folder, ';',
+        self.cmd = ['cd', tmp_folder, ';',
                     self.binary_path,    # Evals pcz 1
                     "-i", PurePath(self.io_dict["in"]["input_pcz_path1"]).name,
                     "-o", temp_out_1,
@@ -359,12 +359,12 @@ class PCZsimilarity(BiobbObject):
         info_dict['evals_1'] = []
         info_dict['evals_2'] = []
 
-        with open(PurePath(self.tmp_folder).joinpath(temp_out_1), 'r') as file:
+        with open(PurePath(tmp_folder).joinpath(temp_out_1), 'r') as file:
             for line in file:
                 info = float(line.strip())
                 info_dict['evals_1'].append(info)
 
-        with open(PurePath(self.tmp_folder).joinpath(temp_out_2), 'r') as file:
+        with open(PurePath(tmp_folder).joinpath(temp_out_2), 'r') as file:
             for line in file:
                 info = float(line.strip())
                 info_dict['evals_2'].append(info)
@@ -378,7 +378,7 @@ class PCZsimilarity(BiobbObject):
         # pczdump -i structure.ca.std.pcz --evals -o evals.txt
         self.cmd = []
         self.cmd.append('cd')
-        self.cmd.append(self.tmp_folder)
+        self.cmd.append(tmp_folder)
         self.cmd.append(';')
         for pc in (range(1, num_evals_min+1)):
             # Evecs pcz 1
@@ -417,7 +417,7 @@ class PCZsimilarity(BiobbObject):
             info_dict['evecs_1'][pc_id] = []
             info_dict['evecs_2'][pc_id] = []
             # with open(str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("evecs_1_pc{}".format(pc))), 'r') as file:
-            with open(PurePath(self.tmp_folder).joinpath("evecs_1_pc{}".format(pc)), 'r') as file:
+            with open(PurePath(tmp_folder).joinpath("evecs_1_pc{}".format(pc)), 'r') as file:
                 list_evecs = []
                 for line in file:
                     info = line.strip().split(' ')
@@ -428,7 +428,7 @@ class PCZsimilarity(BiobbObject):
                 eigenvectors_1.append(list_evecs)
 
             # with open(str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("evecs_2_pc{}".format(pc))), 'r') as file:
-            with open(PurePath(self.tmp_folder).joinpath("evecs_2_pc{}".format(pc)), 'r') as file:
+            with open(PurePath(tmp_folder).joinpath("evecs_2_pc{}".format(pc)), 'r') as file:
                 list_evecs = []
                 for line in file:
                     info = line.strip().split(' ')
@@ -451,16 +451,14 @@ class PCZsimilarity(BiobbObject):
         dotp = self.dot_product_accum(eigenvectors_1, eigenvectors_2)
         info_dict['similarityIndex_dotp'] = float("{:.3f}".format(dotp))
 
-        with open(PurePath(self.tmp_folder).joinpath(temp_json), 'w') as out_file:
+        with open(PurePath(tmp_folder).joinpath(temp_json), 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
 
         # Copy outputs from temporary folder to output path
-        shutil.copy2(PurePath(self.tmp_folder).joinpath(temp_json), PurePath(self.io_dict["out"]["output_json_path"]))
+        shutil.copy2(PurePath(tmp_folder).joinpath(temp_json), PurePath(self.io_dict["out"]["output_json_path"]))
 
         # Remove temporary folder(s)
-        self.tmp_files.extend([
-            self.tmp_folder
-        ])
+        self.tmp_files.append(tmp_folder)
         self.remove_tmp_files()
 
         self.check_arguments(output_files_created=True, raise_exception=False)

@@ -108,11 +108,11 @@ class PCZzip(BiobbObject):
         #   The problem was found in Galaxy executions, launching Singularity containers (May 2023).
 
         # Creating temporary folder
-        self.tmp_folder = fu.create_unique_dir()
-        fu.log('Creating %s temporary folder' % self.tmp_folder, self.out_log)
+        tmp_folder = fu.create_unique_dir()
+        fu.log('Creating %s temporary folder' % tmp_folder, self.out_log)
 
-        shutil.copy2(self.io_dict["in"]["input_pdb_path"], self.tmp_folder)
-        shutil.copy2(self.io_dict["in"]["input_crd_path"], self.tmp_folder)
+        shutil.copy2(self.io_dict["in"]["input_pdb_path"], tmp_folder)
+        shutil.copy2(self.io_dict["in"]["input_crd_path"], tmp_folder)
 
         # Command line
         # pcazip -i infile -o outfile -n natoms
@@ -123,7 +123,7 @@ class PCZzip(BiobbObject):
         #             "-o", output_pcz
         #             ]
 
-        self.cmd = ['cd', self.tmp_folder, ';',
+        self.cmd = ['cd', tmp_folder, ';',
                     self.binary_path,
                     "-p", PurePath(self.io_dict["in"]["input_pdb_path"]).name,
                     "-i", PurePath(self.io_dict["in"]["input_crd_path"]).name,
@@ -148,15 +148,13 @@ class PCZzip(BiobbObject):
         self.run_biobb()
 
         # Copy outputs from temporary folder to output path
-        shutil.copy2(PurePath(self.tmp_folder).joinpath(PurePath(self.io_dict["out"]["output_pcz_path"]).name), PurePath(self.io_dict["out"]["output_pcz_path"]))
+        shutil.copy2(PurePath(tmp_folder).joinpath(PurePath(self.io_dict["out"]["output_pcz_path"]).name), PurePath(self.io_dict["out"]["output_pcz_path"]))
 
         # Copy files to host
         # self.copy_to_host()
 
         # Remove temporary folder(s)
-        self.tmp_files.extend([
-            self.tmp_folder
-        ])
+        self.tmp_files.append(tmp_folder)
         self.remove_tmp_files()
 
         self.check_arguments(output_files_created=True, raise_exception=False)

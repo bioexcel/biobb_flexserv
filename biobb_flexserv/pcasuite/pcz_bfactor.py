@@ -105,10 +105,10 @@ class PCZbfactor(BiobbObject):
         #   The problem was found in Galaxy executions, launching Singularity containers (May 2023).
 
         # Creating temporary folder
-        self.tmp_folder = fu.create_unique_dir()
-        fu.log('Creating %s temporary folder' % self.tmp_folder, self.out_log)
+        tmp_folder = fu.create_unique_dir()
+        fu.log('Creating %s temporary folder' % tmp_folder, self.out_log)
 
-        shutil.copy2(self.io_dict["in"]["input_pcz_path"], self.tmp_folder)
+        shutil.copy2(self.io_dict["in"]["input_pcz_path"], tmp_folder)
 
         # Command line (1: dat file)
         # pczdump -i structure.ca.std.pcz --fluc=1 -o bfactor_1.dat
@@ -119,7 +119,7 @@ class PCZbfactor(BiobbObject):
         #             "--fluc={}".format(self.eigenvector)
         #             ]
 
-        self.cmd = ['cd', self.tmp_folder, ';',
+        self.cmd = ['cd', tmp_folder, ';',
                     self.binary_path,
                     '-i', PurePath(self.io_dict["in"]["input_pcz_path"]).name,
                     '-o', PurePath(self.io_dict["out"]["output_dat_path"]).name,
@@ -141,7 +141,7 @@ class PCZbfactor(BiobbObject):
             #             "--pdb"
             #             ]
 
-            self.cmd = ['cd', self.tmp_folder, ';',
+            self.cmd = ['cd', tmp_folder, ';',
                         self.binary_path,
                         '-i', PurePath(self.io_dict["in"]["input_pcz_path"]).name,
                         '-o', PurePath(self.io_dict["out"]["output_pdb_path"]).name,
@@ -154,18 +154,16 @@ class PCZbfactor(BiobbObject):
             self.run_biobb()
 
         # Copy outputs from temporary folder to output path
-        shutil.copy2(PurePath(self.tmp_folder).joinpath(PurePath(self.io_dict["out"]["output_dat_path"]).name), PurePath(self.io_dict["out"]["output_dat_path"]))
+        shutil.copy2(PurePath(tmp_folder).joinpath(PurePath(self.io_dict["out"]["output_dat_path"]).name), PurePath(self.io_dict["out"]["output_dat_path"]))
 
         if self.pdb:
-            shutil.copy2(PurePath(self.tmp_folder).joinpath(PurePath(self.io_dict["out"]["output_pdb_path"]).name), PurePath(self.io_dict["out"]["output_pdb_path"]))
+            shutil.copy2(PurePath(tmp_folder).joinpath(PurePath(self.io_dict["out"]["output_pdb_path"]).name), PurePath(self.io_dict["out"]["output_pdb_path"]))
 
         # Copy files to host
         # self.copy_to_host()
 
         # Remove temporary folder(s)
-        self.tmp_files.extend([
-            self.tmp_folder
-        ])
+        self.tmp_files.append(tmp_folder)
         self.remove_tmp_files()
 
         self.check_arguments(output_files_created=True, raise_exception=False)
