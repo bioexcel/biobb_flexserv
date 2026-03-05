@@ -2,4 +2,4 @@ from . import flexserv
 from . import pcasuite
 name = "biobb_flexserv"
 __all__ = ["flexserv", "pcasuite"]
-__version__ = "5.2.0"
+__version__ = "5.2.1"
