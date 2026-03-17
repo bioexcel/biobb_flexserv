@@ -4,8 +4,8 @@
     "github": "https://github.com/bioexcel/biobb_flexserv",
     "readthedocs": "https://biobb-flexserv.readthedocs.io/en/latest/",
     "conda": "https://anaconda.org/bioconda/biobb_flexserv",
-    "docker": "https://quay.io/biocontainers/biobb_flexserv:5.2.1--pypl5321hdfd78af_0",
-    "singularity": "https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--pypl5321hdfd78af_0",
+    "docker": "https://quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0",
+    "singularity": "https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0",
     "version": "5.2.1",
     "rest": true,
     "tools": [

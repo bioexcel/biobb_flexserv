@@ -3,7 +3,7 @@
 [![](https://img.shields.io/conda/vn/bioconda/biobb_flexserv?label=Conda)](https://anaconda.org/bioconda/biobb_flexserv)
 [![](https://img.shields.io/conda/dn/bioconda/biobb_flexserv?label=Conda%20Downloads)](https://anaconda.org/bioconda/biobb_flexserv)
 [![](https://img.shields.io/badge/Docker-Quay.io-blue)](https://quay.io/repository/biocontainers/biobb_flexserv?tab=tags)
-[![](https://img.shields.io/badge/Singularity-GalaxyProject-blue)](https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--pypl5321hdfd78af_0)
+[![](https://img.shields.io/badge/Singularity-GalaxyProject-blue)](https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0)
 
 [![](https://img.shields.io/badge/OS-Unix%20%7C%20MacOS-blue)](https://github.com/bioexcel/biobb_flexserv)
 [![](https://img.shields.io/pypi/pyversions/biobb-flexserv.svg?label=Python%20Versions)](https://pypi.org/project/biobb-flexserv/)
@@ -71,13 +71,13 @@ Using DOCKER:
 * Installation:
 
 
-        docker pull quay.io/biocontainers/biobb_flexserv:5.2.1--pypl5321hdfd78af_0
+        docker pull quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
 
 
 * Usage:
 
 
-        docker run quay.io/biocontainers/biobb_flexserv:5.2.1--pypl5321hdfd78af_0
+        docker run quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
 
 Using SINGULARITY:
 
@@ -86,7 +86,7 @@ Using SINGULARITY:
 * Installation:
 
 
-        singularity pull --name biobb_flexserv.sif https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--pypl5321hdfd78af_0
+        singularity pull --name biobb_flexserv.sif https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
 
 
 * Usage:
