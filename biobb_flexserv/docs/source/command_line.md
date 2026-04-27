@@ -40,13 +40,13 @@ Config input / output arguments for this building block:
 Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
-* **binary_path** (*string*): (bd) BD binary path to be used..
-* **time** (*integer*): (1000000) Total simulation time (ps).
-* **dt** (*number*): (1e-15) Integration time (ps).
-* **wfreq** (*integer*): (1000) Writing frequency (ps).
-* **remove_tmp** (*boolean*): (True) Remove temporal files..
-* **restart** (*boolean*): (False) Do not execute if output files exist..
-* **sandbox_path** (*string*): (./) Parent path to the sandbox directory..
+* **binary_path** (*string*): (bd) BD binary path to be used.
+* **time** (*integer*): (1000000) Total simulation time (ps)
+* **dt** (*number*): (1e-15) Integration time (ps)
+* **wfreq** (*integer*): (1000) Writing frequency (ps)
+* **remove_tmp** (*boolean*): (True) Remove temporal files.
+* **restart** (*boolean*): (False) Do not execute if output files exist.
+* **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_bd_run.yml)
 ```python
@@ -108,13 +108,13 @@ Config input / output arguments for this building block:
 Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
-* **binary_path** (*string*): (dmdgoopt) DMD binary path to be used..
-* **dt** (*number*): (1e-12) Integration time (s).
-* **temperature** (*integer*): (300) Simulation temperature (K).
-* **frames** (*integer*): (1000) Number of frames in the final ensemble.
-* **remove_tmp** (*boolean*): (True) Remove temporal files..
-* **restart** (*boolean*): (False) Do not execute if output files exist..
-* **sandbox_path** (*string*): (./) Parent path to the sandbox directory..
+* **binary_path** (*string*): (dmdgoopt) DMD binary path to be used.
+* **dt** (*number*): (1e-12) Integration time (s)
+* **temperature** (*integer*): (300) Simulation temperature (K)
+* **frames** (*integer*): (1000) Number of frames in the final ensemble
+* **remove_tmp** (*boolean*): (True) Remove temporal files.
+* **restart** (*boolean*): (False) Do not execute if output files exist.
+* **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_dmd_run.yml)
 ```python
@@ -174,12 +174,12 @@ Config input / output arguments for this building block:
 Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
-* **binary_path** (*string*): (diaghess) NMA binary path to be used..
-* **frames** (*integer*): (1000) Number of frames in the final ensemble.
-* **nvecs** (*integer*): (50) Number of vectors to take into account for the ensemble generation.
-* **remove_tmp** (*boolean*): (True) Remove temporal files..
-* **restart** (*boolean*): (False) Do not execute if output files exist..
-* **sandbox_path** (*string*): (./) Parent path to the sandbox directory..
+* **binary_path** (*string*): (diaghess) NMA binary path to be used.
+* **frames** (*integer*): (1000) Number of frames in the final ensemble
+* **nvecs** (*integer*): (50) Number of vectors to take into account for the ensemble generation
+* **remove_tmp** (*boolean*): (True) Remove temporal files.
+* **restart** (*boolean*): (False) Do not execute if output files exist.
+* **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_nma_run.yml)
 ```python
@@ -236,12 +236,12 @@ Config input / output arguments for this building block:
 Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
-* **binary_path** (*string*): (pczdump) pczdump binary path to be used..
-* **eigenvector** (*integer*): (1) Eigenvector to be used for the animation.
-* **pdb** (*boolean*): (False) Use PDB format for output trajectory.
-* **remove_tmp** (*boolean*): (True) Remove temporal files..
-* **restart** (*boolean*): (False) Do not execute if output files exist..
-* **sandbox_path** (*string*): (./) Parent path to the sandbox directory..
+* **binary_path** (*string*): (pczdump) pczdump binary path to be used.
+* **eigenvector** (*integer*): (1) Eigenvector to be used for the animation
+* **pdb** (*boolean*): (False) Use PDB format for output trajectory
+* **remove_tmp** (*boolean*): (True) Remove temporal files.
+* **restart** (*boolean*): (False) Do not execute if output files exist.
+* **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_animate.yml)
 ```python
@@ -305,12 +305,12 @@ Config input / output arguments for this building block:
 Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
-* **binary_path** (*string*): (pczdump) pczdump binary path to be used..
-* **eigenvector** (*integer*): (0) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes)..
-* **pdb** (*boolean*): (False) Generate a PDB file with the computed bfactors (to be easily represented with colour scale).
-* **remove_tmp** (*boolean*): (True) Remove temporal files..
-* **restart** (*boolean*): (False) Do not execute if output files exist..
-* **sandbox_path** (*string*): (./) Parent path to the sandbox directory..
+* **binary_path** (*string*): (pczdump) pczdump binary path to be used.
+* **eigenvector** (*integer*): (0) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
+* **pdb** (*boolean*): (False) Generate a PDB file with the computed bfactors (to be easily represented with colour scale)
+* **remove_tmp** (*boolean*): (True) Remove temporal files.
+* **restart** (*boolean*): (False) Do not execute if output files exist.
+* **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_bfactor.yml)
 ```python
@@ -369,11 +369,11 @@ Config input / output arguments for this building block:
 Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
-* **eigenvector** (*integer*): (0) PCA mode (eigenvector) from which to extract stiffness..
-* **binary_path** (*string*): (pczdump) pczdump binary path to be used..
-* **remove_tmp** (*boolean*): (True) Remove temporal files..
-* **restart** (*boolean*): (False) Do not execute if output files exist..
-* **sandbox_path** (*string*): (./) Parent path to the sandbox directory..
+* **eigenvector** (*integer*): (0) PCA mode (eigenvector) from which to extract stiffness.
+* **binary_path** (*string*): (pczdump) pczdump binary path to be used.
+* **remove_tmp** (*boolean*): (True) Remove temporal files.
+* **restart** (*boolean*): (False) Do not execute if output files exist.
+* **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_collectivity.yml)
 ```python
@@ -430,11 +430,11 @@ Config input / output arguments for this building block:
 Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
-* **binary_path** (*string*): (pczdump) pczdump binary path to be used..
-* **eigenvector** (*integer*): (1) PCA mode (eigenvector) from which to extract eigen vectors..
-* **remove_tmp** (*boolean*): (True) Remove temporal files..
-* **restart** (*boolean*): (False) Do not execute if output files exist..
-* **sandbox_path** (*string*): (./) Parent path to the sandbox directory..
+* **binary_path** (*string*): (pczdump) pczdump binary path to be used.
+* **eigenvector** (*integer*): (1) PCA mode (eigenvector) from which to extract eigen vectors.
+* **remove_tmp** (*boolean*): (True) Remove temporal files.
+* **restart** (*boolean*): (False) Do not execute if output files exist.
+* **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_evecs.yml)
 ```python
@@ -491,12 +491,12 @@ Config input / output arguments for this building block:
 Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
-* **binary_path** (*string*): (pczdump) pczdump binary path to be used..
-* **eigenvector** (*integer*): (0) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes)..
-* **method** (*string*): (Dynamic_domain) Method to compute the hinge regions (Options: Bfactor_slope, Force_constant, Dynamic_domain).
-* **remove_tmp** (*boolean*): (True) Remove temporal files..
-* **restart** (*boolean*): (False) Do not execute if output files exist..
-* **sandbox_path** (*string*): (./) Parent path to the sandbox directory..
+* **binary_path** (*string*): (pczdump) pczdump binary path to be used.
+* **eigenvector** (*integer*): (0) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
+* **method** (*string*): (Dynamic_domain) Method to compute the hinge regions (Options: Bfactor_slope, Force_constant, Dynamic_domain)
+* **remove_tmp** (*boolean*): (True) Remove temporal files.
+* **restart** (*boolean*): (False) Do not execute if output files exist.
+* **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_hinges.yml)
 ```python
@@ -555,10 +555,10 @@ Config input / output arguments for this building block:
 Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
-* **binary_path** (*string*): (pczdump) pczdump binary path to be used..
-* **remove_tmp** (*boolean*): (True) Remove temporal files..
-* **restart** (*boolean*): (False) Do not execute if output files exist..
-* **sandbox_path** (*string*): (./) Parent path to the sandbox directory..
+* **binary_path** (*string*): (pczdump) pczdump binary path to be used.
+* **remove_tmp** (*boolean*): (True) Remove temporal files.
+* **restart** (*boolean*): (False) Do not execute if output files exist.
+* **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
 ### YAML
 ### JSON
 
@@ -593,11 +593,11 @@ Config input / output arguments for this building block:
 Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
-* **binary_path** (*string*): (pczdump) pczdump binary path to be used..
-* **mask** (*string*): (all atoms) Residue mask, in the format ":resnum1, resnum2, resnum3" (e.g. ":10,21,33"). See https://mmb.irbbarcelona.org/software/pcasuite/ for the complete format specification..
-* **remove_tmp** (*boolean*): (True) Remove temporal files..
-* **restart** (*boolean*): (False) Do not execute if output files exist..
-* **sandbox_path** (*string*): (./) Parent path to the sandbox directory..
+* **binary_path** (*string*): (pczdump) pczdump binary path to be used.
+* **mask** (*string*): (all atoms) Residue mask, in the format ":resnum1, resnum2, resnum3" (e.g. ":10,21,33"). See https://mmb.irbbarcelona.org/software/pcasuite/ for the complete format specification.
+* **remove_tmp** (*boolean*): (True) Remove temporal files.
+* **restart** (*boolean*): (False) Do not execute if output files exist.
+* **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
 ### YAML
 ### JSON
 
@@ -635,11 +635,11 @@ Config input / output arguments for this building block:
 Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
-* **amplifying_factor** (*number*): (0.0) common displacement (dx) along the different eigenvectors. If 0, the result is the absolute similarity index (dot product)..
-* **binary_path** (*string*): (pczdump) pczdump binary path to be used..
-* **remove_tmp** (*boolean*): (True) Remove temporal files..
-* **restart** (*boolean*): (False) Do not execute if output files exist..
-* **sandbox_path** (*string*): (./) Parent path to the sandbox directory..
+* **amplifying_factor** (*number*): (0.0) common displacement (dx) along the different eigenvectors. If 0, the result is the absolute similarity index (dot product).
+* **binary_path** (*string*): (pczdump) pczdump binary path to be used.
+* **remove_tmp** (*boolean*): (True) Remove temporal files.
+* **restart** (*boolean*): (False) Do not execute if output files exist.
+* **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
 ### YAML
 ### JSON
 
@@ -674,12 +674,12 @@ Config input / output arguments for this building block:
 Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
-* **binary_path** (*string*): (pczdump) pczdump binary path to be used..
-* **eigenvector** (*integer*): (0) PCA mode (eigenvector) from which to extract stiffness..
-* **temperature** (*integer*): (300) Temperature with which compute the apparent stiffness..
-* **remove_tmp** (*boolean*): (True) Remove temporal files..
-* **restart** (*boolean*): (False) Do not execute if output files exist..
-* **sandbox_path** (*string*): (./) Parent path to the sandbox directory..
+* **binary_path** (*string*): (pczdump) pczdump binary path to be used.
+* **eigenvector** (*integer*): (0) PCA mode (eigenvector) from which to extract stiffness.
+* **temperature** (*integer*): (300) Temperature with which compute the apparent stiffness.
+* **remove_tmp** (*boolean*): (True) Remove temporal files.
+* **restart** (*boolean*): (False) Do not execute if output files exist.
+* **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_stiffness.yml)
 ```python
@@ -736,12 +736,12 @@ Config input / output arguments for this building block:
 Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
-* **binary_path** (*string*): (pcaunzip) pcaunzip binary path to be used..
-* **verbose** (*boolean*): (False) Make output verbose.
-* **pdb** (*boolean*): (False) Use PDB format for output trajectory.
-* **remove_tmp** (*boolean*): (True) Remove temporal files..
-* **restart** (*boolean*): (False) Do not execute if output files exist..
-* **sandbox_path** (*string*): (./) Parent path to the sandbox directory..
+* **binary_path** (*string*): (pcaunzip) pcaunzip binary path to be used.
+* **verbose** (*boolean*): (False) Make output verbose
+* **pdb** (*boolean*): (False) Use PDB format for output trajectory
+* **remove_tmp** (*boolean*): (True) Remove temporal files.
+* **restart** (*boolean*): (False) Do not execute if output files exist.
+* **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_unzip.yml)
 ```python
@@ -801,14 +801,14 @@ Config input / output arguments for this building block:
 Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
-* **binary_path** (*string*): (pcazip) pcazip binary path to be used..
-* **neigenv** (*integer*): (0) Number of generated eigenvectors.
-* **variance** (*integer*): (90) Percentage of variance captured by the final set of eigenvectors.
-* **verbose** (*boolean*): (False) Make output verbose.
-* **gauss_rmsd** (*boolean*): (False) Use a gaussian RMSd for fitting.
-* **remove_tmp** (*boolean*): (True) Remove temporal files..
-* **restart** (*boolean*): (False) Do not execute if output files exist..
-* **sandbox_path** (*string*): (./) Parent path to the sandbox directory..
+* **binary_path** (*string*): (pcazip) pcazip binary path to be used.
+* **neigenv** (*integer*): (0) Number of generated eigenvectors
+* **variance** (*integer*): (90) Percentage of variance captured by the final set of eigenvectors
+* **verbose** (*boolean*): (False) Make output verbose
+* **gauss_rmsd** (*boolean*): (False) Use a gaussian RMSd for fitting
+* **remove_tmp** (*boolean*): (True) Remove temporal files.
+* **restart** (*boolean*): (False) Do not execute if output files exist.
+* **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_zip.yml)
 ```python
