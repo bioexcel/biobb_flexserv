@@ -2,11 +2,9 @@
 
 """Module containing the PCZstiffness class and the command line interface."""
 from typing import Optional
-import shutil
 import json
 import math
-from pathlib import PurePath
-from biobb_common.tools import file_utils as fu
+from pathlib import Path, PurePath
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.tools.file_utils import launchlogger
 
@@ -27,6 +25,12 @@ class PCZstiffness(BiobbObject):
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
             * **restart** (*bool*) - (False) [WF property] Do not execute if output files exist.
             * **sandbox_path** (*str*) - ("./") [WF property] Parent path to the sandbox directory.
+            * **container_path** (*str*) - (None) Container path definition.
+            * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
+            * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
+            * **container_working_dir** (*str*) - (None) Container working directory definition.
+            * **container_user_id** (*str*) - (None) Container user_id definition.
+            * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
     Examples:
         This is a use example of how to use the building block from Python::
@@ -84,34 +88,20 @@ class PCZstiffness(BiobbObject):
         # Setup Biobb
         if self.check_restart():
             return 0
-        # self.stage_files()
+        self.stage_files()
 
-        # Internal file paths
-        # try:
-        #     # Using rel paths to shorten the amount of characters due to fortran path length limitations
-        #     input_pcz = str(Path(self.stage_io_dict["in"]["input_pcz_path"]).relative_to(Path.cwd()))
-        #     output_json = str(Path(self.stage_io_dict["out"]["output_json_path"]).relative_to(Path.cwd()))
-        # except ValueError:
-        #     # Container or remote case
-        #     input_pcz = self.stage_io_dict["in"]["input_pcz_path"]
-        #     output_json = self.stage_io_dict["out"]["output_json_path"]
+        if self.container_path:
+            working_dir = self.container_volume_path if self.container_volume_path else "/data"
+        else:
+            working_dir = self.stage_io_dict.get("unique_dir", "")
 
-        # Manually creating a Sandbox to avoid issues with input parameters buffer overflow:
-        #   Long strings defining a file path makes Fortran or C compiled programs crash if the string
-        #   declared is shorter than the input parameter path (string) length.
-        #   Generating a temporary folder and working inside this folder (sandbox) fixes this problem.
-        #   The problem was found in Galaxy executions, launching Singularity containers (May 2023).
-
-        # Creating temporary folder
-        tmp_folder = fu.create_unique_dir()
-        fu.log('Creating %s temporary folder' % tmp_folder, self.out_log)
-
-        shutil.copy2(self.io_dict["in"]["input_pcz_path"], tmp_folder)
+        unique_dir = Path(self.stage_io_dict.get("unique_dir", ""))
 
         # Temporary output
         # temp_out = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output.dat"))
         temp_out = "output.dat"
-        temp_json = "output.json"
+        temp_out_path = unique_dir.joinpath(temp_out)
+        staged_output_json_path = unique_dir.joinpath(Path(self.stage_io_dict["out"]["output_json_path"]).name)
 
         # Command line
         # pczdump -i structure.ca.std.pcz --stiffness -o pcz.stiffness
@@ -122,9 +112,9 @@ class PCZstiffness(BiobbObject):
         #             "--temperature={}".format(self.temperature)
         #             ]
 
-        self.cmd = ['cd', tmp_folder, ';',
+        self.cmd = ['cd', working_dir, ';',
                     self.binary_path,
-                    "-i", PurePath(self.io_dict["in"]["input_pcz_path"]).name,
+                    "-i", PurePath(self.stage_io_dict["in"]["input_pcz_path"]).name,
                     "-o", temp_out,
                     "--stiff={}".format(self.eigenvector),
                     "--temperature={}".format(self.temperature)
@@ -138,7 +128,7 @@ class PCZstiffness(BiobbObject):
         info_dict['stiffness'] = []
         info_dict['stiffness_log'] = []
         row = 0
-        with open(PurePath(tmp_folder).joinpath(temp_out), 'r') as file:
+        with open(temp_out_path, 'r') as file:
             for line in file:
                 info = line.strip().split(',')
                 line_array = []
@@ -157,17 +147,13 @@ class PCZstiffness(BiobbObject):
                 info_dict['stiffness_log'][row][row] = float('inf')
                 row += 1
 
-        with open(PurePath(tmp_folder).joinpath(temp_json), 'w') as out_file:
+        with open(staged_output_json_path, 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
 
-        # Copy outputs from temporary folder to output path
-        shutil.copy2(PurePath(tmp_folder).joinpath(temp_json), PurePath(self.io_dict["out"]["output_json_path"]))
-
         # Copy files to host
-        # self.copy_to_host()
+        self.copy_to_host()
 
         # Remove temporary folder(s)
-        self.tmp_files.append(tmp_folder)
         self.remove_tmp_files()
 
         self.check_arguments(output_files_created=True, raise_exception=False)

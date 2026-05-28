@@ -2,7 +2,7 @@
 
 """Module containing the dmd_run class and the command line interface."""
 from typing import Optional
-from pathlib import Path
+from pathlib import Path, PurePath
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.tools.file_utils import launchlogger
 
@@ -25,6 +25,12 @@ class DMDRun(BiobbObject):
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
             * **restart** (*bool*) - (False) [WF property] Do not execute if output files exist.
             * **sandbox_path** (*str*) - ("./") [WF property] Parent path to the sandbox directory.
+            * **container_path** (*str*) - (None) Container path definition.
+            * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
+            * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
+            * **container_working_dir** (*str*) - (None) Container working directory definition.
+            * **container_user_id** (*str*) - (None) Container user_id definition.
+            * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
     Examples:
         This is a use example of how to use the building block from Python::
@@ -86,25 +92,18 @@ class DMDRun(BiobbObject):
             return 0
         self.stage_files()
 
-        # Internal file paths
-        try:
-            # Using rel paths to shorten the amount of characters due to fortran path length limitations
-            input_pdb = str(Path(self.stage_io_dict["in"]["input_pdb_path"]).relative_to(Path.cwd()))
-            output_crd = str(Path(self.stage_io_dict["out"]["output_crd_path"]).relative_to(Path.cwd()))
-            output_log = str(Path(self.stage_io_dict["out"]["output_log_path"]).relative_to(Path.cwd()))
-        except ValueError:
-            # Container or remote case
-            input_pdb = self.stage_io_dict["in"]["input_pdb_path"]
-            output_crd = self.stage_io_dict["out"]["output_crd_path"]
-            output_log = self.stage_io_dict["out"]["output_log_path"]
+        if self.container_path:
+            working_dir = self.container_volume_path if self.container_volume_path else "/data"
+        else:
+            working_dir = self.stage_io_dict.get("unique_dir", "")
 
         # Config file
         instructions_file = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("dmd.in"))
         with open(instructions_file, 'w') as dmdin:
 
             dmdin.write("&INPUT\n")
-            dmdin.write("  FILE9='{}',\n".format(input_pdb))
-            dmdin.write("  FILE21='{}',\n".format(output_crd))
+            dmdin.write("  FILE9='{}',\n".format(PurePath(self.stage_io_dict["in"]["input_pdb_path"]).name))
+            dmdin.write("  FILE21='{}',\n".format(PurePath(self.stage_io_dict["out"]["output_crd_path"]).name))
             dmdin.write("  TSNAP={},\n".format(self.dt))
             dmdin.write("  NBLOC={},\n".format(self.frames))
             dmdin.write("  TEMP={},\n".format(self.temperature))
@@ -117,9 +116,10 @@ class DMDRun(BiobbObject):
 
         # Command line
         # dmdgoopt < dmd.in > dmd.log
-        self.cmd = [self.binary_path,
-                    '<', instructions_file,
-                    '>', output_log
+        self.cmd = ["cd", working_dir, ";",
+                    self.binary_path,
+                    '<', PurePath(instructions_file).name,
+                    '>', PurePath(self.stage_io_dict["out"]["output_log_path"]).name
                     ]
 
         # Run Biobb block

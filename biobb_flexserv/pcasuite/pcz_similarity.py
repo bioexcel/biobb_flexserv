@@ -4,9 +4,7 @@
 from typing import Optional
 import json
 import numpy as np
-import shutil
-from pathlib import PurePath
-from biobb_common.tools import file_utils as fu
+from pathlib import Path, PurePath
 from math import exp
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.tools.file_utils import launchlogger
@@ -28,6 +26,12 @@ class PCZsimilarity(BiobbObject):
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
             * **restart** (*bool*) - (False) [WF property] Do not execute if output files exist.
             * **sandbox_path** (*str*) - ("./") [WF property] Parent path to the sandbox directory.
+            * **container_path** (*str*) - (None) Container path definition.
+            * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
+            * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
+            * **container_working_dir** (*str*) - (None) Container working directory definition.
+            * **container_user_id** (*str*) - (None) Container user_id definition.
+            * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
     Examples:
         This is a use example of how to use the building block from Python::
@@ -298,35 +302,21 @@ class PCZsimilarity(BiobbObject):
         # Setup Biobb
         if self.check_restart():
             return 0
-        # self.stage_files()
+        self.stage_files()
 
-        # Internal file paths
-        # try:
-        #     # Using rel paths to shorten the amount of characters due to fortran path length limitations
-        #     input_pcz_1 = str(Path(self.stage_io_dict["in"]["input_pcz_path1"]).relative_to(Path.cwd()))
-        #     input_pcz_2 = str(Path(self.stage_io_dict["in"]["input_pcz_path2"]).relative_to(Path.cwd()))
-        #     output_json = str(Path(self.stage_io_dict["out"]["output_json_path"]).relative_to(Path.cwd()))
-        # except ValueError:
-        #     # Container or remote case
-        #     output_json = self.stage_io_dict["out"]["output_json_path"]
+        if self.container_path:
+            working_dir = self.container_volume_path if self.container_volume_path else "/data"
+        else:
+            working_dir = self.stage_io_dict.get("unique_dir", "")
 
-        # Manually creating a Sandbox to avoid issues with input parameters buffer overflow:
-        #   Long strings defining a file path makes Fortran or C compiled programs crash if the string
-        #   declared is shorter than the input parameter path (string) length.
-        #   Generating a temporary folder and working inside this folder (sandbox) fixes this problem.
-        #   The problem was found in Galaxy executions, launching Singularity containers (May 2023).
-
-        # Creating temporary folder
-        tmp_folder = fu.create_unique_dir()
-        fu.log('Creating %s temporary folder' % tmp_folder, self.out_log)
-
-        shutil.copy2(self.io_dict["in"]["input_pcz_path1"], tmp_folder)
-        shutil.copy2(self.io_dict["in"]["input_pcz_path2"], tmp_folder)
+        unique_dir = Path(self.stage_io_dict.get("unique_dir", ""))
 
         # Temporary output
-        temp_json = "output.json"
         temp_out_1 = "output1.dat"
         temp_out_2 = "output2.dat"
+        temp_out_1_path = unique_dir.joinpath(temp_out_1)
+        temp_out_2_path = unique_dir.joinpath(temp_out_2)
+        staged_output_json_path = unique_dir.joinpath(Path(self.stage_io_dict["out"]["output_json_path"]).name)
 
         # Command line 1
         # pczdump -i structure.ca.std.pcz --evals -o evals.txt
@@ -340,13 +330,13 @@ class PCZsimilarity(BiobbObject):
         #             "--evals"
         #             ]
 
-        self.cmd = ['cd', tmp_folder, ';',
+        self.cmd = ['cd', working_dir, ';',
                     self.binary_path,    # Evals pcz 1
-                    "-i", PurePath(self.io_dict["in"]["input_pcz_path1"]).name,
+                    "-i", PurePath(self.stage_io_dict["in"]["input_pcz_path1"]).name,
                     "-o", temp_out_1,
                     "--evals", ';',
                     self.binary_path,    # Evals pcz 2
-                    "-i", PurePath(self.io_dict["in"]["input_pcz_path2"]).name,
+                    "-i", PurePath(self.stage_io_dict["in"]["input_pcz_path2"]).name,
                     "-o", temp_out_2,
                     "--evals"
                     ]
@@ -359,12 +349,12 @@ class PCZsimilarity(BiobbObject):
         info_dict['evals_1'] = []
         info_dict['evals_2'] = []
 
-        with open(PurePath(tmp_folder).joinpath(temp_out_1), 'r') as file:
+        with open(temp_out_1_path, 'r') as file:
             for line in file:
                 info = float(line.strip())
                 info_dict['evals_1'].append(info)
 
-        with open(PurePath(tmp_folder).joinpath(temp_out_2), 'r') as file:
+        with open(temp_out_2_path, 'r') as file:
             for line in file:
                 info = float(line.strip())
                 info_dict['evals_2'].append(info)
@@ -376,30 +366,21 @@ class PCZsimilarity(BiobbObject):
 
         # Command line 2
         # pczdump -i structure.ca.std.pcz --evals -o evals.txt
-        self.cmd = []
-        self.cmd.append('cd')
-        self.cmd.append(tmp_folder)
-        self.cmd.append(';')
+        self.cmd = ['cd', working_dir, ';']
         for pc in (range(1, num_evals_min+1)):
             # Evecs pcz 1
             self.cmd.append(self.binary_path)
             self.cmd.append("-i")
-            # self.cmd.append(input_pcz_1)
-            self.cmd.append(PurePath(self.io_dict["in"]["input_pcz_path1"]).name)
-            # self.cmd.append("-o evecs_1_pc{}".format(pc))
+            self.cmd.append(PurePath(self.stage_io_dict["in"]["input_pcz_path1"]).name)
             self.cmd.append("-o")
-            # self.cmd.append(str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("evecs_1_pc{}".format(pc))))
             self.cmd.append("evecs_1_pc{}".format(pc))
             self.cmd.append("--evec={}".format(pc))
             self.cmd.append(";")
             # Evals pcz 2
             self.cmd.append(self.binary_path)
             self.cmd.append("-i")
-            # self.cmd.append(input_pcz_2)
-            self.cmd.append(PurePath(self.io_dict["in"]["input_pcz_path2"]).name)
-            # self.cmd.append("-o evecs_2_pc{}".format(pc))
+            self.cmd.append(PurePath(self.stage_io_dict["in"]["input_pcz_path2"]).name)
             self.cmd.append("-o")
-            # self.cmd.append(str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("evecs_2_pc{}".format(pc))))
             self.cmd.append("evecs_2_pc{}".format(pc))
             self.cmd.append("--evec={}".format(pc))
             self.cmd.append(";")
@@ -416,8 +397,7 @@ class PCZsimilarity(BiobbObject):
             pc_id = "pc{}".format(pc)
             info_dict['evecs_1'][pc_id] = []
             info_dict['evecs_2'][pc_id] = []
-            # with open(str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("evecs_1_pc{}".format(pc))), 'r') as file:
-            with open(PurePath(tmp_folder).joinpath("evecs_1_pc{}".format(pc)), 'r') as file:
+            with open(unique_dir.joinpath("evecs_1_pc{}".format(pc)), 'r') as file:
                 list_evecs = []
                 for line in file:
                     info = line.strip().split(' ')
@@ -427,8 +407,7 @@ class PCZsimilarity(BiobbObject):
                 info_dict['evecs_1'][pc_id] = list_evecs
                 eigenvectors_1.append(list_evecs)
 
-            # with open(str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("evecs_2_pc{}".format(pc))), 'r') as file:
-            with open(PurePath(tmp_folder).joinpath("evecs_2_pc{}".format(pc)), 'r') as file:
+            with open(unique_dir.joinpath("evecs_2_pc{}".format(pc)), 'r') as file:
                 list_evecs = []
                 for line in file:
                     info = line.strip().split(' ')
@@ -451,14 +430,13 @@ class PCZsimilarity(BiobbObject):
         dotp = self.dot_product_accum(eigenvectors_1, eigenvectors_2)
         info_dict['similarityIndex_dotp'] = float("{:.3f}".format(dotp))
 
-        with open(PurePath(tmp_folder).joinpath(temp_json), 'w') as out_file:
+        with open(staged_output_json_path, 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
 
-        # Copy outputs from temporary folder to output path
-        shutil.copy2(PurePath(tmp_folder).joinpath(temp_json), PurePath(self.io_dict["out"]["output_json_path"]))
+        # Copy files to host
+        self.copy_to_host()
 
         # Remove temporary folder(s)
-        self.tmp_files.append(tmp_folder)
         self.remove_tmp_files()
 
         self.check_arguments(output_files_created=True, raise_exception=False)

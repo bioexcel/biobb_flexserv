@@ -3,7 +3,7 @@
 """Module containing the nma_run class and the command line interface."""
 from typing import Optional
 import os
-from pathlib import Path
+from pathlib import PurePath
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.tools.file_utils import launchlogger
 
@@ -25,6 +25,12 @@ class NMARun(BiobbObject):
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
             * **restart** (*bool*) - (False) [WF property] Do not execute if output files exist.
             * **sandbox_path** (*str*) - ("./") [WF property] Parent path to the sandbox directory.
+            * **container_path** (*str*) - (None) Container path definition.
+            * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
+            * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
+            * **container_working_dir** (*str*) - (None) Container working directory definition.
+            * **container_user_id** (*str*) - (None) Container user_id definition.
+            * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
     Examples:
         This is a use example of how to use the building block from Python::
@@ -84,42 +90,41 @@ class NMARun(BiobbObject):
             return 0
         self.stage_files()
 
-        # Internal file paths
-        try:
-            # Using rel paths to shorten the amount of characters due to fortran path length limitations
-            input_pdb = str(Path(self.stage_io_dict["in"]["input_pdb_path"]).relative_to(Path.cwd()))
-            output_crd = str(Path(self.stage_io_dict["out"]["output_crd_path"]).relative_to(Path.cwd()))
-            output_log = str(Path(self.stage_io_dict["out"]["output_log_path"]).relative_to(Path.cwd()))
-        except ValueError:
-            # Container or remote case
-            input_pdb = self.stage_io_dict["in"]["input_pdb_path"]
-            output_crd = self.stage_io_dict["out"]["output_crd_path"]
-            output_log = self.stage_io_dict["out"]["output_log_path"]
+        if self.container_path:
+            working_dir = self.container_volume_path if self.container_volume_path else "/data"
+        else:
+            working_dir = self.stage_io_dict.get("unique_dir", "")
+
+        input_pdb = PurePath(self.stage_io_dict["in"]["input_pdb_path"]).name
+        output_crd = PurePath(self.stage_io_dict["out"]["output_crd_path"]).name
+        output_log = PurePath(self.stage_io_dict["out"]["output_log_path"]).name
 
         # Command line
         # nmanu.pl structure.ca.pdb hessian.dat 1 0 40
         # diaghess
         # mc-eigen.pl eigenvec.dat > file.proj
         # pca_anim_mc.pl -pdb structure.ca.pdb -evec eigenvec.dat -i file.proj -n 50 -pout traj.crd
-        conda_path = os.getenv("CONDA_PREFIX")
+        if self.container_path:
+            conda_path = "/usr/local"
+        else:
+            conda_path = os.getenv("CONDA_PREFIX")
         nmanu = str(conda_path) + "/bin/nmanu.pl"
         nma_eigen = str(conda_path) + "/bin/mc-eigen-mdweb.pl"
         pca_anim = str(conda_path) + "/bin/pca_anim_mc.pl"
-        self.cmd = ["perl ",
+        self.cmd = ["cd", working_dir, ";",
+                    "perl",
                     nmanu,
                     input_pdb,
-                    "hessian.dat 1 0 40;",
+                    "hessian.dat", "1", "0", "40", ";",
                     self.binary_path,
-                    "; perl",
-                    nma_eigen,
-                    "eigenvec.dat ", str(self.frames), " > file.proj",
-                    "; perl",
+                    ";", "perl",
+                    nma_eigen, "eigenvec.dat", str(self.frames), ">", "file.proj",
+                    ";", "perl",
                     pca_anim,
                     "-pdb",
                     input_pdb,
-                    " -evec eigenvec.dat -i file.proj -n ",
-                    str(self.nvecs),
-                    " -pout", output_crd,
+                    "-evec", "eigenvec.dat", "-i", "file.proj", "-n", str(self.nvecs),
+                    "-pout", output_crd,
                     '>', output_log
                     ]
 

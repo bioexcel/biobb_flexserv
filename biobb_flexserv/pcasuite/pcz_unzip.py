@@ -2,9 +2,7 @@
 
 """Module containing the PCZunzip class and the command line interface."""
 from typing import Optional
-import shutil
 from pathlib import PurePath
-from biobb_common.tools import file_utils as fu
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.tools.file_utils import launchlogger
 
@@ -25,6 +23,12 @@ class PCZunzip(BiobbObject):
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
             * **restart** (*bool*) - (False) [WF property] Do not execute if output files exist.
             * **sandbox_path** (*str*) - ("./") [WF property] Parent path to the sandbox directory.
+            * **container_path** (*str*) - (None) Container path definition.
+            * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
+            * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
+            * **container_working_dir** (*str*) - (None) Container working directory definition.
+            * **container_user_id** (*str*) - (None) Container user_id definition.
+            * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
     Examples:
         This is a use example of how to use the building block from Python::
@@ -80,29 +84,12 @@ class PCZunzip(BiobbObject):
         # Setup Biobb
         if self.check_restart():
             return 0
-        # self.stage_files()
+        self.stage_files()
 
-        # Internal file paths
-        # try:
-        #     # Using rel paths to shorten the amount of characters due to fortran path length limitations
-        #     input_pcz = str(Path(self.stage_io_dict["in"]["input_pcz_path"]).relative_to(Path.cwd()))
-        #     output_crd = str(Path(self.stage_io_dict["out"]["output_crd_path"]).relative_to(Path.cwd()))
-        # except ValueError:
-        #     # Container or remote case
-        #     input_pcz = self.stage_io_dict["in"]["input_pcz_path"]
-        #     output_crd = self.stage_io_dict["out"]["output_crd_path"]
-
-        # Manually creating a Sandbox to avoid issues with input parameters buffer overflow:
-        #   Long strings defining a file path makes Fortran or C compiled programs crash if the string
-        #   declared is shorter than the input parameter path (string) length.
-        #   Generating a temporary folder and working inside this folder (sandbox) fixes this problem.
-        #   The problem was found in Galaxy executions, launching Singularity containers (May 2023).
-
-        # Creating temporary folder
-        tmp_folder = fu.create_unique_dir()
-        fu.log('Creating %s temporary folder' % tmp_folder, self.out_log)
-
-        shutil.copy2(self.io_dict["in"]["input_pcz_path"], tmp_folder)
+        if self.container_path:
+            working_dir = self.container_volume_path if self.container_volume_path else "/data"
+        else:
+            working_dir = self.stage_io_dict.get("unique_dir", "")
 
         # Command line
         # pcaunzip -i infile [-o outfile] [--pdb] [--verbose] [--help]
@@ -111,10 +98,10 @@ class PCZunzip(BiobbObject):
         #             "-o", output_crd
         #             ]
 
-        self.cmd = ['cd', tmp_folder, ';',
+        self.cmd = ['cd', working_dir, ';',
                     self.binary_path,
-                    "-i", PurePath(self.io_dict["in"]["input_pcz_path"]).name,
-                    "-o", PurePath(self.io_dict["out"]["output_crd_path"]).name
+                    "-i", PurePath(self.stage_io_dict["in"]["input_pcz_path"]).name,
+                    "-o", PurePath(self.stage_io_dict["out"]["output_crd_path"]).name
                     ]
 
         if self.verbose:
@@ -126,14 +113,10 @@ class PCZunzip(BiobbObject):
         # Run Biobb block
         self.run_biobb()
 
-        # Copy outputs from temporary folder to output path
-        shutil.copy2(PurePath(tmp_folder).joinpath(PurePath(self.io_dict["out"]["output_crd_path"]).name), PurePath(self.io_dict["out"]["output_crd_path"]))
-
         # Copy files to host
-        # self.copy_to_host()
+        self.copy_to_host()
 
         # Remove temporary folder(s)
-        self.tmp_files.append(tmp_folder)
         self.remove_tmp_files()
 
         self.check_arguments(output_files_created=True, raise_exception=False)

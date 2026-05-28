@@ -12,6 +12,32 @@ bd_run:
     time: 10000
     wfreq: 100
 
+bd_run_docker:
+  paths:
+    input_pdb_path: file:test_data_dir/flexserv/structure.ca.pdb
+    output_crd_path: bd_run_out.crd
+    ref_output_crd_path: file:test_reference_dir/flexserv/bd_run_out.crd
+    output_log_path: bd_run_out.log
+    ref_output_log_path: file:test_reference_dir/flexserv/bd_run_out.log
+  properties:
+    time: 10000
+    wfreq: 100
+    container_path: docker
+    container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
+bd_run_singularity:
+  paths:
+    input_pdb_path: file:test_data_dir/flexserv/structure.ca.pdb
+    output_crd_path: bd_run_out.crd
+    ref_output_crd_path: file:test_reference_dir/flexserv/bd_run_out.crd
+    output_log_path: bd_run_out.log
+    ref_output_log_path: file:test_reference_dir/flexserv/bd_run_out.log
+  properties:
+    time: 10000
+    wfreq: 100
+    container_path: singularity
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
 nma_run:
   paths:
     input_pdb_path: file:test_data_dir/flexserv/structure.ca.pdb
@@ -21,6 +47,30 @@ nma_run:
     ref_output_log_path: file:test_reference_dir/flexserv/nma_run_out.log
   properties:
     frames: 100
+
+nma_run_docker:
+  paths:
+    input_pdb_path: file:test_data_dir/flexserv/structure.ca.pdb
+    output_crd_path: nma_run_out.crd
+    ref_output_crd_path: file:test_reference_dir/flexserv/nma_run_out.crd
+    output_log_path: nma_run_out.log
+    ref_output_log_path: file:test_reference_dir/flexserv/nma_run_out.log
+  properties:
+    frames: 100
+    container_path: docker
+    container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
+nma_run_singularity:
+  paths:
+    input_pdb_path: file:test_data_dir/flexserv/structure.ca.pdb
+    output_crd_path: nma_run_out.crd
+    ref_output_crd_path: file:test_reference_dir/flexserv/nma_run_out.crd
+    output_log_path: nma_run_out.log
+    ref_output_log_path: file:test_reference_dir/flexserv/nma_run_out.log
+  properties:
+    frames: 100
+    container_path: singularity
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
 
 dmd_run:
   paths:
@@ -32,6 +82,30 @@ dmd_run:
   properties:
     frames: 100
 
+dmd_run_docker:
+  paths:
+    input_pdb_path: file:test_data_dir/flexserv/structure.ca.pdb
+    output_crd_path: dmd_run_out.crd
+    ref_output_crd_path: file:test_reference_dir/flexserv/dmd_run_out.crd
+    output_log_path: dmd_run_out.log
+    ref_output_log_path: file:test_reference_dir/flexserv/dmd_run_out.log
+  properties:
+    frames: 100
+    container_path: docker
+    container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
+dmd_run_singularity:
+  paths:
+    input_pdb_path: file:test_data_dir/flexserv/structure.ca.pdb
+    output_crd_path: dmd_run_out.crd
+    ref_output_crd_path: file:test_reference_dir/flexserv/dmd_run_out.crd
+    output_log_path: dmd_run_out.log
+    ref_output_log_path: file:test_reference_dir/flexserv/dmd_run_out.log
+  properties:
+    frames: 100
+    container_path: singularity
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+
 pcz_zip:
   paths:
     input_crd_path: file:test_data_dir/pcasuite/traj.crd
@@ -41,6 +115,28 @@ pcz_zip:
   properties:
     variance: 90
 
+pcz_zip_docker:
+  paths:
+    input_crd_path: file:test_data_dir/pcasuite/traj.crd
+    input_pdb_path: file:test_data_dir/pcasuite/structure.ca.pdb
+    output_pcz_path: pcazip.pcz
+    ref_output_pcz_path: file:test_reference_dir/pcasuite/pcazip.pcz
+  properties:
+    variance: 90
+    container_path: docker
+    container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
+pcz_zip_singularity:
+  paths:
+    input_crd_path: file:test_data_dir/pcasuite/traj.crd
+    input_pdb_path: file:test_data_dir/pcasuite/structure.ca.pdb
+    output_pcz_path: pcazip.pcz
+    ref_output_pcz_path: file:test_reference_dir/pcasuite/pcazip.pcz
+  properties:
+    variance: 90
+    container_path: singularity
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+
 pcz_unzip:
   paths:
     input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
@@ -48,6 +144,26 @@ pcz_unzip:
     ref_output_crd_path: file:test_reference_dir/pcasuite/pcazip.crd
   properties:
     pdb : False
+
+pcz_unzip_docker:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_crd_path: pcazip.crd
+    ref_output_crd_path: file:test_reference_dir/pcasuite/pcazip.crd
+  properties:
+    pdb : False
+    container_path: docker
+    container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
+pcz_unzip_singularity:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_crd_path: pcazip.crd
+    ref_output_crd_path: file:test_reference_dir/pcasuite/pcazip.crd
+  properties:
+    pdb : False
+    container_path: singularity
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
 
 pcz_animate:
   paths:
@@ -57,6 +173,59 @@ pcz_animate:
   properties:
     eigenvector: 1
     pdb: True
+
+pcz_animate_docker:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_crd_path: pcazip_anim1.pdb
+    ref_output_crd_path: file:test_reference_dir/pcasuite/pcazip_anim1.pdb
+  properties:
+    eigenvector: 1
+    pdb: True
+    container_path: docker
+    container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
+pcz_animate_singularity:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_crd_path: pcazip_anim1.pdb
+    ref_output_crd_path: file:test_reference_dir/pcasuite/pcazip_anim1.pdb
+  properties:
+    eigenvector: 1
+    pdb: True
+    container_path: singularity
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
+pcz_animate:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_crd_path: pcazip_anim1.pdb
+    ref_output_crd_path: file:test_reference_dir/pcasuite/pcazip_anim1.pdb
+  properties:
+    eigenvector: 1
+    pdb: True
+
+pcz_animate_docker:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_crd_path: pcazip_anim1.pdb
+    ref_output_crd_path: file:test_reference_dir/pcasuite/pcazip_anim1.pdb
+  properties:
+    eigenvector: 1
+    pdb: True
+    container_path: docker
+    container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
+pcz_animate_singularity:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_crd_path: pcazip_anim1.pdb
+    ref_output_crd_path: file:test_reference_dir/pcasuite/pcazip_anim1.pdb
+  properties:
+    eigenvector: 1
+    pdb: True
+    container_path: singularity
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
 
 pcz_bfactor:
   paths:
@@ -69,6 +238,32 @@ pcz_bfactor:
     eigenvector: 1
     pdb: True
 
+pcz_bfactor_docker:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_dat_path: bfactors.dat
+    ref_output_dat_path: file:test_reference_dir/pcasuite/bfactors.dat
+    output_pdb_path: bfactors.pdb
+    ref_output_pdb_path: file:test_reference_dir/pcasuite/bfactors.pdb
+  properties:
+    eigenvector: 1
+    pdb: True
+    container_path: docker
+    container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
+pcz_bfactor_singularity:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_dat_path: bfactors.dat
+    ref_output_dat_path: file:test_reference_dir/pcasuite/bfactors.dat
+    output_pdb_path: bfactors.pdb
+    ref_output_pdb_path: file:test_reference_dir/pcasuite/bfactors.pdb
+  properties:
+    eigenvector: 1
+    pdb: True
+    container_path: singularity
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+
 pcz_hinges:
   paths:
     input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
@@ -78,11 +273,51 @@ pcz_hinges:
     eigenvector: 0
     method: Bfactor_slope
 
+pcz_hinges_docker:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: hinges.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/hinges.json
+  properties:
+    eigenvector: 0
+    method: Bfactor_slope
+    container_path: docker
+    container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
+pcz_hinges_singularity:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: hinges.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/hinges.json
+  properties:
+    eigenvector: 0
+    method: Bfactor_slope
+    container_path: singularity
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+
 pcz_info:
   paths:
     input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
     output_json_path: pcz.json
     ref_output_json_path: file:test_reference_dir/pcasuite/pcz_info.json
+
+pcz_info_docker:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_info.json
+  properties:
+    container_path: docker
+    container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
+pcz_info_singularity:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_info.json
+  properties:
+    container_path: singularity
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
 
 pcz_evecs:
   paths:
@@ -92,6 +327,26 @@ pcz_evecs:
   properties:
     eigenvector: 1
 
+pcz_evecs_docker:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz_evecs.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_evecs.json
+  properties:
+    eigenvector: 1
+    container_path: docker
+    container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
+pcz_evecs_singularity:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz_evecs.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_evecs.json
+  properties:
+    eigenvector: 1
+    container_path: singularity
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+
 pcz_collectivity:
   paths:
     input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
@@ -100,11 +355,50 @@ pcz_collectivity:
   properties:
     eigenvector: 0
 
+pcz_collectivity_docker:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz_collectivity.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_collectivity.json
+  properties:
+    eigenvector: 0
+    container_path: docker
+    container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
+pcz_collectivity_singularity:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz_collectivity.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_collectivity.json
+  properties:
+    eigenvector: 0
+    container_path: singularity
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+    eigenvector: 0
+
 pcz_lindemann:
   paths:
     input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
     output_json_path: pcz_lindemann.json
     ref_output_json_path: file:test_reference_dir/pcasuite/pcz_lindemann.json
+
+pcz_lindemann_docker:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz_lindemann.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_lindemann.json
+  properties:
+    container_path: docker
+    container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
+pcz_lindemann_singularity:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz_lindemann.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_lindemann.json
+  properties:
+    container_path: singularity
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
 
 pcz_similarity:
   paths:
@@ -113,6 +407,26 @@ pcz_similarity:
     output_json_path: pcz_similarity.json
     ref_output_json_path: file:test_reference_dir/pcasuite/pcz_similarity.json
 
+pcz_similarity_docker:
+  paths:
+    input_pcz_path1: file:test_data_dir/pcasuite/pcazip.pcz
+    input_pcz_path2: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz_similarity.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_similarity.json
+  properties:
+    container_path: docker
+    container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
+pcz_similarity_singularity:
+  paths:
+    input_pcz_path1: file:test_data_dir/pcasuite/pcazip.pcz
+    input_pcz_path2: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz_similarity.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_similarity.json
+  properties:
+    container_path: singularity
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+
 pcz_stiffness:
   paths:
     input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
@@ -120,3 +434,23 @@ pcz_stiffness:
     ref_output_json_path: file:test_reference_dir/pcasuite/pcz_stiffness.json
   properties:
     eigenvector: 0
+
+pcz_stiffness_docker:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz_stiffness.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_stiffness.json
+  properties:
+    eigenvector: 0
+    container_path: docker
+    container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+
+pcz_stiffness_singularity:
+  paths:
+    input_pcz_path: file:test_data_dir/pcasuite/pcazip.pcz
+    output_json_path: pcz_stiffness.json
+    ref_output_json_path: file:test_reference_dir/pcasuite/pcz_stiffness.json
+  properties:
+    eigenvector: 0
+    container_path: singularity
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab

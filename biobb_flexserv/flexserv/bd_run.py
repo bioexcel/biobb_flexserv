@@ -2,7 +2,7 @@
 
 """Module containing the bd_run class and the command line interface."""
 from typing import Optional
-from pathlib import Path
+from pathlib import PurePath
 from biobb_common.generic.biobb_object import BiobbObject
 from biobb_common.tools.file_utils import launchlogger
 
@@ -25,6 +25,12 @@ class BDRun(BiobbObject):
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
             * **restart** (*bool*) - (False) [WF property] Do not execute if output files exist.
             * **sandbox_path** (*str*) - ("./") [WF property] Parent path to the sandbox directory.
+            * **container_path** (*str*) - (None) Container path definition.
+            * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
+            * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
+            * **container_working_dir** (*str*) - (None) Container working directory definition.
+            * **container_user_id** (*str*) - (None) Container user_id definition.
+            * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
     Examples:
         This is a use example of how to use the building block from Python::
@@ -85,30 +91,24 @@ class BDRun(BiobbObject):
             return 0
         self.stage_files()
 
-        # Internal file paths
-        try:
-            # Using rel paths to shorten the amount of characters due to fortran path length limitations
-            input_pdb = str(Path(self.stage_io_dict["in"]["input_pdb_path"]).relative_to(Path.cwd()))
-            output_crd = str(Path(self.stage_io_dict["out"]["output_crd_path"]).relative_to(Path.cwd()))
-            output_log = str(Path(self.stage_io_dict["out"]["output_log_path"]).relative_to(Path.cwd()))
-        except ValueError:
-            # Container or remote case
-            input_pdb = self.stage_io_dict["in"]["input_pdb_path"]
-            output_crd = self.stage_io_dict["out"]["output_crd_path"]
-            output_log = self.stage_io_dict["out"]["output_log_path"]
+        if self.container_path:
+            working_dir = self.container_volume_path if self.container_volume_path else "/data"
+        else:
+            working_dir = self.stage_io_dict.get("unique_dir", "")
 
         # Command line
         # bd structure.ca.pdb 1000000 1e-15 1000 40 3.8 traj.crd > bd.log
         # itempsmax, dt, itsnap, const, r0
-        self.cmd = [self.binary_path,
-                    input_pdb,
+        self.cmd = ["cd", working_dir, ";",
+                    self.binary_path,
+                    PurePath(self.stage_io_dict["in"]["input_pdb_path"]).name,
                     str(self.time),
                     str(self.dt),
                     str(self.wfreq),
                     "40",  # Hardcoded "Const", see https://mmb.irbbarcelona.org/gitlab/adam/FlexServ/blob/master/bd/bd2.f#L51
                     "3.8",  # Hardcoded "r0", see https://mmb.irbbarcelona.org/gitlab/adam/FlexServ/blob/master/bd/bd2.f#L52
-                    output_crd,
-                    '>', output_log
+                    PurePath(self.stage_io_dict["out"]["output_crd_path"]).name,
+                    '>', PurePath(self.stage_io_dict["out"]["output_log_path"]).name
                     ]
 
         # Run Biobb block
