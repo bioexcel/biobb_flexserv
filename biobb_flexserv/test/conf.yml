@@ -104,7 +104,7 @@ dmd_run_singularity:
   properties:
     frames: 100
     container_path: singularity
-    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
 
 pcz_zip:
   paths:
@@ -135,7 +135,7 @@ pcz_zip_singularity:
   properties:
     variance: 90
     container_path: singularity
-    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
 
 pcz_unzip:
   paths:
@@ -163,7 +163,7 @@ pcz_unzip_singularity:
   properties:
     pdb : False
     container_path: singularity
-    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
 
 pcz_animate:
   paths:
@@ -225,7 +225,7 @@ pcz_animate_singularity:
     eigenvector: 1
     pdb: True
     container_path: singularity
-    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
 
 pcz_bfactor:
   paths:
@@ -262,7 +262,7 @@ pcz_bfactor_singularity:
     eigenvector: 1
     pdb: True
     container_path: singularity
-    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
 
 pcz_hinges:
   paths:
@@ -293,7 +293,7 @@ pcz_hinges_singularity:
     eigenvector: 0
     method: Bfactor_slope
     container_path: singularity
-    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
 
 pcz_info:
   paths:
@@ -317,7 +317,7 @@ pcz_info_singularity:
     ref_output_json_path: file:test_reference_dir/pcasuite/pcz_info.json
   properties:
     container_path: singularity
-    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
 
 pcz_evecs:
   paths:
@@ -345,7 +345,7 @@ pcz_evecs_singularity:
   properties:
     eigenvector: 1
     container_path: singularity
-    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
 
 pcz_collectivity:
   paths:
@@ -373,7 +373,7 @@ pcz_collectivity_singularity:
   properties:
     eigenvector: 0
     container_path: singularity
-    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
     eigenvector: 0
 
 pcz_lindemann:
@@ -398,7 +398,7 @@ pcz_lindemann_singularity:
     ref_output_json_path: file:test_reference_dir/pcasuite/pcz_lindemann.json
   properties:
     container_path: singularity
-    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
 
 pcz_similarity:
   paths:
@@ -425,7 +425,7 @@ pcz_similarity_singularity:
     ref_output_json_path: file:test_reference_dir/pcasuite/pcz_similarity.json
   properties:
     container_path: singularity
-    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
 
 pcz_stiffness:
   paths:
@@ -453,4 +453,4 @@ pcz_stiffness_singularity:
   properties:
     eigenvector: 0
     container_path: singularity
-    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab
+    container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
