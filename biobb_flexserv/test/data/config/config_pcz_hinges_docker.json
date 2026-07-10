@@ -1,0 +1,8 @@
+{
+  "properties": {
+    "eigenvector": 0,
+    "method": "Bfactor_slope",
+    "container_path": "docker",
+    "container_image": "quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
+  }
+}

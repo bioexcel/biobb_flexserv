@@ -1,0 +1,4 @@
+properties:
+  container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: docker
+  eigenvector: 0

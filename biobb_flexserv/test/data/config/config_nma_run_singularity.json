@@ -1,0 +1,7 @@
+{
+  "properties": {
+    "frames": 100,
+    "container_path": "singularity",
+    "container_image": "https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
+  }
+}

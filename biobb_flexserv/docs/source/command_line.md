@@ -47,10 +47,34 @@ Config parameters for this building block:
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
+* **container_path** (*string*): (None) Container path definition.
+* **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
+* **container_volume_path** (*string*): (/tmp) Container volume path definition.
+* **container_working_dir** (*string*): (None) Container working directory definition.
+* **container_user_id** (*string*): (None) Container user_id definition.
+* **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_bd_run.yml)
 ```python
 properties:
+  time: 10000
+  wfreq: 100
+
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_bd_run_docker.yml)
+```python
+properties:
+  container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: docker
+  time: 10000
+  wfreq: 100
+
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_bd_run_singularity.yml)
+```python
+properties:
+  container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: singularity
   time: 10000
   wfreq: 100
 
@@ -66,6 +90,28 @@ bd_run --config config_bd_run.yml --input_pdb_path structure.ca.pdb --output_log
   "properties": {
     "time": 10000,
     "wfreq": 100
+  }
+}
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_bd_run_docker.json)
+```python
+{
+  "properties": {
+    "time": 10000,
+    "wfreq": 100,
+    "container_path": "docker",
+    "container_image": "quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
+  }
+}
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_bd_run_singularity.json)
+```python
+{
+  "properties": {
+    "time": 10000,
+    "wfreq": 100,
+    "container_path": "singularity",
+    "container_image": "https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
   }
 }
 ```
@@ -115,10 +161,32 @@ Config parameters for this building block:
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
+* **container_path** (*string*): (None) Container path definition.
+* **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
+* **container_volume_path** (*string*): (/tmp) Container volume path definition.
+* **container_working_dir** (*string*): (None) Container working directory definition.
+* **container_user_id** (*string*): (None) Container user_id definition.
+* **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_dmd_run.yml)
 ```python
 properties:
+  frames: 100
+
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_dmd_run_docker.yml)
+```python
+properties:
+  container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: docker
+  frames: 100
+
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_dmd_run_singularity.yml)
+```python
+properties:
+  container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: singularity
   frames: 100
 
 ```
@@ -132,6 +200,26 @@ dmd_run --config config_dmd_run.yml --input_pdb_path structure.ca.pdb --output_l
 {
   "properties": {
     "frames": 100
+  }
+}
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_dmd_run_docker.json)
+```python
+{
+  "properties": {
+    "frames": 100,
+    "container_path": "docker",
+    "container_image": "quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
+  }
+}
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_dmd_run_singularity.json)
+```python
+{
+  "properties": {
+    "frames": 100,
+    "container_path": "singularity",
+    "container_image": "https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
   }
 }
 ```
@@ -180,10 +268,32 @@ Config parameters for this building block:
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
+* **container_path** (*string*): (None) Container path definition.
+* **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
+* **container_volume_path** (*string*): (/tmp) Container volume path definition.
+* **container_working_dir** (*string*): (None) Container working directory definition.
+* **container_user_id** (*string*): (None) Container user_id definition.
+* **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_nma_run.yml)
 ```python
 properties:
+  frames: 100
+
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_nma_run_docker.yml)
+```python
+properties:
+  container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: docker
+  frames: 100
+
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_nma_run_singularity.yml)
+```python
+properties:
+  container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: singularity
   frames: 100
 
 ```
@@ -197,6 +307,26 @@ nma_run --config config_nma_run.yml --input_pdb_path structure.ca.pdb --output_l
 {
   "properties": {
     "frames": 100
+  }
+}
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_nma_run_docker.json)
+```python
+{
+  "properties": {
+    "frames": 100,
+    "container_path": "docker",
+    "container_image": "quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
+  }
+}
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_nma_run_singularity.json)
+```python
+{
+  "properties": {
+    "frames": 100,
+    "container_path": "singularity",
+    "container_image": "https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
   }
 }
 ```
@@ -242,10 +372,34 @@ Config parameters for this building block:
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
+* **container_path** (*string*): (None) Container path definition.
+* **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
+* **container_volume_path** (*string*): (/tmp) Container volume path definition.
+* **container_working_dir** (*string*): (None) Container working directory definition.
+* **container_user_id** (*string*): (None) Container user_id definition.
+* **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_animate.yml)
 ```python
 properties:
+  eigenvector: 1
+  pdb: true
+
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_animate_docker.yml)
+```python
+properties:
+  container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: docker
+  eigenvector: 1
+  pdb: true
+
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_animate_singularity.yml)
+```python
+properties:
+  container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: singularity
   eigenvector: 1
   pdb: true
 
@@ -261,6 +415,28 @@ pcz_animate --config config_pcz_animate.yml --input_pcz_path pcazip.pcz --output
   "properties": {
     "eigenvector": 1,
     "pdb": true
+  }
+}
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_animate_docker.json)
+```python
+{
+  "properties": {
+    "eigenvector": 1,
+    "pdb": true,
+    "container_path": "docker",
+    "container_image": "quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
+  }
+}
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_animate_singularity.json)
+```python
+{
+  "properties": {
+    "eigenvector": 1,
+    "pdb": true,
+    "container_path": "singularity",
+    "container_image": "https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
   }
 }
 ```
@@ -311,10 +487,34 @@ Config parameters for this building block:
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
+* **container_path** (*string*): (None) Container path definition.
+* **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
+* **container_volume_path** (*string*): (/tmp) Container volume path definition.
+* **container_working_dir** (*string*): (None) Container working directory definition.
+* **container_user_id** (*string*): (None) Container user_id definition.
+* **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_bfactor.yml)
 ```python
 properties:
+  eigenvector: 1
+  pdb: true
+
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_bfactor_docker.yml)
+```python
+properties:
+  container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: docker
+  eigenvector: 1
+  pdb: true
+
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_bfactor_singularity.yml)
+```python
+properties:
+  container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: singularity
   eigenvector: 1
   pdb: true
 
@@ -330,6 +530,28 @@ pcz_bfactor --config config_pcz_bfactor.yml --input_pcz_path pcazip.pcz --output
   "properties": {
     "eigenvector": 1,
     "pdb": true
+  }
+}
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_bfactor_docker.json)
+```python
+{
+  "properties": {
+    "eigenvector": 1,
+    "pdb": true,
+    "container_path": "docker",
+    "container_image": "quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
+  }
+}
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_bfactor_singularity.json)
+```python
+{
+  "properties": {
+    "eigenvector": 1,
+    "pdb": true,
+    "container_path": "singularity",
+    "container_image": "https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
   }
 }
 ```
@@ -374,10 +596,32 @@ Config parameters for this building block:
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
+* **container_path** (*string*): (None) Container path definition.
+* **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
+* **container_volume_path** (*string*): (/tmp) Container volume path definition.
+* **container_working_dir** (*string*): (None) Container working directory definition.
+* **container_user_id** (*string*): (None) Container user_id definition.
+* **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_collectivity.yml)
 ```python
 properties:
+  eigenvector: 0
+
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_collectivity_docker.yml)
+```python
+properties:
+  container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: docker
+  eigenvector: 0
+
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_collectivity_singularity.yml)
+```python
+properties:
+  container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: singularity
   eigenvector: 0
 
 ```
@@ -391,6 +635,26 @@ pcz_collectivity --config config_pcz_collectivity.yml --input_pcz_path pcazip.pc
 {
   "properties": {
     "eigenvector": 0
+  }
+}
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_collectivity_docker.json)
+```python
+{
+  "properties": {
+    "eigenvector": 0,
+    "container_path": "docker",
+    "container_image": "quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
+  }
+}
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_collectivity_singularity.json)
+```python
+{
+  "properties": {
+    "eigenvector": 0,
+    "container_path": "singularity",
+    "container_image": "https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
   }
 }
 ```
@@ -435,10 +699,32 @@ Config parameters for this building block:
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
+* **container_path** (*string*): (None) Container path definition.
+* **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
+* **container_volume_path** (*string*): (/tmp) Container volume path definition.
+* **container_working_dir** (*string*): (None) Container working directory definition.
+* **container_user_id** (*string*): (None) Container user_id definition.
+* **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_evecs.yml)
 ```python
 properties:
+  eigenvector: 1
+
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_evecs_docker.yml)
+```python
+properties:
+  container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: docker
+  eigenvector: 1
+
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_evecs_singularity.yml)
+```python
+properties:
+  container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: singularity
   eigenvector: 1
 
 ```
@@ -452,6 +738,26 @@ pcz_evecs --config config_pcz_evecs.yml --input_pcz_path pcazip.pcz --output_jso
 {
   "properties": {
     "eigenvector": 1
+  }
+}
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_evecs_docker.json)
+```python
+{
+  "properties": {
+    "eigenvector": 1,
+    "container_path": "docker",
+    "container_image": "quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
+  }
+}
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_evecs_singularity.json)
+```python
+{
+  "properties": {
+    "eigenvector": 1,
+    "container_path": "singularity",
+    "container_image": "https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
   }
 }
 ```
@@ -497,10 +803,34 @@ Config parameters for this building block:
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
+* **container_path** (*string*): (None) Container path definition.
+* **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
+* **container_volume_path** (*string*): (/tmp) Container volume path definition.
+* **container_working_dir** (*string*): (None) Container working directory definition.
+* **container_user_id** (*string*): (None) Container user_id definition.
+* **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_hinges.yml)
 ```python
 properties:
+  eigenvector: 0
+  method: Bfactor_slope
+
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_hinges_docker.yml)
+```python
+properties:
+  container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: docker
+  eigenvector: 0
+  method: Bfactor_slope
+
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_hinges_singularity.yml)
+```python
+properties:
+  container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: singularity
   eigenvector: 0
   method: Bfactor_slope
 
@@ -516,6 +846,28 @@ pcz_hinges --config config_pcz_hinges.yml --input_pcz_path pcazip.pcz --output_j
   "properties": {
     "eigenvector": 0,
     "method": "Bfactor_slope"
+  }
+}
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_hinges_docker.json)
+```python
+{
+  "properties": {
+    "eigenvector": 0,
+    "method": "Bfactor_slope",
+    "container_path": "docker",
+    "container_image": "quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
+  }
+}
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_hinges_singularity.json)
+```python
+{
+  "properties": {
+    "eigenvector": 0,
+    "method": "Bfactor_slope",
+    "container_path": "singularity",
+    "container_image": "https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
   }
 }
 ```
@@ -559,6 +911,12 @@ Config parameters for this building block:
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
+* **container_path** (*string*): (None) Container path definition.
+* **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
+* **container_volume_path** (*string*): (/tmp) Container volume path definition.
+* **container_working_dir** (*string*): (None) Container working directory definition.
+* **container_user_id** (*string*): (None) Container user_id definition.
+* **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
 ### JSON
 
@@ -598,6 +956,12 @@ Config parameters for this building block:
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
+* **container_path** (*string*): (None) Container path definition.
+* **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
+* **container_volume_path** (*string*): (/tmp) Container volume path definition.
+* **container_working_dir** (*string*): (None) Container working directory definition.
+* **container_user_id** (*string*): (None) Container user_id definition.
+* **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
 ### JSON
 
@@ -640,6 +1004,12 @@ Config parameters for this building block:
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
+* **container_path** (*string*): (None) Container path definition.
+* **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
+* **container_volume_path** (*string*): (/tmp) Container volume path definition.
+* **container_working_dir** (*string*): (None) Container working directory definition.
+* **container_user_id** (*string*): (None) Container user_id definition.
+* **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
 ### JSON
 
@@ -680,10 +1050,32 @@ Config parameters for this building block:
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
+* **container_path** (*string*): (None) Container path definition.
+* **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
+* **container_volume_path** (*string*): (/tmp) Container volume path definition.
+* **container_working_dir** (*string*): (None) Container working directory definition.
+* **container_user_id** (*string*): (None) Container user_id definition.
+* **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_stiffness.yml)
 ```python
 properties:
+  eigenvector: 0
+
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_stiffness_docker.yml)
+```python
+properties:
+  container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: docker
+  eigenvector: 0
+
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_stiffness_singularity.yml)
+```python
+properties:
+  container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: singularity
   eigenvector: 0
 
 ```
@@ -697,6 +1089,26 @@ pcz_stiffness --config config_pcz_stiffness.yml --input_pcz_path pcazip.pcz --ou
 {
   "properties": {
     "eigenvector": 0
+  }
+}
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_stiffness_docker.json)
+```python
+{
+  "properties": {
+    "eigenvector": 0,
+    "container_path": "docker",
+    "container_image": "quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
+  }
+}
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_stiffness_singularity.json)
+```python
+{
+  "properties": {
+    "eigenvector": 0,
+    "container_path": "singularity",
+    "container_image": "https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
   }
 }
 ```
@@ -742,10 +1154,32 @@ Config parameters for this building block:
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
+* **container_path** (*string*): (None) Container path definition.
+* **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
+* **container_volume_path** (*string*): (/tmp) Container volume path definition.
+* **container_working_dir** (*string*): (None) Container working directory definition.
+* **container_user_id** (*string*): (None) Container user_id definition.
+* **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_unzip.yml)
 ```python
 properties:
+  pdb: false
+
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_unzip_docker.yml)
+```python
+properties:
+  container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: docker
+  pdb: false
+
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_unzip_singularity.yml)
+```python
+properties:
+  container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: singularity
   pdb: false
 
 ```
@@ -759,6 +1193,26 @@ pcz_unzip --config config_pcz_unzip.yml --input_pcz_path pcazip.pcz --output_crd
 {
   "properties": {
     "pdb": false
+  }
+}
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_unzip_docker.json)
+```python
+{
+  "properties": {
+    "pdb": false,
+    "container_path": "docker",
+    "container_image": "quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
+  }
+}
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_unzip_singularity.json)
+```python
+{
+  "properties": {
+    "pdb": false,
+    "container_path": "singularity",
+    "container_image": "https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
   }
 }
 ```
@@ -809,10 +1263,32 @@ Config parameters for this building block:
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
+* **container_path** (*string*): (None) Container path definition.
+* **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
+* **container_volume_path** (*string*): (/tmp) Container volume path definition.
+* **container_working_dir** (*string*): (None) Container working directory definition.
+* **container_user_id** (*string*): (None) Container user_id definition.
+* **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
 #### [Common config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_zip.yml)
 ```python
 properties:
+  variance: 90
+
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_zip_docker.yml)
+```python
+properties:
+  container_image: quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: docker
+  variance: 90
+
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_zip_singularity.yml)
+```python
+properties:
+  container_image: https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0
+  container_path: singularity
   variance: 90
 
 ```
@@ -826,6 +1302,26 @@ pcz_zip --config config_pcz_zip.yml --input_pdb_path structure.ca.pdb --input_cr
 {
   "properties": {
     "variance": 90
+  }
+}
+```
+#### [Docker config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_zip_docker.json)
+```python
+{
+  "properties": {
+    "variance": 90,
+    "container_path": "docker",
+    "container_image": "quay.io/biocontainers/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
+  }
+}
+```
+#### [Singularity config file](https://github.com/bioexcel/biobb_flexserv/blob/master/biobb_flexserv/test/data/config/config_pcz_zip_singularity.json)
+```python
+{
+  "properties": {
+    "variance": 90,
+    "container_path": "singularity",
+    "container_image": "https://depot.galaxyproject.org/singularity/biobb_flexserv:5.2.1--py312pl5321hc5e4ab4_0"
   }
 }
 ```
