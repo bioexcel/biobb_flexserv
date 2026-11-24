@@ -7,7 +7,6 @@ import numpy as np
 from pathlib import Path, PurePath
 from math import exp
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.tools.file_utils import launchlogger
 
 
 class PCZsimilarity(BiobbObject):
@@ -75,12 +74,9 @@ class PCZsimilarity(BiobbObject):
         self.amplifying_factor = properties.get('amplifying_factor')
         self.binary_path = properties.get('binary_path', 'pczdump')
 
-        # Check the properties
-        self.check_properties(properties)
-        self.check_arguments()
-
     # Check two eigenvectors to be compatible for dot product
     # i.e. same number of vectors and values per vector
+
     def are_compatible(self, eigenvectors_1, eigenvectors_2):
         # Check the number of eigenvectors and the number of values in both eigenvectors to match
         if len(eigenvectors_1) != len(eigenvectors_2):
@@ -295,14 +291,8 @@ class PCZsimilarity(BiobbObject):
         # sso = (dpm * dpm).sum() / n_components
         return sso
 
-    @launchlogger
-    def launch(self):
+    def run(self):
         """Launches the execution of the FlexServ pcz_similarity module."""
-
-        # Setup Biobb
-        if self.check_restart():
-            return 0
-        self.stage_files()
 
         if self.container_path:
             working_dir = self.container_volume_path if self.container_volume_path else "/data"

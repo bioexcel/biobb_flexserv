@@ -4,7 +4,6 @@
 from typing import Optional
 from pathlib import PurePath
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.tools.file_utils import launchlogger
 
 
 class PCZbfactor(BiobbObject):
@@ -77,18 +76,8 @@ class PCZbfactor(BiobbObject):
         self.eigenvector = properties.get('eigenvector', 1)
         self.pdb = properties.get('pdb', False)
 
-        # Check the properties
-        self.check_properties(properties)
-        self.check_arguments()
-
-    @launchlogger
-    def launch(self):
+    def run(self):
         """Launches the execution of the FlexServ pcz_bfactor module."""
-
-        # Setup Biobb
-        if self.check_restart():
-            return 0
-        self.stage_files()
 
         if self.container_path:
             working_dir = self.container_volume_path if self.container_volume_path else "/data"

@@ -4,7 +4,6 @@
 from typing import Optional
 from pathlib import PurePath
 from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.tools.file_utils import launchlogger
 
 
 class BDRun(BiobbObject):
@@ -78,18 +77,8 @@ class BDRun(BiobbObject):
         self.dt = properties.get('dt', 1e-15)
         self.wfreq = properties.get('wfreq', 1000)
 
-        # Check the properties
-        self.check_properties(properties)
-        self.check_arguments()
-
-    @launchlogger
-    def launch(self):
+    def run(self):
         """Launches the execution of the FlexServ BDRun module."""
-
-        # Setup Biobb
-        if self.check_restart():
-            return 0
-        self.stage_files()
 
         if self.container_path:
             working_dir = self.container_volume_path if self.container_volume_path else "/data"
