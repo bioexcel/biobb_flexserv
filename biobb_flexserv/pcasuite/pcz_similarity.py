@@ -56,24 +56,7 @@ class PCZsimilarity(BiobbObject):
 
     def __init__(self, input_pcz_path1: str, input_pcz_path2: str,
                  output_json_path: str, properties: Optional[dict] = None, **kwargs) -> None:
-
-        properties = properties or {}
-
-        # Call parent class constructor
-        super().__init__(properties)
-        self.locals_var_dict = locals().copy()
-
-        # Input/Output files
-        self.io_dict = {
-            'in': {'input_pcz_path1': input_pcz_path1,
-                   'input_pcz_path2': input_pcz_path2},
-            'out': {'output_json_path': output_json_path}
-        }
-
-        # Properties specific for BB
-        self.properties = properties
-        self.amplifying_factor = properties.get('amplifying_factor')
-        self.binary_path = properties.get('binary_path', 'pczdump')
+        super().__init__(**locals())
 
     # Check two eigenvectors to be compatible for dot product
     # i.e. same number of vectors and values per vector

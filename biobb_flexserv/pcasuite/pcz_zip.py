@@ -57,28 +57,7 @@ class PCZzip(BiobbObject):
 
     def __init__(self, input_pdb_path: str, input_crd_path: str,
                  output_pcz_path: str, properties: Optional[dict] = None, **kwargs) -> None:
-
-        properties = properties or {}
-
-        # Call parent class constructor
-        super().__init__(properties)
-        self.locals_var_dict = locals().copy()
-
-        # Input/Output files
-        self.io_dict = {
-            'in': {'input_pdb_path': input_pdb_path,
-                   'input_crd_path': input_crd_path},
-            'out': {'output_pcz_path': output_pcz_path}
-        }
-
-        # Properties specific for BB
-        self.properties = properties
-        self.binary_path = properties.get('binary_path', 'pcazip')
-        self.neigenv = properties.get('neigenv', 0)
-        # self.variance = properties.get('variance', 90)
-        self.variance = properties.get('variance')
-        self.verbose = properties.get('verbose', False)
-        self.gauss_rmsd = properties.get('gauss_rmsd', False)
+        super().__init__(**locals())
 
     def run(self):
         """Launches the execution of the FlexServ pcazip module."""

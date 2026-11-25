@@ -53,23 +53,9 @@ class PCZlindemann(BiobbObject):
 
     def __init__(self, input_pcz_path: str,
                  output_json_path: str, properties: Optional[dict] = None, **kwargs) -> None:
-
-        properties = properties or {}
-
-        # Call parent class constructor
-        super().__init__(properties)
-        self.locals_var_dict = locals().copy()
-
-        # Input/Output files
-        self.io_dict = {
-            'in': {'input_pcz_path': input_pcz_path},
-            'out': {'output_json_path': output_json_path}
-        }
+        super().__init__(**locals())
 
         # Properties specific for BB
-        self.properties = properties
-        self.binary_path = properties.get('binary_path', 'pczdump')
-        self.mask = properties.get('mask', '')
 
     def run(self):
         """Launches the execution of the FlexServ pcz_lindemann module."""

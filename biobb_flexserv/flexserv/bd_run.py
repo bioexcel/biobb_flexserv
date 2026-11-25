@@ -56,26 +56,7 @@ class BDRun(BiobbObject):
 
     def __init__(self, input_pdb_path: str, output_log_path: str,
                  output_crd_path: str, properties: Optional[dict] = None, **kwargs) -> None:
-
-        properties = properties or {}
-
-        # Call parent class constructor
-        super().__init__(properties)
-        self.locals_var_dict = locals().copy()
-
-        # Input/Output files
-        self.io_dict = {
-            'in': {'input_pdb_path': input_pdb_path},
-            'out': {'output_log_path': output_log_path,
-                    'output_crd_path': output_crd_path}
-        }
-
-        # Properties specific for BB
-        self.properties = properties
-        self.binary_path = properties.get('binary_path', 'bd')
-        self.time = properties.get('time', 1000000)
-        self.dt = properties.get('dt', 1e-15)
-        self.wfreq = properties.get('wfreq', 1000)
+        super().__init__(**locals())
 
     def run(self):
         """Launches the execution of the FlexServ BDRun module."""
