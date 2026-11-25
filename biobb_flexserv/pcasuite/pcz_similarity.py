@@ -7,6 +7,7 @@ import numpy as np
 from pathlib import Path, PurePath
 from math import exp
 from biobb_common.generic.biobb_object import BiobbObject
+from biobb_common.tools import file_utils as fu
 
 
 class PCZsimilarity(BiobbObject):
@@ -80,10 +81,10 @@ class PCZsimilarity(BiobbObject):
     def are_compatible(self, eigenvectors_1, eigenvectors_2):
         # Check the number of eigenvectors and the number of values in both eigenvectors to match
         if len(eigenvectors_1) != len(eigenvectors_2):
-            print('WARNING: Number of eigenvectors does not match')
+            fu.log('WARNING: Number of eigenvectors does not match', self.out_log, self.global_log)
             return False
         if len(eigenvectors_1[0]) != len(eigenvectors_2[0]):
-            print('WARNING: Number of values in eigenvectors does not match')
+            fu.log('WARNING: Number of values in eigenvectors does not match', self.out_log, self.global_log)
             return False
         return True
 
