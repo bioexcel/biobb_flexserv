@@ -18,7 +18,7 @@ class PCZbfactor(BiobbObject):
         output_pdb_path (str) (Optional): Output PDB with Bfactor x residue x PCA mode file. File type: output. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/bfactors.pdb>`_. Accepted formats: pdb (edam:format_1476).
         properties (dict - Python dictionary object containing the tool parameters, not input/output files):
             * **binary_path** (*str*) - ("pczdump") pczdump binary path to be used.
-            * **eigenvector** (*int*) - (0) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
+            * **eigenvector** (*int*) - (1) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
             * **pdb** (*bool*) - (False) Generate a PDB file with the computed bfactors (to be easily represented with colour scale)
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
             * **restart** (*bool*) - (False) [WF property] Do not execute if output files exist.

@@ -482,7 +482,7 @@ Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
 * **binary_path** (*string*): (pczdump) pczdump binary path to be used.
-* **eigenvector** (*integer*): (0) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
+* **eigenvector** (*integer*): (1) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
 * **pdb** (*boolean*): (False) Generate a PDB file with the computed bfactors (to be easily represented with colour scale)
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
