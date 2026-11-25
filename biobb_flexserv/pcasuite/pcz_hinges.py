@@ -2,6 +2,7 @@
 
 """Module containing the PCZhinges class and the command line interface."""
 from typing import Optional
+import ast
 import json
 import re
 from pathlib import Path, PurePath
@@ -146,7 +147,7 @@ class PCZhinges(BiobbObject):
                     start = start + 1
                 if start and "[" in line:
                     # dict_out["clusters"][start-1]["residues"] = list(map(int,list(line.replace(", ]", "").replace("  [","").split(', '))))
-                    dict_out["clusters"][start-1]["residues"] = eval(line)
+                    dict_out["clusters"][start-1]["residues"] = ast.literal_eval(line)
                 # Interacting regions: 13 14 30 31 69 70 84 85 112 113 114 115 116 166 167 199 200
                 if "Interacting regions" in line:
                     nums = line.split(':')[1]
