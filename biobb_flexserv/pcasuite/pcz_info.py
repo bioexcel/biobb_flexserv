@@ -74,15 +74,13 @@ class PCZinfo(BiobbObject):
         else:
             working_dir = self.stage_io_dict.get("unique_dir", "")
 
-        unique_dir = Path(self.stage_io_dict.get("unique_dir", ""))
-
         # Temporary output
         # temp_out_1 = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output1.dat"))
         # temp_out_2 = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output2.dat"))
-        temp_out_1 = "output1.dat"
-        temp_out_2 = "output2.dat"
-        temp_out_1_path = unique_dir.joinpath(temp_out_1)
-        temp_out_2_path = unique_dir.joinpath(temp_out_2)
+        temp_out_1_path = self.create_tmp_file("_output1.dat")
+        temp_out_2_path = self.create_tmp_file("_output2.dat")
+        temp_out_1 = Path(temp_out_1_path).name
+        temp_out_2 = Path(temp_out_2_path).name
         staged_output_json_path = self.sandbox_file("output_json_path")
 
         # Command line

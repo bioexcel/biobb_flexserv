@@ -84,12 +84,10 @@ class PCZstiffness(BiobbObject):
         else:
             working_dir = self.stage_io_dict.get("unique_dir", "")
 
-        unique_dir = Path(self.stage_io_dict.get("unique_dir", ""))
-
         # Temporary output
         # temp_out = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output.dat"))
-        temp_out = "output.dat"
-        temp_out_path = unique_dir.joinpath(temp_out)
+        temp_out_path = self.create_tmp_file("_output.dat")
+        temp_out = Path(temp_out_path).name
         staged_output_json_path = self.sandbox_file("output_json_path")
 
         # Command line
