@@ -1257,7 +1257,7 @@ Syntax: input_parameter (datatype) - (default_value) Definition
 Config parameters for this building block:
 * **binary_path** (*string*): (pcazip) pcazip binary path to be used.
 * **neigenv** (*integer*): (0) Number of generated eigenvectors
-* **variance** (*integer*): (90) Percentage of variance captured by the final set of eigenvectors
+* **variance** (*integer*): (None) Percentage of variance captured by the final set of eigenvectors
 * **verbose** (*boolean*): (False) Make output verbose
 * **gauss_rmsd** (*boolean*): (False) Use a gaussian RMSd for fitting
 * **remove_tmp** (*boolean*): (True) Remove temporal files.

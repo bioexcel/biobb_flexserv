@@ -99,7 +99,7 @@
                 },
                 "variance": {
                     "type": "integer",
-                    "default": 90,
+                    "default": null,
                     "wf_prop": false,
                     "description": "Percentage of variance captured by the final set of eigenvectors"
                 },

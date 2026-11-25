@@ -19,7 +19,7 @@ class PCZzip(BiobbObject):
         properties (dict - Python dictionary object containing the tool parameters, not input/output files):
             * **binary_path** (*str*) - ("pcazip") pcazip binary path to be used.
             * **neigenv** (*int*) - (0) Number of generated eigenvectors
-            * **variance** (*int*) - (90) Percentage of variance captured by the final set of eigenvectors
+            * **variance** (*int*) - (None) Percentage of variance captured by the final set of eigenvectors
             * **verbose** (*bool*) - (False) Make output verbose
             * **gauss_rmsd** (*bool*) - (False) Use a gaussian RMSd for fitting
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
