@@ -87,7 +87,7 @@ class PCZhinges(BiobbObject):
         elif self.method == "Dynamic_domain":
             method = "#### Lavery method"
         else:
-            print("Method not recognised ({}), please check it and try again. ".format(self.method))
+            raise ValueError("Method not recognised ({}), please check it and try again. ".format(self.method))
 
         start = False
         out_data = ''
