@@ -64,13 +64,13 @@
                 },
                 "eigenvector": {
                     "type": "integer",
-                    "default": 0,
+                    "default": 1,
                     "wf_prop": false,
                     "description": "PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes)."
                 },
                 "method": {
                     "type": "string",
-                    "default": "Dynamic_domain",
+                    "default": "Bfactor_slope",
                     "wf_prop": false,
                     "description": "Method to compute the hinge regions (Options: Bfactor_slope, Force_constant, Dynamic_domain)"
                 },

@@ -798,8 +798,8 @@ Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
 * **binary_path** (*string*): (pczdump) pczdump binary path to be used.
-* **eigenvector** (*integer*): (0) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
-* **method** (*string*): (Dynamic_domain) Method to compute the hinge regions (Options: Bfactor_slope, Force_constant, Dynamic_domain)
+* **eigenvector** (*integer*): (1) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
+* **method** (*string*): (Bfactor_slope) Method to compute the hinge regions (Options: Bfactor_slope, Force_constant, Dynamic_domain)
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.

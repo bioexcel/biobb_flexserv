@@ -20,8 +20,8 @@ class PCZhinges(BiobbObject):
         output_json_path (str): Output hinge regions x PCA mode file. File type: output. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/hinges.json>`_. Accepted formats: json (edam:format_3464).
         properties (dict - Python dictionary object containing the tool parameters, not input/output files):
             * **binary_path** (*str*) - ("pczdump") pczdump binary path to be used.
-            * **eigenvector** (*int*) - (0) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
-            * **method** (*str*) - ("Dynamic_domain") Method to compute the hinge regions (Options: Bfactor_slope, Force_constant, Dynamic_domain)
+            * **eigenvector** (*int*) - (1) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
+            * **method** (*str*) - ("Bfactor_slope") Method to compute the hinge regions (Options: Bfactor_slope, Force_constant, Dynamic_domain)
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
             * **restart** (*bool*) - (False) [WF property] Do not execute if output files exist.
             * **sandbox_path** (*str*) - ("./") [WF property] Parent path to the sandbox directory.
