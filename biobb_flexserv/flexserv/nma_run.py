@@ -121,15 +121,6 @@ class NMARun(BiobbObject):
         # Run Biobb block
         self.run_biobb()
 
-        # Copy files to host
-        self.copy_to_host()
-
-        # Remove temporary folder(s)
-        self.remove_tmp_files()
-        self.check_arguments(output_files_created=True, raise_exception=False)
-
-        return self.return_code
-
 
 def nma_run(input_pdb_path: str,
             output_log_path: str, output_crd_path: str,

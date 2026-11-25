@@ -102,16 +102,6 @@ class PCZanimate(BiobbObject):
         # Run Biobb block
         self.run_biobb()
 
-        # Copy files to host
-        self.copy_to_host()
-
-        # Remove temporary folder(s)
-        self.remove_tmp_files()
-
-        self.check_arguments(output_files_created=True, raise_exception=False)
-
-        return self.return_code
-
 
 def pcz_animate(input_pcz_path: str, output_crd_path: str,
                 properties: Optional[dict] = None, **kwargs) -> int:
