@@ -3,6 +3,7 @@
 """Module containing the nma_run class and the command line interface."""
 from typing import Optional
 import os
+import sys
 from pathlib import PurePath
 from biobb_common.generic.biobb_object import BiobbObject
 
@@ -96,7 +97,7 @@ class NMARun(BiobbObject):
         if self.container_path:
             conda_path = "/usr/local"
         else:
-            conda_path = os.getenv("CONDA_PREFIX")
+            conda_path = os.getenv("CONDA_PREFIX", sys.prefix)
         nmanu = str(conda_path) + "/bin/nmanu.pl"
         nma_eigen = str(conda_path) + "/bin/mc-eigen-mdweb.pl"
         pca_anim = str(conda_path) + "/bin/pca_anim_mc.pl"
