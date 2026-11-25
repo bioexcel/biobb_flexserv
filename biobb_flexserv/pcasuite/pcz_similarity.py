@@ -21,7 +21,7 @@ class PCZsimilarity(BiobbObject):
         input_pcz_path2 (str): Input compressed trajectory file 2. File type: input. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/data/pcasuite/pcazip.pcz>`_. Accepted formats: pcz (edam:format_3874).
         output_json_path (str): Output json file with PCA Similarity results. File type: output. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/pcz_similarity.json>`_. Accepted formats: json (edam:format_3464).
         properties (dict - Python dictionary object containing the tool parameters, not input/output files):
-            * **amplifying_factor** (*float*) - ("0.0") common displacement (dx) along the different eigenvectors. If 0, the result is the absolute similarity index (dot product).
+            * **amplifying_factor** (*float*) - (None) common displacement (dx) along the different eigenvectors. If 0, the result is the absolute similarity index (dot product).
             * **binary_path** (*str*) - ("pczdump") pczdump binary path to be used.
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
             * **restart** (*bool*) - (False) [WF property] Do not execute if output files exist.
