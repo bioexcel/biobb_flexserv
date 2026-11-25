@@ -104,7 +104,7 @@ class PCZbfactor(BiobbObject):
         # Run Biobb block
         self.run_biobb()
 
-        if self.pdb:
+        if self.pdb and self.stage_io_dict["out"].get("output_pdb_path"):
             # Command line (2: pdb file)
             # pczdump -i structure.ca.std.pcz --fluc=1 --pdb -o bfactor_1.pdb
             # self.cmd = [self.binary_path,
