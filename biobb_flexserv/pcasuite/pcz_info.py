@@ -83,7 +83,7 @@ class PCZinfo(BiobbObject):
         temp_out_2 = "output2.dat"
         temp_out_1_path = unique_dir.joinpath(temp_out_1)
         temp_out_2_path = unique_dir.joinpath(temp_out_2)
-        staged_output_json_path = unique_dir.joinpath(Path(self.stage_io_dict["out"]["output_json_path"]).name)
+        staged_output_json_path = self.sandbox_file("output_json_path")
 
         # Command line
         # pczdump -i structure.ca.std.pcz --info -o pcz.info

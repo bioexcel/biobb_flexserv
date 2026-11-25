@@ -88,7 +88,7 @@ class PCZevecs(BiobbObject):
         # temp_out = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output.dat"))
         temp_out = "output.dat"
         temp_out_path = unique_dir.joinpath(temp_out)
-        staged_output_json_path = unique_dir.joinpath(Path(self.stage_io_dict["out"]["output_json_path"]).name)
+        staged_output_json_path = self.sandbox_file("output_json_path")
 
         # Command line
         # pczdump -i structure.ca.std.pcz --evecs -o pcz.evecs

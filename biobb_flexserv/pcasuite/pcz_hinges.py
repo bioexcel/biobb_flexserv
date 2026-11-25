@@ -174,7 +174,7 @@ class PCZhinges(BiobbObject):
         temp_out = "output.dat"
         temp_log = "output.log"
         temp_out_path = unique_dir.joinpath(temp_out)
-        staged_output_json_path = unique_dir.joinpath(Path(self.stage_io_dict["out"]["output_json_path"]).name)
+        staged_output_json_path = self.sandbox_file("output_json_path")
 
         # Command line (1: dat file)
         # pczdump -i structure.ca.std.pcz --fluc=1 -o bfactor_1.dat
