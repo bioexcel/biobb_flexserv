@@ -58,11 +58,6 @@ class PCZunzip(BiobbObject):
 
         # Command line
         # pcaunzip -i infile [-o outfile] [--pdb] [--verbose] [--help]
-        # self.cmd = [self.binary_path,
-        #             "-i", input_pcz,
-        #             "-o", output_crd
-        #             ]
-
         self.cmd = [self.binary_path,
                     "-i", self.stage_io_dict["in"]["input_pcz_path"],
                     "-o", self.stage_io_dict["out"]["output_crd_path"]

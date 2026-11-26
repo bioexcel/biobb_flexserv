@@ -127,7 +127,6 @@ class PCZhinges(BiobbObject):
                     dict_out["clusters"].append(cluster)
                     start = start + 1
                 if start and "[" in line:
-                    # dict_out["clusters"][start-1]["residues"] = list(map(int,list(line.replace(", ]", "").replace("  [","").split(', '))))
                     dict_out["clusters"][start-1]["residues"] = ast.literal_eval(line)
                 # Interacting regions: 13 14 30 31 69 70 84 85 112 113 114 115 116 166 167 199 200
                 if "Interacting regions" in line:
@@ -144,22 +143,13 @@ class PCZhinges(BiobbObject):
         """Launches the execution of the FlexServ pcz_hinges module."""
 
         # Temporary output
-        # temp_out = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output.dat"))
         temp_out_path = self.create_tmp_file("_output.dat")
         temp_out = self.staged_path(temp_out_path)
         temp_log = self.staged_path(self.create_tmp_file("_output.log"))
         staged_output_json_path = self.sandbox_file("output_json_path")
 
-        # Command line (1: dat file)
-        # pczdump -i structure.ca.std.pcz --fluc=1 -o bfactor_1.dat
-        # self.cmd = [self.binary_path,
-        #             "-i", input_pcz,
-        #             "-o", temp_out,
-        #             "-t", "0.3",
-        #             "--hinge={}".format(self.eigenvector),
-        #             ">&", "pcz_dump.hinges.log"
-        #             ]
-
+        # Command line
+        # pczdump -i structure.ca.std.pcz -t 0.3 --hinge=1 -o pcz.hinges >& pcz_dump.hinges.log
         self.cmd = [self.binary_path,
                     '-i', self.stage_io_dict["in"]["input_pcz_path"],
                     '-o', temp_out,

@@ -61,14 +61,7 @@ class PCZzip(BiobbObject):
         """Launches the execution of the FlexServ pcazip module."""
 
         # Command line
-        # pcazip -i infile -o outfile -n natoms
-        # [-v] [--mask maskfile] [-e nev] [-q qual] [--pdb pdbfile]
-        # self.cmd = [self.binary_path,
-        #             "-p", input_pdb,
-        #             "-i", input_crd,
-        #             "-o", output_pcz
-        #             ]
-
+        # pcazip -p structure.ca.pdb -i traj.crd -o pcazip.pcz [-v] [-g] [-e nev] [-q variance]
         self.cmd = [self.binary_path,
                     "-p", self.stage_io_dict["in"]["input_pdb_path"],
                     "-i", self.stage_io_dict["in"]["input_crd_path"],

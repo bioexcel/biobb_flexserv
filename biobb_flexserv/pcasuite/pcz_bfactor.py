@@ -60,14 +60,7 @@ class PCZbfactor(BiobbObject):
         """Launches the execution of the FlexServ pcz_bfactor module."""
 
         # Command line (1: dat file)
-        # pczdump -i structure.ca.std.pcz --fluc=1 -o bfactor_1.dat
-        # self.cmd = [self.binary_path,
-        #             "-i", input_pcz,
-        #             "-o", output_dat,
-        #             "--bfactor",
-        #             "--fluc={}".format(self.eigenvector)
-        #             ]
-
+        # pczdump -i structure.ca.std.pcz --bfactor --fluc=1 -o bfactor_1.dat
         self.cmd = [self.binary_path,
                     '-i', self.stage_io_dict["in"]["input_pcz_path"],
                     '-o', self.stage_io_dict["out"]["output_dat_path"],
@@ -80,15 +73,7 @@ class PCZbfactor(BiobbObject):
 
         if self.pdb and self.stage_io_dict["out"].get("output_pdb_path"):
             # Command line (2: pdb file)
-            # pczdump -i structure.ca.std.pcz --fluc=1 --pdb -o bfactor_1.pdb
-            # self.cmd = [self.binary_path,
-            #             "-i", input_pcz,
-            #             "-o", output_pdb,
-            #             "--bfactor",
-            #             "--fluc={}".format(self.eigenvector),
-            #             "--pdb"
-            #             ]
-
+            # pczdump -i structure.ca.std.pcz --bfactor --fluc=1 --pdb -o bfactor_1.pdb
             self.cmd = [self.binary_path,
                         '-i', self.stage_io_dict["in"]["input_pcz_path"],
                         '-o', self.stage_io_dict["out"]["output_pdb_path"],

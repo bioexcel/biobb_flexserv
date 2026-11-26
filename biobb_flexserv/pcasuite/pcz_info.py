@@ -53,8 +53,6 @@ class PCZinfo(BiobbObject):
         """Launches the execution of the FlexServ pcz_info module."""
 
         # Temporary output
-        # temp_out_1 = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output1.dat"))
-        # temp_out_2 = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output2.dat"))
         temp_out_1_path = self.create_tmp_file("_output1.dat")
         temp_out_2_path = self.create_tmp_file("_output2.dat")
         temp_out_1 = self.staged_path(temp_out_1_path)
@@ -62,17 +60,7 @@ class PCZinfo(BiobbObject):
         staged_output_json_path = self.sandbox_file("output_json_path")
 
         # Command line
-        # pczdump -i structure.ca.std.pcz --info -o pcz.info
-        # self.cmd = [self.binary_path,
-        #             "-i", input_pcz,
-        #             "-o", temp_out_1,
-        #             "--info", ';',
-        #             self.binary_path,
-        #             "-i", input_pcz,
-        #             "-o", temp_out_2,
-        #             "--evals"
-        #             ]
-
+        # pczdump -i structure.ca.std.pcz --info -o pcz.info && pczdump -i structure.ca.std.pcz --evals -o pcz.evals
         self.cmd = [self.binary_path,
                     "-i", self.stage_io_dict["in"]["input_pcz_path"],
                     "-o", temp_out_1,

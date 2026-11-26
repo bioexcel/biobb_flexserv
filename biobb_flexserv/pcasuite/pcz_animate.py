@@ -59,12 +59,6 @@ class PCZanimate(BiobbObject):
 
         # Command line
         # pczdump -i structure.ca.std.pcz --anim=1 --pdb -o anim_1.pdb
-        # self.cmd = [self.binary_path,
-        #             "-i", input_pcz,
-        #             "-o", output_crd,
-        #             "--anim={}".format(self.eigenvector)
-        #             ]
-
         self.cmd = [self.binary_path,
                     '-i', self.stage_io_dict["in"]["input_pcz_path"],
                     '-o', self.stage_io_dict["out"]["output_crd_path"],

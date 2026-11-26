@@ -60,19 +60,12 @@ class PCZevecs(BiobbObject):
         """Launches the execution of the FlexServ pcz_evecs module."""
 
         # Temporary output
-        # temp_out = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output.dat"))
         temp_out_path = self.create_tmp_file("_output.dat")
         temp_out = self.staged_path(temp_out_path)
         staged_output_json_path = self.sandbox_file("output_json_path")
 
         # Command line
-        # pczdump -i structure.ca.std.pcz --evecs -o pcz.evecs
-        # self.cmd = [self.binary_path,
-        #             "-i", input_pcz,
-        #             "-o", temp_out,
-        #             "--evec={}".format(self.eigenvector)
-        #             ]
-
+        # pczdump -i structure.ca.std.pcz --evec=1 -o pcz.evecs
         self.cmd = [self.binary_path,
                     '-i', self.stage_io_dict["in"]["input_pcz_path"],
                     '-o', temp_out,
