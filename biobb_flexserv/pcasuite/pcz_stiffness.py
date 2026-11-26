@@ -112,9 +112,9 @@ class PCZstiffness(BiobbObject):
                             line_array_log.append(float(nums))
 
                 info_dict['stiffness'].append(line_array)
-                info_dict['stiffness'][row][row] = float('inf')
+                info_dict['stiffness'][row][row] = None
                 info_dict['stiffness_log'].append(line_array_log)
-                info_dict['stiffness_log'][row][row] = float('inf')
+                info_dict['stiffness_log'][row][row] = None
                 row += 1
 
         with open(staged_output_json_path, 'w') as out_file:
