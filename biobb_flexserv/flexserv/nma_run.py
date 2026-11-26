@@ -4,7 +4,6 @@
 from typing import Optional
 import os
 import sys
-from pathlib import PurePath
 from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
@@ -62,14 +61,12 @@ class NMARun(BiobbObject):
     def run(self):
         """Launches the execution of the FlexServ NMARun module."""
 
-        if self.container_path:
-            working_dir = self.container_volume_path if self.container_volume_path else "/data"
-        else:
-            working_dir = self.stage_io_dict.get("unique_dir", "")
-
-        input_pdb = PurePath(self.stage_io_dict["in"]["input_pdb_path"]).name
-        output_crd = PurePath(self.stage_io_dict["out"]["output_crd_path"]).name
-        output_log = PurePath(self.stage_io_dict["out"]["output_log_path"]).name
+        # The tools write hessian.dat, eigenvec.dat and file.proj in the working dir: a folder of its own
+        working_dir = self.staged_path(self.create_tmp_dir())
+        unique_dir = self.stage_io_dict.get("unique_dir", "")
+        input_pdb = os.path.join(unique_dir, self.stage_io_dict["in"]["input_pdb_path"])
+        output_crd = os.path.join(unique_dir, self.stage_io_dict["out"]["output_crd_path"])
+        output_log = os.path.join(unique_dir, self.stage_io_dict["out"]["output_log_path"])
 
         # Command line
         # nmanu.pl structure.ca.pdb hessian.dat 1 0 40
