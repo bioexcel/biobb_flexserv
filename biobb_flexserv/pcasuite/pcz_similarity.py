@@ -4,7 +4,7 @@
 from typing import Optional
 import json
 import numpy as np
-from pathlib import Path, PurePath
+from pathlib import Path
 from math import exp
 from biobb_common.generic.biobb_object import BiobbObject, launcher
 from biobb_common.tools import file_utils as fu
@@ -29,7 +29,6 @@ class PCZsimilarity(BiobbObject):
             * **container_path** (*str*) - (None) Container path definition.
             * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
             * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
-            * **container_working_dir** (*str*) - (None) Container working directory definition.
             * **container_user_id** (*str*) - (None) Container user_id definition.
             * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
@@ -278,18 +277,13 @@ class PCZsimilarity(BiobbObject):
     def run(self):
         """Launches the execution of the FlexServ pcz_similarity module."""
 
-        if self.container_path:
-            working_dir = self.container_volume_path if self.container_volume_path else "/data"
-        else:
-            working_dir = self.stage_io_dict.get("unique_dir", "")
-
         unique_dir = Path(self.stage_io_dict.get("unique_dir", ""))
 
         # Temporary output
         temp_out_1_path = self.create_tmp_file("_output1.dat")
         temp_out_2_path = self.create_tmp_file("_output2.dat")
-        temp_out_1 = Path(temp_out_1_path).name
-        temp_out_2 = Path(temp_out_2_path).name
+        temp_out_1 = self.staged_path(temp_out_1_path)
+        temp_out_2 = self.staged_path(temp_out_2_path)
         staged_output_json_path = self.sandbox_file("output_json_path")
 
         # Command line 1
@@ -304,13 +298,12 @@ class PCZsimilarity(BiobbObject):
         #             "--evals"
         #             ]
 
-        self.cmd = ['cd', working_dir, ';',
-                    self.binary_path,    # Evals pcz 1
-                    "-i", PurePath(self.stage_io_dict["in"]["input_pcz_path1"]).name,
+        self.cmd = [self.binary_path,    # Evals pcz 1
+                    "-i", self.stage_io_dict["in"]["input_pcz_path1"],
                     "-o", temp_out_1,
                     "--evals", ';',
                     self.binary_path,    # Evals pcz 2
-                    "-i", PurePath(self.stage_io_dict["in"]["input_pcz_path2"]).name,
+                    "-i", self.stage_io_dict["in"]["input_pcz_path2"],
                     "-o", temp_out_2,
                     "--evals"
                     ]
@@ -340,12 +333,12 @@ class PCZsimilarity(BiobbObject):
 
         # Command line 2
         # pczdump -i structure.ca.std.pcz --evals -o evals.txt
-        self.cmd = ['cd', working_dir, ';']
+        self.cmd = []
         for pc in (range(1, num_evals_min+1)):
             # Evecs pcz 1
             self.cmd.append(self.binary_path)
             self.cmd.append("-i")
-            self.cmd.append(PurePath(self.stage_io_dict["in"]["input_pcz_path1"]).name)
+            self.cmd.append(self.stage_io_dict["in"]["input_pcz_path1"])
             self.cmd.append("-o")
             self.cmd.append("evecs_1_pc{}".format(pc))
             self.cmd.append("--evec={}".format(pc))
@@ -353,7 +346,7 @@ class PCZsimilarity(BiobbObject):
             # Evals pcz 2
             self.cmd.append(self.binary_path)
             self.cmd.append("-i")
-            self.cmd.append(PurePath(self.stage_io_dict["in"]["input_pcz_path2"]).name)
+            self.cmd.append(self.stage_io_dict["in"]["input_pcz_path2"])
             self.cmd.append("-o")
             self.cmd.append("evecs_2_pc{}".format(pc))
             self.cmd.append("--evec={}".format(pc))

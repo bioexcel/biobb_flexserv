@@ -4,7 +4,6 @@
 from typing import Optional
 import json
 import math
-from pathlib import Path, PurePath
 from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
@@ -27,7 +26,6 @@ class PCZstiffness(BiobbObject):
             * **container_path** (*str*) - (None) Container path definition.
             * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
             * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
-            * **container_working_dir** (*str*) - (None) Container working directory definition.
             * **container_user_id** (*str*) - (None) Container user_id definition.
             * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
@@ -62,15 +60,10 @@ class PCZstiffness(BiobbObject):
     def run(self):
         """Launches the execution of the FlexServ pcz_stiffness module."""
 
-        if self.container_path:
-            working_dir = self.container_volume_path if self.container_volume_path else "/data"
-        else:
-            working_dir = self.stage_io_dict.get("unique_dir", "")
-
         # Temporary output
         # temp_out = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output.dat"))
         temp_out_path = self.create_tmp_file("_output.dat")
-        temp_out = Path(temp_out_path).name
+        temp_out = self.staged_path(temp_out_path)
         staged_output_json_path = self.sandbox_file("output_json_path")
 
         # Command line
@@ -82,9 +75,8 @@ class PCZstiffness(BiobbObject):
         #             "--temperature={}".format(self.temperature)
         #             ]
 
-        self.cmd = ['cd', working_dir, ';',
-                    self.binary_path,
-                    "-i", PurePath(self.stage_io_dict["in"]["input_pcz_path"]).name,
+        self.cmd = [self.binary_path,
+                    "-i", self.stage_io_dict["in"]["input_pcz_path"],
                     "-o", temp_out,
                     "--stiff={}".format(self.eigenvector),
                     "--temperature={}".format(self.temperature)

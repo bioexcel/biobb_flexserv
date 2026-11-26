@@ -2,7 +2,6 @@
 
 """Module containing the PCAzip class and the command line interface."""
 from typing import Optional
-from pathlib import PurePath
 from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
@@ -28,7 +27,6 @@ class PCZzip(BiobbObject):
             * **container_path** (*str*) - (None) Container path definition.
             * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
             * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
-            * **container_working_dir** (*str*) - (None) Container working directory definition.
             * **container_user_id** (*str*) - (None) Container user_id definition.
             * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
@@ -62,11 +60,6 @@ class PCZzip(BiobbObject):
     def run(self):
         """Launches the execution of the FlexServ pcazip module."""
 
-        if self.container_path:
-            working_dir = self.container_volume_path if self.container_volume_path else "/data"
-        else:
-            working_dir = self.stage_io_dict.get("unique_dir", "")
-
         # Command line
         # pcazip -i infile -o outfile -n natoms
         # [-v] [--mask maskfile] [-e nev] [-q qual] [--pdb pdbfile]
@@ -76,11 +69,10 @@ class PCZzip(BiobbObject):
         #             "-o", output_pcz
         #             ]
 
-        self.cmd = ['cd', working_dir, ';',
-                    self.binary_path,
-                    "-p", PurePath(self.stage_io_dict["in"]["input_pdb_path"]).name,
-                    "-i", PurePath(self.stage_io_dict["in"]["input_crd_path"]).name,
-                    "-o", PurePath(self.stage_io_dict["out"]["output_pcz_path"]).name
+        self.cmd = [self.binary_path,
+                    "-p", self.stage_io_dict["in"]["input_pdb_path"],
+                    "-i", self.stage_io_dict["in"]["input_crd_path"],
+                    "-o", self.stage_io_dict["out"]["output_pcz_path"]
                     ]
 
         if self.verbose:

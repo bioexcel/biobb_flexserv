@@ -2,7 +2,6 @@
 
 """Module containing the PCZbfactor class and the command line interface."""
 from typing import Optional
-from pathlib import PurePath
 from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
@@ -26,7 +25,6 @@ class PCZbfactor(BiobbObject):
             * **container_path** (*str*) - (None) Container path definition.
             * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
             * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
-            * **container_working_dir** (*str*) - (None) Container working directory definition.
             * **container_user_id** (*str*) - (None) Container user_id definition.
             * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
@@ -61,11 +59,6 @@ class PCZbfactor(BiobbObject):
     def run(self):
         """Launches the execution of the FlexServ pcz_bfactor module."""
 
-        if self.container_path:
-            working_dir = self.container_volume_path if self.container_volume_path else "/data"
-        else:
-            working_dir = self.stage_io_dict.get("unique_dir", "")
-
         # Command line (1: dat file)
         # pczdump -i structure.ca.std.pcz --fluc=1 -o bfactor_1.dat
         # self.cmd = [self.binary_path,
@@ -75,10 +68,9 @@ class PCZbfactor(BiobbObject):
         #             "--fluc={}".format(self.eigenvector)
         #             ]
 
-        self.cmd = ['cd', working_dir, ';',
-                    self.binary_path,
-                    '-i', PurePath(self.stage_io_dict["in"]["input_pcz_path"]).name,
-                    '-o', PurePath(self.stage_io_dict["out"]["output_dat_path"]).name,
+        self.cmd = [self.binary_path,
+                    '-i', self.stage_io_dict["in"]["input_pcz_path"],
+                    '-o', self.stage_io_dict["out"]["output_dat_path"],
                     "--bfactor",
                     "--fluc={}".format(self.eigenvector)
                     ]
@@ -97,10 +89,9 @@ class PCZbfactor(BiobbObject):
             #             "--pdb"
             #             ]
 
-            self.cmd = ['cd', working_dir, ';',
-                        self.binary_path,
-                        '-i', PurePath(self.stage_io_dict["in"]["input_pcz_path"]).name,
-                        '-o', PurePath(self.stage_io_dict["out"]["output_pdb_path"]).name,
+            self.cmd = [self.binary_path,
+                        '-i', self.stage_io_dict["in"]["input_pcz_path"],
+                        '-o', self.stage_io_dict["out"]["output_pdb_path"],
                         "--bfactor",
                         "--fluc={}".format(self.eigenvector),
                         "--pdb"

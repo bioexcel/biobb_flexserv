@@ -27,7 +27,6 @@ class NMARun(BiobbObject):
             * **container_path** (*str*) - (None) Container path definition.
             * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
             * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
-            * **container_working_dir** (*str*) - (None) Container working directory definition.
             * **container_user_id** (*str*) - (None) Container user_id definition.
             * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
@@ -61,12 +60,10 @@ class NMARun(BiobbObject):
     def run(self):
         """Launches the execution of the FlexServ NMARun module."""
 
-        # The tools write hessian.dat, eigenvec.dat and file.proj in the working dir: a folder of its own
-        working_dir = self.staged_path(self.create_tmp_dir())
-        unique_dir = self.stage_io_dict.get("unique_dir", "")
-        input_pdb = os.path.join(unique_dir, self.stage_io_dict["in"]["input_pdb_path"])
-        output_crd = os.path.join(unique_dir, self.stage_io_dict["out"]["output_crd_path"])
-        output_log = os.path.join(unique_dir, self.stage_io_dict["out"]["output_log_path"])
+        # The tools write hessian.dat, eigenvec.dat and file.proj where they run: in the sandbox
+        input_pdb = self.stage_io_dict["in"]["input_pdb_path"]
+        output_crd = self.stage_io_dict["out"]["output_crd_path"]
+        output_log = self.stage_io_dict["out"]["output_log_path"]
 
         # Command line
         # nmanu.pl structure.ca.pdb hessian.dat 1 0 40
@@ -80,15 +77,14 @@ class NMARun(BiobbObject):
         nmanu = str(conda_path) + "/bin/nmanu.pl"
         nma_eigen = str(conda_path) + "/bin/mc-eigen-mdweb.pl"
         pca_anim = str(conda_path) + "/bin/pca_anim_mc.pl"
-        self.cmd = ["cd", working_dir, ";",
-                    "perl",
+        self.cmd = ["perl",
                     nmanu,
                     input_pdb,
-                    "hessian.dat", "1", "0", "40", ";",
+                    "hessian.dat", "1", "0", "40", "&&",
                     self.binary_path,
-                    ";", "perl",
+                    "&&", "perl",
                     nma_eigen, "eigenvec.dat", str(self.frames), ">", "file.proj",
-                    ";", "perl",
+                    "&&", "perl",
                     pca_anim,
                     "-pdb",
                     input_pdb,
