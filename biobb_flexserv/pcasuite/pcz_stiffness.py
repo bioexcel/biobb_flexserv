@@ -5,7 +5,7 @@ from typing import Optional
 import json
 import math
 from pathlib import Path, PurePath
-from biobb_common.generic.biobb_object import BiobbObject
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZstiffness(BiobbObject):
@@ -121,15 +121,7 @@ class PCZstiffness(BiobbObject):
             out_file.write(json.dumps(info_dict, indent=4))
 
 
-def pcz_stiffness(input_pcz_path: str, output_json_path: str,
-                  properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZstiffness <flexserv.pcasuite.pcz_stiffness>`flexserv.pcasuite.PCZstiffness class and
-    execute :meth:`launch() <flexserv.pcasuite.pcz_stiffness.launch>` method"""
-    return PCZstiffness(**dict(locals())).launch()
-
-
-pcz_stiffness.__doc__ = PCZstiffness.__doc__
-main = PCZstiffness.get_main(pcz_stiffness, "Extract PCA Stiffness from a compressed PCZ file.")
+pcz_stiffness = launcher(PCZstiffness)
 
 if __name__ == '__main__':
-    main()
+    PCZstiffness.main()

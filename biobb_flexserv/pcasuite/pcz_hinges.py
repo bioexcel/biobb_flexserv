@@ -6,7 +6,7 @@ import ast
 import json
 import re
 from pathlib import Path, PurePath
-from biobb_common.generic.biobb_object import BiobbObject
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZhinges(BiobbObject):
@@ -186,15 +186,7 @@ class PCZhinges(BiobbObject):
             out_file.write(json.dumps(dict_out, indent=4))
 
 
-def pcz_hinges(input_pcz_path: str, output_json_path: str,
-               properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZhinges <flexserv.pcasuite.pcz_hinges>`flexserv.pcasuite.PCZhinges class and
-    execute :meth:`launch() <flexserv.pcasuite.pcz_hinges.launch>` method"""
-    return PCZhinges(**dict(locals())).launch()
-
-
-pcz_hinges.__doc__ = PCZhinges.__doc__
-main = PCZhinges.get_main(pcz_hinges, "Compute possible hinge regions (residues around which large protein movements are organized) of a molecule from a compressed PCZ file.")
+pcz_hinges = launcher(PCZhinges)
 
 if __name__ == '__main__':
-    main()
+    PCZhinges.main()

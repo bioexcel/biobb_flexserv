@@ -3,7 +3,7 @@
 """Module containing the PCZbfactor class and the command line interface."""
 from typing import Optional
 from pathlib import PurePath
-from biobb_common.generic.biobb_object import BiobbObject
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZbfactor(BiobbObject):
@@ -110,15 +110,7 @@ class PCZbfactor(BiobbObject):
             self.run_biobb()
 
 
-def pcz_bfactor(input_pcz_path: str, output_dat_path: str, output_pdb_path: str,
-                properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZbfactor <flexserv.pcasuite.pcz_bfactor>`flexserv.pcasuite.PCZbfactor class and
-    execute :meth:`launch() <flexserv.pcasuite.pcz_bfactor.launch>` method"""
-    return PCZbfactor(**dict(locals())).launch()
-
-
-pcz_bfactor.__doc__ = PCZbfactor.__doc__
-main = PCZbfactor.get_main(pcz_bfactor, "Extract residue bfactors x PCA mode from a compressed PCZ file.")
+pcz_bfactor = launcher(PCZbfactor)
 
 if __name__ == '__main__':
-    main()
+    PCZbfactor.main()

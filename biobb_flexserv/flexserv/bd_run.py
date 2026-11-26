@@ -3,7 +3,7 @@
 """Module containing the bd_run class and the command line interface."""
 from typing import Optional
 from pathlib import PurePath
-from biobb_common.generic.biobb_object import BiobbObject
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class BDRun(BiobbObject):
@@ -85,16 +85,7 @@ class BDRun(BiobbObject):
         self.run_biobb()
 
 
-def bd_run(input_pdb_path: str,
-           output_log_path: str, output_crd_path: str,
-           properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`BDRun <flexserv.bd_run.BDRun>`flexserv.bd_run.BDRun class and
-    execute :meth:`launch() <flexserv.bd_run.BDRun.launch>` method"""
-    return BDRun(**dict(locals())).launch()
-
-
-bd_run.__doc__ = BDRun.__doc__
-main = BDRun.get_main(bd_run, "Generates protein conformational structures using the Brownian Dynamics method.")
+bd_run = launcher(BDRun)
 
 if __name__ == '__main__':
-    main()
+    BDRun.main()

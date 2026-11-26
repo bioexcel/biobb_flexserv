@@ -24,20 +24,20 @@ setuptools.setup(
     python_requires='>=3.10',
     entry_points={
         "console_scripts": [
-            "bd_run = biobb_flexserv.flexserv.bd_run:main",
-            "dmd_run = biobb_flexserv.flexserv.dmd_run:main",
-            "nma_run = biobb_flexserv.flexserv.nma_run:main",
-            "pcz_zip = biobb_flexserv.pcasuite.pcz_zip:main",
-            "pcz_unzip = biobb_flexserv.pcasuite.pcz_unzip:main",
-            "pcz_animate = biobb_flexserv.pcasuite.pcz_animate:main",
-            "pcz_bfactor = biobb_flexserv.pcasuite.pcz_bfactor:main",
-            "pcz_collectivity = biobb_flexserv.pcasuite.pcz_collectivity:main",
-            "pcz_evecs = biobb_flexserv.pcasuite.pcz_evecs:main",
-            "pcz_hinges = biobb_flexserv.pcasuite.pcz_hinges:main",
-            "pcz_info = biobb_flexserv.pcasuite.pcz_info:main",
-            "pcz_lindemann = biobb_flexserv.pcasuite.pcz_lindemann:main",
-            "pcz_stiffness = biobb_flexserv.pcasuite.pcz_stiffness:main",
-            "pcz_similarity = biobb_flexserv.pcasuite.pcz_similarity:main"
+            "bd_run = biobb_flexserv.flexserv.bd_run:BDRun.main",
+            "dmd_run = biobb_flexserv.flexserv.dmd_run:DMDRun.main",
+            "nma_run = biobb_flexserv.flexserv.nma_run:NMARun.main",
+            "pcz_zip = biobb_flexserv.pcasuite.pcz_zip:PCZzip.main",
+            "pcz_unzip = biobb_flexserv.pcasuite.pcz_unzip:PCZunzip.main",
+            "pcz_animate = biobb_flexserv.pcasuite.pcz_animate:PCZanimate.main",
+            "pcz_bfactor = biobb_flexserv.pcasuite.pcz_bfactor:PCZbfactor.main",
+            "pcz_collectivity = biobb_flexserv.pcasuite.pcz_collectivity:PCZcollectivity.main",
+            "pcz_evecs = biobb_flexserv.pcasuite.pcz_evecs:PCZevecs.main",
+            "pcz_hinges = biobb_flexserv.pcasuite.pcz_hinges:PCZhinges.main",
+            "pcz_info = biobb_flexserv.pcasuite.pcz_info:PCZinfo.main",
+            "pcz_lindemann = biobb_flexserv.pcasuite.pcz_lindemann:PCZlindemann.main",
+            "pcz_stiffness = biobb_flexserv.pcasuite.pcz_stiffness:PCZstiffness.main",
+            "pcz_similarity = biobb_flexserv.pcasuite.pcz_similarity:PCZsimilarity.main"
         ]
     },
     classifiers=[

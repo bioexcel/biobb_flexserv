@@ -3,7 +3,7 @@
 """Module containing the PCZanimate class and the command line interface."""
 from typing import Optional
 from pathlib import PurePath
-from biobb_common.generic.biobb_object import BiobbObject
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZanimate(BiobbObject):
@@ -86,15 +86,7 @@ class PCZanimate(BiobbObject):
         self.run_biobb()
 
 
-def pcz_animate(input_pcz_path: str, output_crd_path: str,
-                properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZanimate <flexserv.pcasuite.pcz_animate>`flexserv.pcasuite.PCZanimate class and
-    execute :meth:`launch() <flexserv.pcasuite.pcz_animate.launch>` method"""
-    return PCZanimate(**dict(locals())).launch()
-
-
-pcz_animate.__doc__ = PCZanimate.__doc__
-main = PCZanimate.get_main(pcz_animate, "Extract PCA animations from a compressed PCZ file.")
+pcz_animate = launcher(PCZanimate)
 
 if __name__ == '__main__':
-    main()
+    PCZanimate.main()

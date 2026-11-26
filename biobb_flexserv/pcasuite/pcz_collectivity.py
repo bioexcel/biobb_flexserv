@@ -4,7 +4,7 @@
 from typing import Optional
 from pathlib import Path, PurePath
 import json
-from biobb_common.generic.biobb_object import BiobbObject
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZcollectivity(BiobbObject):
@@ -104,15 +104,7 @@ class PCZcollectivity(BiobbObject):
             out_file.write(json.dumps(info_dict, indent=4))
 
 
-def pcz_collectivity(input_pcz_path: str, output_json_path: str,
-                     properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZcollectivity <flexserv.pcasuite.pcz_collectivity>`flexserv.pcasuite.PCZcollectivity class and
-    execute :meth:`launch() <flexserv.pcasuite.pcz_collectivity.launch>` method"""
-    return PCZcollectivity(**dict(locals())).launch()
-
-
-pcz_collectivity.__doc__ = PCZcollectivity.__doc__
-main = PCZcollectivity.get_main(pcz_collectivity, "Extract PCA collectivity (numerical measure of how many atoms are affected by a given mode) from a compressed PCZ file.")
+pcz_collectivity = launcher(PCZcollectivity)
 
 if __name__ == '__main__':
-    main()
+    PCZcollectivity.main()

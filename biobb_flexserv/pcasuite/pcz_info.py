@@ -4,7 +4,7 @@
 from typing import Optional
 import json
 from pathlib import Path, PurePath
-from biobb_common.generic.biobb_object import BiobbObject
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZinfo(BiobbObject):
@@ -136,15 +136,7 @@ class PCZinfo(BiobbObject):
             out_file.write(json.dumps(info_dict, indent=4))
 
 
-def pcz_info(input_pcz_path: str, output_json_path: str,
-             properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZinfo <flexserv.pcasuite.pcz_info>`flexserv.pcasuite.PCZinfo class and
-    execute :meth:`launch() <flexserv.pcasuite.pcz_info.launch>` method"""
-    return PCZinfo(**dict(locals())).launch()
-
-
-pcz_info.__doc__ = PCZinfo.__doc__
-main = PCZinfo.get_main(pcz_info, "Extract PCA info from a compressed PCZ file.")
+pcz_info = launcher(PCZinfo)
 
 if __name__ == '__main__':
-    main()
+    PCZinfo.main()

@@ -3,7 +3,7 @@
 """Module containing the PCZunzip class and the command line interface."""
 from typing import Optional
 from pathlib import PurePath
-from biobb_common.generic.biobb_object import BiobbObject
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZunzip(BiobbObject):
@@ -86,16 +86,7 @@ class PCZunzip(BiobbObject):
         self.run_biobb()
 
 
-def pcz_unzip(input_pcz_path: str,
-              output_crd_path: str,
-              properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZunzip <flexserv.pcasuite.PCZunzip>`flexserv.pcasuite.PCZunzip class and
-    execute :meth:`launch() <flexserv.pcasuite.PCZunzip.launch>` method"""
-    return PCZunzip(**dict(locals())).launch()
-
-
-pcz_unzip.__doc__ = PCZunzip.__doc__
-main = PCZunzip.get_main(pcz_unzip, "Uncompress Molecular Dynamics (MD) compressed trajectories using Principal Component Analysis (PCA) algorithms.")
+pcz_unzip = launcher(PCZunzip)
 
 if __name__ == '__main__':
-    main()
+    PCZunzip.main()

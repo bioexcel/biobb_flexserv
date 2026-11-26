@@ -3,7 +3,7 @@
 """Module containing the dmd_run class and the command line interface."""
 from typing import Optional
 from pathlib import Path, PurePath
-from biobb_common.generic.biobb_object import BiobbObject
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class DMDRun(BiobbObject):
@@ -95,16 +95,7 @@ class DMDRun(BiobbObject):
         self.run_biobb()
 
 
-def dmd_run(input_pdb_path: str,
-            output_log_path: str, output_crd_path: str,
-            properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`DMDRun <flexserv.dmd_run.DMDRun>`flexserv.dmd_run.DMDRun class and
-    execute :meth:`launch() <flexserv.dmd_run.DMDRun.launch>` method"""
-    return DMDRun(**dict(locals())).launch()
-
-
-dmd_run.__doc__ = DMDRun.__doc__
-main = DMDRun.get_main(dmd_run, "Generates protein conformational structures using the Discrete Molecular Dynamics method.")
+dmd_run = launcher(DMDRun)
 
 if __name__ == '__main__':
-    main()
+    DMDRun.main()

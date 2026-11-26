@@ -5,7 +5,7 @@ from typing import Optional
 import json
 import math
 from pathlib import Path, PurePath
-from biobb_common.generic.biobb_object import BiobbObject
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZevecs(BiobbObject):
@@ -122,15 +122,7 @@ class PCZevecs(BiobbObject):
             out_file.write(json.dumps(info_dict, indent=4))
 
 
-def pcz_evecs(input_pcz_path: str, output_json_path: str,
-              properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZevecs <flexserv.pcasuite.pcz_evecs>`flexserv.pcasuite.PCZevecs class and
-    execute :meth:`launch() <flexserv.pcasuite.pcz_evecs.launch>` method"""
-    return PCZevecs(**dict(locals())).launch()
-
-
-pcz_evecs.__doc__ = PCZevecs.__doc__
-main = PCZevecs.get_main(pcz_evecs, "Extract PCA Eigen Vectors from a compressed PCZ file.")
+pcz_evecs = launcher(PCZevecs)
 
 if __name__ == '__main__':
-    main()
+    PCZevecs.main()

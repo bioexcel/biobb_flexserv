@@ -6,7 +6,7 @@ import json
 import numpy as np
 from pathlib import Path, PurePath
 from math import exp
-from biobb_common.generic.biobb_object import BiobbObject
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 from biobb_common.tools import file_utils as fu
 
 
@@ -408,15 +408,7 @@ class PCZsimilarity(BiobbObject):
             out_file.write(json.dumps(info_dict, indent=4))
 
 
-def pcz_similarity(input_pcz_path1: str, input_pcz_path2: str, output_json_path: str,
-                   properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZsimilarity <flexserv.pcasuite.pcz_similarity>`flexserv.pcasuite.PCZsimilarity class and
-    execute :meth:`launch() <flexserv.pcasuite.pcz_similarity.launch>` method"""
-    return PCZsimilarity(**dict(locals())).launch()
-
-
-pcz_similarity.__doc__ = PCZsimilarity.__doc__
-main = PCZsimilarity.get_main(pcz_similarity, "Compute PCA Similarity from a given pair of compressed PCZ files.")
+pcz_similarity = launcher(PCZsimilarity)
 
 if __name__ == '__main__':
-    main()
+    PCZsimilarity.main()

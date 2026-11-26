@@ -4,7 +4,7 @@
 from typing import Optional
 import json
 from pathlib import Path, PurePath
-from biobb_common.generic.biobb_object import BiobbObject
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZlindemann(BiobbObject):
@@ -104,15 +104,7 @@ class PCZlindemann(BiobbObject):
             out_file.write(json.dumps(info_dict, indent=4))
 
 
-def pcz_lindemann(input_pcz_path: str, output_json_path: str,
-                  properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZlindemann <flexserv.pcasuite.pcz_lindemann>`flexserv.pcasuite.PCZlindemann class and
-    execute :meth:`launch() <flexserv.pcasuite.pcz_lindemann.launch>` method"""
-    return PCZlindemann(**dict(locals())).launch()
-
-
-pcz_lindemann.__doc__ = PCZlindemann.__doc__
-main = PCZlindemann.get_main(pcz_lindemann, "Extract Lindemann coefficients from a compressed PCZ file.")
+pcz_lindemann = launcher(PCZlindemann)
 
 if __name__ == '__main__':
-    main()
+    PCZlindemann.main()

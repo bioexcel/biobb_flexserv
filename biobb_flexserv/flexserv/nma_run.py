@@ -5,7 +5,7 @@ from typing import Optional
 import os
 import sys
 from pathlib import PurePath
-from biobb_common.generic.biobb_object import BiobbObject
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class NMARun(BiobbObject):
@@ -104,16 +104,7 @@ class NMARun(BiobbObject):
         self.run_biobb()
 
 
-def nma_run(input_pdb_path: str,
-            output_log_path: str, output_crd_path: str,
-            properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`NMARun <flexserv.nma_run.NMARun>`flexserv.nma_run.NMARun class and
-    execute :meth:`launch() <flexserv.nma_run.NMARun.launch>` method"""
-    return NMARun(**dict(locals())).launch()
-
-
-nma_run.__doc__ = NMARun.__doc__
-main = NMARun.get_main(nma_run, "Generates protein conformational structures using the Normal Mode Analysis method.")
+nma_run = launcher(NMARun)
 
 if __name__ == '__main__':
-    main()
+    NMARun.main()
