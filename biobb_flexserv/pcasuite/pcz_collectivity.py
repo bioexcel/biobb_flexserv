@@ -3,6 +3,7 @@
 """Module containing the PCZcollectivity class and the command line interface."""
 from typing import Optional
 import json
+from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
@@ -78,12 +79,7 @@ class PCZcollectivity(BiobbObject):
         #  0.132891
         #  0.165089
         #  0.147202
-        info_dict = {}
-        info_dict['collectivity'] = []
-        with open(temp_out_path, 'r') as file:
-            for line in file:
-                info = float(line.strip())
-                info_dict['collectivity'].append(info)
+        info_dict = {'collectivity': [float(v) for v in Path(temp_out_path).read_text().split()]}
 
         with open(staged_output_json_path, 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))

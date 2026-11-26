@@ -4,6 +4,7 @@
 from typing import Optional
 import json
 import math
+from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
@@ -75,34 +76,17 @@ class PCZevecs(BiobbObject):
         # Run Biobb block
         self.run_biobb()
 
-        # Parse output evecs
+        # Parse output evecs (strings in the JSON)
         #  0.180  -0.069   0.168   0.204  -0.054   0.235   0.145  -0.001   0.260   0.183
         # -0.041   0.231   0.174  -0.077   0.144   0.097  -0.022   0.143   0.069   0.008
+        evecs = Path(temp_out_path).read_text().split()
 
-        info_dict = {}
-        info_dict['evecs'] = []
-        with open(temp_out_path, 'r') as file:
-            for line in file:
-                info = line.strip().split(' ')
-                for nums in info:
-                    if nums:
-                        info_dict['evecs'].append(nums)
+        # Projections: the norm of the x, y, z values of each atom
+        values = [float(v) for v in evecs]
+        projs = [float("{:.4f}".format(math.sqrt(x * x + y * y + z * z)))
+                 for x, y, z in zip(values[0::3], values[1::3], values[2::3])]
 
-        # Computing Projections
-        info_dict['projs'] = []
-        module = 1
-        proj = 0
-        for num in info_dict['evecs']:
-            val = float(num) * float(num)
-            proj = proj + val
-            if module % 3 == 0:
-                proj = math.sqrt(proj)
-                module = 1
-                info_dict['projs'].append(float("{:.4f}".format(proj)))
-                proj = 0
-            else:
-                module = module + 1
-
+        info_dict = {'evecs': evecs, 'projs': projs}
         with open(staged_output_json_path, 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
 

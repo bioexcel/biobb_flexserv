@@ -2,7 +2,6 @@
 
 """Module containing the dmd_run class and the command line interface."""
 from typing import Optional
-from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
@@ -61,7 +60,7 @@ class DMDRun(BiobbObject):
         """Launches the execution of the FlexServ BDRun module."""
 
         # Config file
-        instructions_file = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("dmd.in"))
+        instructions_file = self.create_tmp_file("_dmd.in")
         with open(instructions_file, 'w') as dmdin:
 
             dmdin.write("&INPUT\n")

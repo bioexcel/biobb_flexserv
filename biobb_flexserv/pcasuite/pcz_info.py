@@ -3,6 +3,8 @@
 """Module containing the PCZinfo class and the command line interface."""
 from typing import Optional
 import json
+from itertools import accumulate
+from pathlib import Path
 from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
@@ -96,21 +98,12 @@ class PCZinfo(BiobbObject):
         # 170.061981
         # 89.214905
         # 39.836308
-        info_dict['Eigen_Values'] = []
-        info_dict['Eigen_Values_dimensionality_vs_total'] = []
-        info_dict['Eigen_Values_dimensionality_vs_explained'] = []
-        accum_tot = 0
-        accum_exp = 0
-        with open(temp_out_2_path, 'r') as file:
-            for line in file:
-                eval = float(line.strip())
-                eval_var = (eval / float(info_dict['Total_variance']))*100
-                accum_tot = accum_tot + eval_var
-                eval_dim = (eval / float(info_dict['Explained_variance']))*100
-                accum_exp = accum_exp + eval_dim
-                info_dict['Eigen_Values'].append(eval)
-                info_dict['Eigen_Values_dimensionality_vs_total'].append(accum_tot)
-                info_dict['Eigen_Values_dimensionality_vs_explained'].append(accum_exp)
+        evals = [float(v) for v in Path(temp_out_2_path).read_text().split()]
+        # Cumulative percentages of the total and of the explained variance
+        total, explained = float(info_dict['Total_variance']), float(info_dict['Explained_variance'])
+        info_dict['Eigen_Values'] = evals
+        info_dict['Eigen_Values_dimensionality_vs_total'] = list(accumulate(e / total * 100 for e in evals))
+        info_dict['Eigen_Values_dimensionality_vs_explained'] = list(accumulate(e / explained * 100 for e in evals))
 
         with open(staged_output_json_path, 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
