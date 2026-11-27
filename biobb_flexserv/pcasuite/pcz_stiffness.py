@@ -4,9 +4,7 @@
 from typing import Optional
 import json
 import math
-from pathlib import Path, PurePath
-from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.tools.file_utils import launchlogger
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZstiffness(BiobbObject):
@@ -28,7 +26,6 @@ class PCZstiffness(BiobbObject):
             * **container_path** (*str*) - (None) Container path definition.
             * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
             * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
-            * **container_working_dir** (*str*) - (None) Container working directory definition.
             * **container_user_id** (*str*) - (None) Container user_id definition.
             * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
@@ -58,63 +55,20 @@ class PCZstiffness(BiobbObject):
 
     def __init__(self, input_pcz_path: str,
                  output_json_path: str, properties: Optional[dict] = None, **kwargs) -> None:
+        super().__init__(**locals())
 
-        properties = properties or {}
-
-        # Call parent class constructor
-        super().__init__(properties)
-        self.locals_var_dict = locals().copy()
-
-        # Input/Output files
-        self.io_dict = {
-            'in': {'input_pcz_path': input_pcz_path},
-            'out': {'output_json_path': output_json_path}
-        }
-
-        # Properties specific for BB
-        self.properties = properties
-        self.binary_path = properties.get('binary_path', 'pczdump')
-        self.eigenvector = properties.get('eigenvector', 0)
-        self.temperature = properties.get('temperature', 300)
-
-        # Check the properties
-        self.check_properties(properties)
-        self.check_arguments()
-
-    @launchlogger
-    def launch(self):
+    def run(self):
         """Launches the execution of the FlexServ pcz_stiffness module."""
 
-        # Setup Biobb
-        if self.check_restart():
-            return 0
-        self.stage_files()
-
-        if self.container_path:
-            working_dir = self.container_volume_path if self.container_volume_path else "/data"
-        else:
-            working_dir = self.stage_io_dict.get("unique_dir", "")
-
-        unique_dir = Path(self.stage_io_dict.get("unique_dir", ""))
-
         # Temporary output
-        # temp_out = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output.dat"))
-        temp_out = "output.dat"
-        temp_out_path = unique_dir.joinpath(temp_out)
-        staged_output_json_path = unique_dir.joinpath(Path(self.stage_io_dict["out"]["output_json_path"]).name)
+        temp_out_path = self.create_tmp_file("_output.dat")
+        temp_out = self.staged_path(temp_out_path)
+        staged_output_json_path = self.sandbox_file("output_json_path")
 
         # Command line
-        # pczdump -i structure.ca.std.pcz --stiffness -o pcz.stiffness
-        # self.cmd = [self.binary_path,
-        #             "-i", input_pcz,
-        #             "-o", temp_out,
-        #             "--stiffness={}".format(self.eigenvector),
-        #             "--temperature={}".format(self.temperature)
-        #             ]
-
-        self.cmd = ['cd', working_dir, ';',
-                    self.binary_path,
-                    "-i", PurePath(self.stage_io_dict["in"]["input_pcz_path"]).name,
+        # pczdump -i structure.ca.std.pcz --stiff=0 --temperature=300 -o pcz.stiffness
+        self.cmd = [self.binary_path,
+                    "-i", self.stage_io_dict["in"]["input_pcz_path"],
                     "-o", temp_out,
                     "--stiff={}".format(self.eigenvector),
                     "--temperature={}".format(self.temperature)
@@ -142,34 +96,16 @@ class PCZstiffness(BiobbObject):
                             line_array_log.append(float(nums))
 
                 info_dict['stiffness'].append(line_array)
-                info_dict['stiffness'][row][row] = float('inf')
+                info_dict['stiffness'][row][row] = None
                 info_dict['stiffness_log'].append(line_array_log)
-                info_dict['stiffness_log'][row][row] = float('inf')
+                info_dict['stiffness_log'][row][row] = None
                 row += 1
 
         with open(staged_output_json_path, 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
 
-        # Copy files to host
-        self.copy_to_host()
 
-        # Remove temporary folder(s)
-        self.remove_tmp_files()
-
-        self.check_arguments(output_files_created=True, raise_exception=False)
-
-        return self.return_code
-
-
-def pcz_stiffness(input_pcz_path: str, output_json_path: str,
-                  properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZstiffness <flexserv.pcasuite.pcz_stiffness>`flexserv.pcasuite.PCZstiffness class and
-    execute :meth:`launch() <flexserv.pcasuite.pcz_stiffness.launch>` method"""
-    return PCZstiffness(**dict(locals())).launch()
-
-
-pcz_stiffness.__doc__ = PCZstiffness.__doc__
-main = PCZstiffness.get_main(pcz_stiffness, "Extract PCA Stiffness from a compressed PCZ file.")
+pcz_stiffness = launcher(PCZstiffness)
 
 if __name__ == '__main__':
-    main()
+    PCZstiffness.main()

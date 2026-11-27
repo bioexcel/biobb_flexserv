@@ -99,7 +99,7 @@
                 },
                 "variance": {
                     "type": "integer",
-                    "default": 90,
+                    "default": null,
                     "wf_prop": false,
                     "description": "Percentage of variance captured by the final set of eigenvectors"
                 },
@@ -150,12 +150,6 @@
                     "default": "/tmp",
                     "wf_prop": false,
                     "description": "Container volume path definition."
-                },
-                "container_working_dir": {
-                    "type": "string",
-                    "default": null,
-                    "wf_prop": false,
-                    "description": "Container working directory definition."
                 },
                 "container_user_id": {
                     "type": "string",

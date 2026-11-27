@@ -4,9 +4,8 @@
 from typing import Optional
 import json
 import math
-from pathlib import Path, PurePath
-from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.tools.file_utils import launchlogger
+from pathlib import Path
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZevecs(BiobbObject):
@@ -27,7 +26,6 @@ class PCZevecs(BiobbObject):
             * **container_path** (*str*) - (None) Container path definition.
             * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
             * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
-            * **container_working_dir** (*str*) - (None) Container working directory definition.
             * **container_user_id** (*str*) - (None) Container user_id definition.
             * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
@@ -57,61 +55,20 @@ class PCZevecs(BiobbObject):
 
     def __init__(self, input_pcz_path: str,
                  output_json_path: str, properties: Optional[dict] = None, **kwargs) -> None:
+        super().__init__(**locals())
 
-        properties = properties or {}
-
-        # Call parent class constructor
-        super().__init__(properties)
-        self.locals_var_dict = locals().copy()
-
-        # Input/Output files
-        self.io_dict = {
-            'in': {'input_pcz_path': input_pcz_path},
-            'out': {'output_json_path': output_json_path}
-        }
-
-        # Properties specific for BB
-        self.properties = properties
-        self.binary_path = properties.get('binary_path', 'pczdump')
-        self.eigenvector = properties.get('eigenvector', 1)
-
-        # Check the properties
-        self.check_properties(properties)
-        self.check_arguments()
-
-    @launchlogger
-    def launch(self):
+    def run(self):
         """Launches the execution of the FlexServ pcz_evecs module."""
 
-        # Setup Biobb
-        if self.check_restart():
-            return 0
-        self.stage_files()
-
-        if self.container_path:
-            working_dir = self.container_volume_path if self.container_volume_path else "/data"
-        else:
-            working_dir = self.stage_io_dict.get("unique_dir", "")
-
-        unique_dir = Path(self.stage_io_dict.get("unique_dir", ""))
-
         # Temporary output
-        # temp_out = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output.dat"))
-        temp_out = "output.dat"
-        temp_out_path = unique_dir.joinpath(temp_out)
-        staged_output_json_path = unique_dir.joinpath(Path(self.stage_io_dict["out"]["output_json_path"]).name)
+        temp_out_path = self.create_tmp_file("_output.dat")
+        temp_out = self.staged_path(temp_out_path)
+        staged_output_json_path = self.sandbox_file("output_json_path")
 
         # Command line
-        # pczdump -i structure.ca.std.pcz --evecs -o pcz.evecs
-        # self.cmd = [self.binary_path,
-        #             "-i", input_pcz,
-        #             "-o", temp_out,
-        #             "--evec={}".format(self.eigenvector)
-        #             ]
-
-        self.cmd = ['cd', working_dir, ';',
-                    self.binary_path,
-                    '-i', PurePath(self.stage_io_dict["in"]["input_pcz_path"]).name,
+        # pczdump -i structure.ca.std.pcz --evec=1 -o pcz.evecs
+        self.cmd = [self.binary_path,
+                    '-i', self.stage_io_dict["in"]["input_pcz_path"],
                     '-o', temp_out,
                     "--evec={}".format(self.eigenvector)
                     ]
@@ -119,57 +76,22 @@ class PCZevecs(BiobbObject):
         # Run Biobb block
         self.run_biobb()
 
-        # Parse output evecs
+        # Parse output evecs (strings in the JSON)
         #  0.180  -0.069   0.168   0.204  -0.054   0.235   0.145  -0.001   0.260   0.183
         # -0.041   0.231   0.174  -0.077   0.144   0.097  -0.022   0.143   0.069   0.008
+        evecs = Path(temp_out_path).read_text().split()
 
-        info_dict = {}
-        info_dict['evecs'] = []
-        with open(temp_out_path, 'r') as file:
-            for line in file:
-                info = line.strip().split(' ')
-                for nums in info:
-                    if nums:
-                        info_dict['evecs'].append(nums)
+        # Projections: the norm of the x, y, z values of each atom
+        values = [float(v) for v in evecs]
+        projs = [float("{:.4f}".format(math.sqrt(x * x + y * y + z * z)))
+                 for x, y, z in zip(values[0::3], values[1::3], values[2::3])]
 
-        # Computing Projections
-        info_dict['projs'] = []
-        module = 1
-        proj = 0
-        for num in info_dict['evecs']:
-            val = float(num) * float(num)
-            proj = proj + val
-            if module % 3 == 0:
-                proj = math.sqrt(proj)
-                module = 1
-                info_dict['projs'].append(float("{:.4f}".format(proj)))
-                proj = 0
-            else:
-                module = module + 1
-
+        info_dict = {'evecs': evecs, 'projs': projs}
         with open(staged_output_json_path, 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
 
-        # Copy files to host
-        self.copy_to_host()
 
-        # Remove temporary folder(s)
-        self.remove_tmp_files()
-
-        self.check_arguments(output_files_created=True, raise_exception=False)
-
-        return self.return_code
-
-
-def pcz_evecs(input_pcz_path: str, output_json_path: str,
-              properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZevecs <flexserv.pcasuite.pcz_evecs>`flexserv.pcasuite.PCZevecs class and
-    execute :meth:`launch() <flexserv.pcasuite.pcz_evecs.launch>` method"""
-    return PCZevecs(**dict(locals())).launch()
-
-
-pcz_evecs.__doc__ = PCZevecs.__doc__
-main = PCZevecs.get_main(pcz_evecs, "Extract PCA Eigen Vectors from a compressed PCZ file.")
+pcz_evecs = launcher(PCZevecs)
 
 if __name__ == '__main__':
-    main()
+    PCZevecs.main()

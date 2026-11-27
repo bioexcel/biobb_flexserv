@@ -3,9 +3,9 @@
 """Module containing the PCZinfo class and the command line interface."""
 from typing import Optional
 import json
-from pathlib import Path, PurePath
-from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.tools.file_utils import launchlogger
+from itertools import accumulate
+from pathlib import Path
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZinfo(BiobbObject):
@@ -25,7 +25,6 @@ class PCZinfo(BiobbObject):
             * **container_path** (*str*) - (None) Container path definition.
             * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
             * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
-            * **container_working_dir** (*str*) - (None) Container working directory definition.
             * **container_user_id** (*str*) - (None) Container user_id definition.
             * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
@@ -50,71 +49,26 @@ class PCZinfo(BiobbObject):
 
     def __init__(self, input_pcz_path: str,
                  output_json_path: str, properties: Optional[dict] = None, **kwargs) -> None:
+        super().__init__(**locals())
 
-        properties = properties or {}
-
-        # Call parent class constructor
-        super().__init__(properties)
-        self.locals_var_dict = locals().copy()
-
-        # Input/Output files
-        self.io_dict = {
-            'in': {'input_pcz_path': input_pcz_path},
-            'out': {'output_json_path': output_json_path}
-        }
-
-        # Properties specific for BB
-        self.properties = properties
-        self.binary_path = properties.get('binary_path', 'pczdump')
-
-        # Check the properties
-        self.check_properties(properties)
-        self.check_arguments()
-
-    @launchlogger
-    def launch(self):
+    def run(self):
         """Launches the execution of the FlexServ pcz_info module."""
 
-        # Setup Biobb
-        if self.check_restart():
-            return 0
-        self.stage_files()
-
-        if self.container_path:
-            working_dir = self.container_volume_path if self.container_volume_path else "/data"
-        else:
-            working_dir = self.stage_io_dict.get("unique_dir", "")
-
-        unique_dir = Path(self.stage_io_dict.get("unique_dir", ""))
-
         # Temporary output
-        # temp_out_1 = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output1.dat"))
-        # temp_out_2 = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output2.dat"))
-        temp_out_1 = "output1.dat"
-        temp_out_2 = "output2.dat"
-        temp_out_1_path = unique_dir.joinpath(temp_out_1)
-        temp_out_2_path = unique_dir.joinpath(temp_out_2)
-        staged_output_json_path = unique_dir.joinpath(Path(self.stage_io_dict["out"]["output_json_path"]).name)
+        temp_out_1_path = self.create_tmp_file("_output1.dat")
+        temp_out_2_path = self.create_tmp_file("_output2.dat")
+        temp_out_1 = self.staged_path(temp_out_1_path)
+        temp_out_2 = self.staged_path(temp_out_2_path)
+        staged_output_json_path = self.sandbox_file("output_json_path")
 
         # Command line
-        # pczdump -i structure.ca.std.pcz --info -o pcz.info
-        # self.cmd = [self.binary_path,
-        #             "-i", input_pcz,
-        #             "-o", temp_out_1,
-        #             "--info", ';',
-        #             self.binary_path,
-        #             "-i", input_pcz,
-        #             "-o", temp_out_2,
-        #             "--evals"
-        #             ]
-
-        self.cmd = ['cd', working_dir, ';',
-                    self.binary_path,
-                    "-i", PurePath(self.stage_io_dict["in"]["input_pcz_path"]).name,
+        # pczdump -i structure.ca.std.pcz --info -o pcz.info && pczdump -i structure.ca.std.pcz --evals -o pcz.evals
+        self.cmd = [self.binary_path,
+                    "-i", self.stage_io_dict["in"]["input_pcz_path"],
                     "-o", temp_out_1,
-                    "--info", ';',
+                    "--info", '&&',
                     self.binary_path,
-                    "-i", PurePath(self.stage_io_dict["in"]["input_pcz_path"]).name,
+                    "-i", self.stage_io_dict["in"]["input_pcz_path"],
                     "-o", temp_out_2,
                     "--evals"
                     ]
@@ -144,45 +98,18 @@ class PCZinfo(BiobbObject):
         # 170.061981
         # 89.214905
         # 39.836308
-        info_dict['Eigen_Values'] = []
-        info_dict['Eigen_Values_dimensionality_vs_total'] = []
-        info_dict['Eigen_Values_dimensionality_vs_explained'] = []
-        accum_tot = 0
-        accum_exp = 0
-        with open(temp_out_2_path, 'r') as file:
-            for line in file:
-                eval = float(line.strip())
-                eval_var = (eval / float(info_dict['Total_variance']))*100
-                accum_tot = accum_tot + eval_var
-                eval_dim = (eval / float(info_dict['Explained_variance']))*100
-                accum_exp = accum_exp + eval_dim
-                info_dict['Eigen_Values'].append(eval)
-                info_dict['Eigen_Values_dimensionality_vs_total'].append(accum_tot)
-                info_dict['Eigen_Values_dimensionality_vs_explained'].append(accum_exp)
+        evals = [float(v) for v in Path(temp_out_2_path).read_text().split()]
+        # Cumulative percentages of the total and of the explained variance
+        total, explained = float(info_dict['Total_variance']), float(info_dict['Explained_variance'])
+        info_dict['Eigen_Values'] = evals
+        info_dict['Eigen_Values_dimensionality_vs_total'] = list(accumulate(e / total * 100 for e in evals))
+        info_dict['Eigen_Values_dimensionality_vs_explained'] = list(accumulate(e / explained * 100 for e in evals))
 
         with open(staged_output_json_path, 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
 
-        # Copy files to host
-        self.copy_to_host()
 
-        # Remove temporary folder(s)
-        self.remove_tmp_files()
-
-        self.check_arguments(output_files_created=True, raise_exception=False)
-
-        return self.return_code
-
-
-def pcz_info(input_pcz_path: str, output_json_path: str,
-             properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZinfo <flexserv.pcasuite.pcz_info>`flexserv.pcasuite.PCZinfo class and
-    execute :meth:`launch() <flexserv.pcasuite.pcz_info.launch>` method"""
-    return PCZinfo(**dict(locals())).launch()
-
-
-pcz_info.__doc__ = PCZinfo.__doc__
-main = PCZinfo.get_main(pcz_info, "Extract PCA info from a compressed PCZ file.")
+pcz_info = launcher(PCZinfo)
 
 if __name__ == '__main__':
-    main()
+    PCZinfo.main()

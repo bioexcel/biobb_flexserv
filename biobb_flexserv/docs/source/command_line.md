@@ -50,7 +50,6 @@ Config parameters for this building block:
 * **container_path** (*string*): (None) Container path definition.
 * **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
 * **container_volume_path** (*string*): (/tmp) Container volume path definition.
-* **container_working_dir** (*string*): (None) Container working directory definition.
 * **container_user_id** (*string*): (None) Container user_id definition.
 * **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
@@ -164,7 +163,6 @@ Config parameters for this building block:
 * **container_path** (*string*): (None) Container path definition.
 * **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
 * **container_volume_path** (*string*): (/tmp) Container volume path definition.
-* **container_working_dir** (*string*): (None) Container working directory definition.
 * **container_user_id** (*string*): (None) Container user_id definition.
 * **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
@@ -271,7 +269,6 @@ Config parameters for this building block:
 * **container_path** (*string*): (None) Container path definition.
 * **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
 * **container_volume_path** (*string*): (/tmp) Container volume path definition.
-* **container_working_dir** (*string*): (None) Container working directory definition.
 * **container_user_id** (*string*): (None) Container user_id definition.
 * **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
@@ -375,7 +372,6 @@ Config parameters for this building block:
 * **container_path** (*string*): (None) Container path definition.
 * **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
 * **container_volume_path** (*string*): (/tmp) Container volume path definition.
-* **container_working_dir** (*string*): (None) Container working directory definition.
 * **container_user_id** (*string*): (None) Container user_id definition.
 * **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
@@ -482,7 +478,7 @@ Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
 * **binary_path** (*string*): (pczdump) pczdump binary path to be used.
-* **eigenvector** (*integer*): (0) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
+* **eigenvector** (*integer*): (1) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
 * **pdb** (*boolean*): (False) Generate a PDB file with the computed bfactors (to be easily represented with colour scale)
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
@@ -490,7 +486,6 @@ Config parameters for this building block:
 * **container_path** (*string*): (None) Container path definition.
 * **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
 * **container_volume_path** (*string*): (/tmp) Container volume path definition.
-* **container_working_dir** (*string*): (None) Container working directory definition.
 * **container_user_id** (*string*): (None) Container user_id definition.
 * **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
@@ -599,7 +594,6 @@ Config parameters for this building block:
 * **container_path** (*string*): (None) Container path definition.
 * **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
 * **container_volume_path** (*string*): (/tmp) Container volume path definition.
-* **container_working_dir** (*string*): (None) Container working directory definition.
 * **container_user_id** (*string*): (None) Container user_id definition.
 * **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
@@ -702,7 +696,6 @@ Config parameters for this building block:
 * **container_path** (*string*): (None) Container path definition.
 * **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
 * **container_volume_path** (*string*): (/tmp) Container volume path definition.
-* **container_working_dir** (*string*): (None) Container working directory definition.
 * **container_user_id** (*string*): (None) Container user_id definition.
 * **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
@@ -798,15 +791,14 @@ Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
 * **binary_path** (*string*): (pczdump) pczdump binary path to be used.
-* **eigenvector** (*integer*): (0) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
-* **method** (*string*): (Dynamic_domain) Method to compute the hinge regions (Options: Bfactor_slope, Force_constant, Dynamic_domain)
+* **eigenvector** (*integer*): (1) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
+* **method** (*string*): (Bfactor_slope) Method to compute the hinge regions (Options: Bfactor_slope, Force_constant, Dynamic_domain)
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
 * **container_path** (*string*): (None) Container path definition.
 * **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
 * **container_volume_path** (*string*): (/tmp) Container volume path definition.
-* **container_working_dir** (*string*): (None) Container working directory definition.
 * **container_user_id** (*string*): (None) Container user_id definition.
 * **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
@@ -914,7 +906,6 @@ Config parameters for this building block:
 * **container_path** (*string*): (None) Container path definition.
 * **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
 * **container_volume_path** (*string*): (/tmp) Container volume path definition.
-* **container_working_dir** (*string*): (None) Container working directory definition.
 * **container_user_id** (*string*): (None) Container user_id definition.
 * **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
@@ -952,14 +943,13 @@ Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
 * **binary_path** (*string*): (pczdump) pczdump binary path to be used.
-* **mask** (*string*): (all atoms) Residue mask, in the format ":resnum1, resnum2, resnum3" (e.g. ":10,21,33"). See https://mmb.irbbarcelona.org/software/pcasuite/ for the complete format specification.
+* **mask** (*string*): (None) Residue mask, in the format ":resnum1, resnum2, resnum3" (e.g. ":10,21,33"). See https://mmb.irbbarcelona.org/software/pcasuite/ for the complete format specification.
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
 * **sandbox_path** (*string*): (./) Parent path to the sandbox directory.
 * **container_path** (*string*): (None) Container path definition.
 * **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
 * **container_volume_path** (*string*): (/tmp) Container volume path definition.
-* **container_working_dir** (*string*): (None) Container working directory definition.
 * **container_user_id** (*string*): (None) Container user_id definition.
 * **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
@@ -999,7 +989,7 @@ Config input / output arguments for this building block:
 Syntax: input_parameter (datatype) - (default_value) Definition
 
 Config parameters for this building block:
-* **amplifying_factor** (*number*): (0.0) common displacement (dx) along the different eigenvectors. If 0, the result is the absolute similarity index (dot product).
+* **amplifying_factor** (*number*): (None) common displacement (dx) along the different eigenvectors. If 0, the result is the absolute similarity index (dot product).
 * **binary_path** (*string*): (pczdump) pczdump binary path to be used.
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
 * **restart** (*boolean*): (False) Do not execute if output files exist.
@@ -1007,7 +997,6 @@ Config parameters for this building block:
 * **container_path** (*string*): (None) Container path definition.
 * **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
 * **container_volume_path** (*string*): (/tmp) Container volume path definition.
-* **container_working_dir** (*string*): (None) Container working directory definition.
 * **container_user_id** (*string*): (None) Container user_id definition.
 * **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
@@ -1053,7 +1042,6 @@ Config parameters for this building block:
 * **container_path** (*string*): (None) Container path definition.
 * **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
 * **container_volume_path** (*string*): (/tmp) Container volume path definition.
-* **container_working_dir** (*string*): (None) Container working directory definition.
 * **container_user_id** (*string*): (None) Container user_id definition.
 * **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
@@ -1157,7 +1145,6 @@ Config parameters for this building block:
 * **container_path** (*string*): (None) Container path definition.
 * **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
 * **container_volume_path** (*string*): (/tmp) Container volume path definition.
-* **container_working_dir** (*string*): (None) Container working directory definition.
 * **container_user_id** (*string*): (None) Container user_id definition.
 * **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML
@@ -1257,7 +1244,7 @@ Syntax: input_parameter (datatype) - (default_value) Definition
 Config parameters for this building block:
 * **binary_path** (*string*): (pcazip) pcazip binary path to be used.
 * **neigenv** (*integer*): (0) Number of generated eigenvectors
-* **variance** (*integer*): (90) Percentage of variance captured by the final set of eigenvectors
+* **variance** (*integer*): (None) Percentage of variance captured by the final set of eigenvectors
 * **verbose** (*boolean*): (False) Make output verbose
 * **gauss_rmsd** (*boolean*): (False) Use a gaussian RMSd for fitting
 * **remove_tmp** (*boolean*): (True) Remove temporal files.
@@ -1266,7 +1253,6 @@ Config parameters for this building block:
 * **container_path** (*string*): (None) Container path definition.
 * **container_image** (*string*): (afandiadib/ambertools:serial) Container image definition.
 * **container_volume_path** (*string*): (/tmp) Container volume path definition.
-* **container_working_dir** (*string*): (None) Container working directory definition.
 * **container_user_id** (*string*): (None) Container user_id definition.
 * **container_shell_path** (*string*): (/bin/bash) Path to default shell inside the container.
 ### YAML

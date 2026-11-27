@@ -2,9 +2,7 @@
 
 """Module containing the dmd_run class and the command line interface."""
 from typing import Optional
-from pathlib import Path, PurePath
-from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.tools.file_utils import launchlogger
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class DMDRun(BiobbObject):
@@ -28,7 +26,6 @@ class DMDRun(BiobbObject):
             * **container_path** (*str*) - (None) Container path definition.
             * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
             * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
-            * **container_working_dir** (*str*) - (None) Container working directory definition.
             * **container_user_id** (*str*) - (None) Container user_id definition.
             * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
@@ -57,53 +54,18 @@ class DMDRun(BiobbObject):
 
     def __init__(self, input_pdb_path: str, output_log_path: str,
                  output_crd_path: str, properties: Optional[dict] = None, **kwargs) -> None:
+        super().__init__(**locals())
 
-        properties = properties or {}
-
-        # Call parent class constructor
-        super().__init__(properties)
-        self.locals_var_dict = locals().copy()
-
-        # Input/Output files
-        self.io_dict = {
-            'in': {'input_pdb_path': input_pdb_path},
-            'out': {'output_log_path': output_log_path,
-                    'output_crd_path': output_crd_path}
-        }
-
-        # Properties specific for BB
-        self.properties = properties
-        self.binary_path = properties.get('binary_path', 'dmdgoopt')
-        # self.dt = properties.get('dt', 1.D-12)
-        self.dt = properties.get('dt', 1e-12)
-        self.temperature = properties.get('temperature', 300)
-        self.frames = properties.get('frames', 1000)
-
-        # Check the properties
-        self.check_properties(properties)
-        self.check_arguments()
-
-    @launchlogger
-    def launch(self):
+    def run(self):
         """Launches the execution of the FlexServ BDRun module."""
 
-        # Setup Biobb
-        if self.check_restart():
-            return 0
-        self.stage_files()
-
-        if self.container_path:
-            working_dir = self.container_volume_path if self.container_volume_path else "/data"
-        else:
-            working_dir = self.stage_io_dict.get("unique_dir", "")
-
         # Config file
-        instructions_file = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("dmd.in"))
+        instructions_file = self.create_tmp_file("_dmd.in")
         with open(instructions_file, 'w') as dmdin:
 
             dmdin.write("&INPUT\n")
-            dmdin.write("  FILE9='{}',\n".format(PurePath(self.stage_io_dict["in"]["input_pdb_path"]).name))
-            dmdin.write("  FILE21='{}',\n".format(PurePath(self.stage_io_dict["out"]["output_crd_path"]).name))
+            dmdin.write("  FILE9='{}',\n".format(self.stage_io_dict["in"]["input_pdb_path"]))
+            dmdin.write("  FILE21='{}',\n".format(self.stage_io_dict["out"]["output_crd_path"]))
             dmdin.write("  TSNAP={},\n".format(self.dt))
             dmdin.write("  NBLOC={},\n".format(self.frames))
             dmdin.write("  TEMP={},\n".format(self.temperature))
@@ -116,35 +78,16 @@ class DMDRun(BiobbObject):
 
         # Command line
         # dmdgoopt < dmd.in > dmd.log
-        self.cmd = ["cd", working_dir, ";",
-                    self.binary_path,
-                    '<', PurePath(instructions_file).name,
-                    '>', PurePath(self.stage_io_dict["out"]["output_log_path"]).name
+        self.cmd = [self.binary_path,
+                    '<', self.staged_path(instructions_file),
+                    '>', self.stage_io_dict["out"]["output_log_path"]
                     ]
 
         # Run Biobb block
         self.run_biobb()
 
-        # Copy files to host
-        self.copy_to_host()
 
-        # Remove temporary folder(s)
-        self.remove_tmp_files()
-        self.check_arguments(output_files_created=True, raise_exception=False)
-
-        return self.return_code
-
-
-def dmd_run(input_pdb_path: str,
-            output_log_path: str, output_crd_path: str,
-            properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`DMDRun <flexserv.dmd_run.DMDRun>`flexserv.dmd_run.DMDRun class and
-    execute :meth:`launch() <flexserv.dmd_run.DMDRun.launch>` method"""
-    return DMDRun(**dict(locals())).launch()
-
-
-dmd_run.__doc__ = DMDRun.__doc__
-main = DMDRun.get_main(dmd_run, "Generates protein conformational structures using the Discrete Molecular Dynamics method.")
+dmd_run = launcher(DMDRun)
 
 if __name__ == '__main__':
-    main()
+    DMDRun.main()

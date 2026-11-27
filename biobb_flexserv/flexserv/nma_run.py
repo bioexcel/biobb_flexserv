@@ -3,9 +3,8 @@
 """Module containing the nma_run class and the command line interface."""
 from typing import Optional
 import os
-from pathlib import PurePath
-from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.tools.file_utils import launchlogger
+import sys
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class NMARun(BiobbObject):
@@ -28,7 +27,6 @@ class NMARun(BiobbObject):
             * **container_path** (*str*) - (None) Container path definition.
             * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
             * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
-            * **container_working_dir** (*str*) - (None) Container working directory definition.
             * **container_user_id** (*str*) - (None) Container user_id definition.
             * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
@@ -57,47 +55,15 @@ class NMARun(BiobbObject):
 
     def __init__(self, input_pdb_path: str, output_log_path: str,
                  output_crd_path: str, properties: Optional[dict] = None, **kwargs) -> None:
+        super().__init__(**locals())
 
-        properties = properties or {}
-
-        # Call parent class constructor
-        super().__init__(properties)
-        self.locals_var_dict = locals().copy()
-
-        # Input/Output files
-        self.io_dict = {
-            'in': {'input_pdb_path': input_pdb_path},
-            'out': {'output_log_path': output_log_path,
-                    'output_crd_path': output_crd_path}
-        }
-
-        # Properties specific for BB
-        self.properties = properties
-        self.binary_path = properties.get('binary_path', 'diaghess')
-        self.frames = properties.get('frames', 1000)
-        self.nvecs = properties.get('nvecs', 50)
-
-        # Check the properties
-        self.check_properties(properties)
-        self.check_arguments()
-
-    @launchlogger
-    def launch(self):
+    def run(self):
         """Launches the execution of the FlexServ NMARun module."""
 
-        # Setup Biobb
-        if self.check_restart():
-            return 0
-        self.stage_files()
-
-        if self.container_path:
-            working_dir = self.container_volume_path if self.container_volume_path else "/data"
-        else:
-            working_dir = self.stage_io_dict.get("unique_dir", "")
-
-        input_pdb = PurePath(self.stage_io_dict["in"]["input_pdb_path"]).name
-        output_crd = PurePath(self.stage_io_dict["out"]["output_crd_path"]).name
-        output_log = PurePath(self.stage_io_dict["out"]["output_log_path"]).name
+        # The tools write hessian.dat, eigenvec.dat and file.proj where they run: in the sandbox
+        input_pdb = self.stage_io_dict["in"]["input_pdb_path"]
+        output_crd = self.stage_io_dict["out"]["output_crd_path"]
+        output_log = self.stage_io_dict["out"]["output_log_path"]
 
         # Command line
         # nmanu.pl structure.ca.pdb hessian.dat 1 0 40
@@ -107,19 +73,18 @@ class NMARun(BiobbObject):
         if self.container_path:
             conda_path = "/usr/local"
         else:
-            conda_path = os.getenv("CONDA_PREFIX")
+            conda_path = os.getenv("CONDA_PREFIX", sys.prefix)
         nmanu = str(conda_path) + "/bin/nmanu.pl"
         nma_eigen = str(conda_path) + "/bin/mc-eigen-mdweb.pl"
         pca_anim = str(conda_path) + "/bin/pca_anim_mc.pl"
-        self.cmd = ["cd", working_dir, ";",
-                    "perl",
+        self.cmd = ["perl",
                     nmanu,
                     input_pdb,
-                    "hessian.dat", "1", "0", "40", ";",
+                    "hessian.dat", "1", "0", "40", "&&",
                     self.binary_path,
-                    ";", "perl",
+                    "&&", "perl",
                     nma_eigen, "eigenvec.dat", str(self.frames), ">", "file.proj",
-                    ";", "perl",
+                    "&&", "perl",
                     pca_anim,
                     "-pdb",
                     input_pdb,
@@ -131,26 +96,8 @@ class NMARun(BiobbObject):
         # Run Biobb block
         self.run_biobb()
 
-        # Copy files to host
-        self.copy_to_host()
 
-        # Remove temporary folder(s)
-        self.remove_tmp_files()
-        self.check_arguments(output_files_created=True, raise_exception=False)
-
-        return self.return_code
-
-
-def nma_run(input_pdb_path: str,
-            output_log_path: str, output_crd_path: str,
-            properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`NMARun <flexserv.nma_run.NMARun>`flexserv.nma_run.NMARun class and
-    execute :meth:`launch() <flexserv.nma_run.NMARun.launch>` method"""
-    return NMARun(**dict(locals())).launch()
-
-
-nma_run.__doc__ = NMARun.__doc__
-main = NMARun.get_main(nma_run, "Generates protein conformational structures using the Normal Mode Analysis method.")
+nma_run = launcher(NMARun)
 
 if __name__ == '__main__':
-    main()
+    NMARun.main()

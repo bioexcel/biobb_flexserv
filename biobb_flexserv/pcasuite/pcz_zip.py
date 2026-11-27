@@ -2,9 +2,7 @@
 
 """Module containing the PCAzip class and the command line interface."""
 from typing import Optional
-from pathlib import PurePath
-from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.tools.file_utils import launchlogger
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZzip(BiobbObject):
@@ -20,7 +18,7 @@ class PCZzip(BiobbObject):
         properties (dict - Python dictionary object containing the tool parameters, not input/output files):
             * **binary_path** (*str*) - ("pcazip") pcazip binary path to be used.
             * **neigenv** (*int*) - (0) Number of generated eigenvectors
-            * **variance** (*int*) - (90) Percentage of variance captured by the final set of eigenvectors
+            * **variance** (*int*) - (None) Percentage of variance captured by the final set of eigenvectors
             * **verbose** (*bool*) - (False) Make output verbose
             * **gauss_rmsd** (*bool*) - (False) Use a gaussian RMSd for fitting
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
@@ -29,7 +27,6 @@ class PCZzip(BiobbObject):
             * **container_path** (*str*) - (None) Container path definition.
             * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
             * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
-            * **container_working_dir** (*str*) - (None) Container working directory definition.
             * **container_user_id** (*str*) - (None) Container user_id definition.
             * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
@@ -58,61 +55,17 @@ class PCZzip(BiobbObject):
 
     def __init__(self, input_pdb_path: str, input_crd_path: str,
                  output_pcz_path: str, properties: Optional[dict] = None, **kwargs) -> None:
+        super().__init__(**locals())
 
-        properties = properties or {}
-
-        # Call parent class constructor
-        super().__init__(properties)
-        self.locals_var_dict = locals().copy()
-
-        # Input/Output files
-        self.io_dict = {
-            'in': {'input_pdb_path': input_pdb_path,
-                   'input_crd_path': input_crd_path},
-            'out': {'output_pcz_path': output_pcz_path}
-        }
-
-        # Properties specific for BB
-        self.properties = properties
-        self.binary_path = properties.get('binary_path', 'pcazip')
-        self.neigenv = properties.get('neigenv', 0)
-        # self.variance = properties.get('variance', 90)
-        self.variance = properties.get('variance')
-        self.verbose = properties.get('verbose', False)
-        self.gauss_rmsd = properties.get('gauss_rmsd', False)
-
-        # Check the properties
-        self.check_properties(properties)
-        self.check_arguments()
-
-    @launchlogger
-    def launch(self):
+    def run(self):
         """Launches the execution of the FlexServ pcazip module."""
 
-        # Setup Biobb
-        if self.check_restart():
-            return 0
-        self.stage_files()
-
-        if self.container_path:
-            working_dir = self.container_volume_path if self.container_volume_path else "/data"
-        else:
-            working_dir = self.stage_io_dict.get("unique_dir", "")
-
         # Command line
-        # pcazip -i infile -o outfile -n natoms
-        # [-v] [--mask maskfile] [-e nev] [-q qual] [--pdb pdbfile]
-        # self.cmd = [self.binary_path,
-        #             "-p", input_pdb,
-        #             "-i", input_crd,
-        #             "-o", output_pcz
-        #             ]
-
-        self.cmd = ['cd', working_dir, ';',
-                    self.binary_path,
-                    "-p", PurePath(self.stage_io_dict["in"]["input_pdb_path"]).name,
-                    "-i", PurePath(self.stage_io_dict["in"]["input_crd_path"]).name,
-                    "-o", PurePath(self.stage_io_dict["out"]["output_pcz_path"]).name
+        # pcazip -p structure.ca.pdb -i traj.crd -o pcazip.pcz [-v] [-g] [-e nev] [-q variance]
+        self.cmd = [self.binary_path,
+                    "-p", self.stage_io_dict["in"]["input_pdb_path"],
+                    "-i", self.stage_io_dict["in"]["input_crd_path"],
+                    "-o", self.stage_io_dict["out"]["output_pcz_path"]
                     ]
 
         if self.verbose:
@@ -132,27 +85,8 @@ class PCZzip(BiobbObject):
         # Run Biobb block
         self.run_biobb()
 
-        # Copy files to host
-        self.copy_to_host()
 
-        # Remove temporary folder(s)
-        self.remove_tmp_files()
-
-        self.check_arguments(output_files_created=True, raise_exception=False)
-
-        return self.return_code
-
-
-def pcz_zip(input_pdb_path: str, input_crd_path: str,
-            output_pcz_path: str,
-            properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZzip <flexserv.pcasuite.PCZzip>`flexserv.pcasuite.PCZzip class and
-    execute :meth:`launch() <flexserv.pcasuite.PCZzip.launch>` method"""
-    return PCZzip(**dict(locals())).launch()
-
-
-pcz_zip.__doc__ = PCZzip.__doc__
-main = PCZzip.get_main(pcz_zip, "Compress Molecular Dynamics (MD) trajectories using Principal Component Analysis (PCA) algorithms.")
+pcz_zip = launcher(PCZzip)
 
 if __name__ == '__main__':
-    main()
+    PCZzip.main()

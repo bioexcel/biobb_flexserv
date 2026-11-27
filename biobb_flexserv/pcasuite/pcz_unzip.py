@@ -2,9 +2,7 @@
 
 """Module containing the PCZunzip class and the command line interface."""
 from typing import Optional
-from pathlib import PurePath
-from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.tools.file_utils import launchlogger
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZunzip(BiobbObject):
@@ -26,7 +24,6 @@ class PCZunzip(BiobbObject):
             * **container_path** (*str*) - (None) Container path definition.
             * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
             * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
-            * **container_working_dir** (*str*) - (None) Container working directory definition.
             * **container_user_id** (*str*) - (None) Container user_id definition.
             * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
@@ -54,54 +51,16 @@ class PCZunzip(BiobbObject):
 
     def __init__(self, input_pcz_path: str,
                  output_crd_path: str, properties: Optional[dict] = None, **kwargs) -> None:
+        super().__init__(**locals())
 
-        properties = properties or {}
-
-        # Call parent class constructor
-        super().__init__(properties)
-        self.locals_var_dict = locals().copy()
-
-        # Input/Output files
-        self.io_dict = {
-            'in': {'input_pcz_path': input_pcz_path},
-            'out': {'output_crd_path': output_crd_path}
-        }
-
-        # Properties specific for BB
-        self.properties = properties
-        self.binary_path = properties.get('binary_path', 'pcaunzip')
-        self.verbose = properties.get('verbose', False)
-        self.pdb = properties.get('pdb', False)
-
-        # Check the properties
-        self.check_properties(properties)
-        self.check_arguments()
-
-    @launchlogger
-    def launch(self):
+    def run(self):
         """Launches the execution of the FlexServ pcaunzip module."""
-
-        # Setup Biobb
-        if self.check_restart():
-            return 0
-        self.stage_files()
-
-        if self.container_path:
-            working_dir = self.container_volume_path if self.container_volume_path else "/data"
-        else:
-            working_dir = self.stage_io_dict.get("unique_dir", "")
 
         # Command line
         # pcaunzip -i infile [-o outfile] [--pdb] [--verbose] [--help]
-        # self.cmd = [self.binary_path,
-        #             "-i", input_pcz,
-        #             "-o", output_crd
-        #             ]
-
-        self.cmd = ['cd', working_dir, ';',
-                    self.binary_path,
-                    "-i", PurePath(self.stage_io_dict["in"]["input_pcz_path"]).name,
-                    "-o", PurePath(self.stage_io_dict["out"]["output_crd_path"]).name
+        self.cmd = [self.binary_path,
+                    "-i", self.stage_io_dict["in"]["input_pcz_path"],
+                    "-o", self.stage_io_dict["out"]["output_crd_path"]
                     ]
 
         if self.verbose:
@@ -113,27 +72,8 @@ class PCZunzip(BiobbObject):
         # Run Biobb block
         self.run_biobb()
 
-        # Copy files to host
-        self.copy_to_host()
 
-        # Remove temporary folder(s)
-        self.remove_tmp_files()
-
-        self.check_arguments(output_files_created=True, raise_exception=False)
-
-        return self.return_code
-
-
-def pcz_unzip(input_pcz_path: str,
-              output_crd_path: str,
-              properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZunzip <flexserv.pcasuite.PCZunzip>`flexserv.pcasuite.PCZunzip class and
-    execute :meth:`launch() <flexserv.pcasuite.PCZunzip.launch>` method"""
-    return PCZunzip(**dict(locals())).launch()
-
-
-pcz_unzip.__doc__ = PCZunzip.__doc__
-main = PCZunzip.get_main(pcz_unzip, "Uncompress Molecular Dynamics (MD) compressed trajectories using Principal Component Analysis (PCA) algorithms.")
+pcz_unzip = launcher(PCZunzip)
 
 if __name__ == '__main__':
-    main()
+    PCZunzip.main()

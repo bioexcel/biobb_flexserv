@@ -2,9 +2,7 @@
 
 """Module containing the PCZbfactor class and the command line interface."""
 from typing import Optional
-from pathlib import PurePath
-from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.tools.file_utils import launchlogger
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZbfactor(BiobbObject):
@@ -19,7 +17,7 @@ class PCZbfactor(BiobbObject):
         output_pdb_path (str) (Optional): Output PDB with Bfactor x residue x PCA mode file. File type: output. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/bfactors.pdb>`_. Accepted formats: pdb (edam:format_1476).
         properties (dict - Python dictionary object containing the tool parameters, not input/output files):
             * **binary_path** (*str*) - ("pczdump") pczdump binary path to be used.
-            * **eigenvector** (*int*) - (0) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
+            * **eigenvector** (*int*) - (1) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
             * **pdb** (*bool*) - (False) Generate a PDB file with the computed bfactors (to be easily represented with colour scale)
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
             * **restart** (*bool*) - (False) [WF property] Do not execute if output files exist.
@@ -27,7 +25,6 @@ class PCZbfactor(BiobbObject):
             * **container_path** (*str*) - (None) Container path definition.
             * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
             * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
-            * **container_working_dir** (*str*) - (None) Container working directory definition.
             * **container_user_id** (*str*) - (None) Container user_id definition.
             * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
@@ -57,57 +54,16 @@ class PCZbfactor(BiobbObject):
 
     def __init__(self, input_pcz_path: str, output_dat_path: str,
                  output_pdb_path: str, properties: Optional[dict] = None, **kwargs) -> None:
+        super().__init__(**locals())
 
-        properties = properties or {}
-
-        # Call parent class constructor
-        super().__init__(properties)
-        self.locals_var_dict = locals().copy()
-
-        # Input/Output files
-        self.io_dict = {
-            'in': {'input_pcz_path': input_pcz_path},
-            'out': {'output_dat_path': output_dat_path,
-                    'output_pdb_path': output_pdb_path}
-        }
-
-        # Properties specific for BB
-        self.properties = properties
-        self.binary_path = properties.get('binary_path', 'pczdump')
-        self.eigenvector = properties.get('eigenvector', 1)
-        self.pdb = properties.get('pdb', False)
-
-        # Check the properties
-        self.check_properties(properties)
-        self.check_arguments()
-
-    @launchlogger
-    def launch(self):
+    def run(self):
         """Launches the execution of the FlexServ pcz_bfactor module."""
 
-        # Setup Biobb
-        if self.check_restart():
-            return 0
-        self.stage_files()
-
-        if self.container_path:
-            working_dir = self.container_volume_path if self.container_volume_path else "/data"
-        else:
-            working_dir = self.stage_io_dict.get("unique_dir", "")
-
         # Command line (1: dat file)
-        # pczdump -i structure.ca.std.pcz --fluc=1 -o bfactor_1.dat
-        # self.cmd = [self.binary_path,
-        #             "-i", input_pcz,
-        #             "-o", output_dat,
-        #             "--bfactor",
-        #             "--fluc={}".format(self.eigenvector)
-        #             ]
-
-        self.cmd = ['cd', working_dir, ';',
-                    self.binary_path,
-                    '-i', PurePath(self.stage_io_dict["in"]["input_pcz_path"]).name,
-                    '-o', PurePath(self.stage_io_dict["out"]["output_dat_path"]).name,
+        # pczdump -i structure.ca.std.pcz --bfactor --fluc=1 -o bfactor_1.dat
+        self.cmd = [self.binary_path,
+                    '-i', self.stage_io_dict["in"]["input_pcz_path"],
+                    '-o', self.stage_io_dict["out"]["output_dat_path"],
                     "--bfactor",
                     "--fluc={}".format(self.eigenvector)
                     ]
@@ -115,21 +71,12 @@ class PCZbfactor(BiobbObject):
         # Run Biobb block
         self.run_biobb()
 
-        if self.pdb:
+        if self.pdb and self.stage_io_dict["out"].get("output_pdb_path"):
             # Command line (2: pdb file)
-            # pczdump -i structure.ca.std.pcz --fluc=1 --pdb -o bfactor_1.pdb
-            # self.cmd = [self.binary_path,
-            #             "-i", input_pcz,
-            #             "-o", output_pdb,
-            #             "--bfactor",
-            #             "--fluc={}".format(self.eigenvector),
-            #             "--pdb"
-            #             ]
-
-            self.cmd = ['cd', working_dir, ';',
-                        self.binary_path,
-                        '-i', PurePath(self.stage_io_dict["in"]["input_pcz_path"]).name,
-                        '-o', PurePath(self.stage_io_dict["out"]["output_pdb_path"]).name,
+            # pczdump -i structure.ca.std.pcz --bfactor --fluc=1 --pdb -o bfactor_1.pdb
+            self.cmd = [self.binary_path,
+                        '-i', self.stage_io_dict["in"]["input_pcz_path"],
+                        '-o', self.stage_io_dict["out"]["output_pdb_path"],
                         "--bfactor",
                         "--fluc={}".format(self.eigenvector),
                         "--pdb"
@@ -138,26 +85,8 @@ class PCZbfactor(BiobbObject):
             # Run Biobb block
             self.run_biobb()
 
-        # Copy files to host
-        self.copy_to_host()
 
-        # Remove temporary folder(s)
-        self.remove_tmp_files()
-
-        self.check_arguments(output_files_created=True, raise_exception=False)
-
-        return self.return_code
-
-
-def pcz_bfactor(input_pcz_path: str, output_dat_path: str, output_pdb_path: str,
-                properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZbfactor <flexserv.pcasuite.pcz_bfactor>`flexserv.pcasuite.PCZbfactor class and
-    execute :meth:`launch() <flexserv.pcasuite.pcz_bfactor.launch>` method"""
-    return PCZbfactor(**dict(locals())).launch()
-
-
-pcz_bfactor.__doc__ = PCZbfactor.__doc__
-main = PCZbfactor.get_main(pcz_bfactor, "Extract residue bfactors x PCA mode from a compressed PCZ file.")
+pcz_bfactor = launcher(PCZbfactor)
 
 if __name__ == '__main__':
-    main()
+    PCZbfactor.main()

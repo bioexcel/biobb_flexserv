@@ -2,9 +2,7 @@
 
 """Module containing the bd_run class and the command line interface."""
 from typing import Optional
-from pathlib import PurePath
-from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.tools.file_utils import launchlogger
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class BDRun(BiobbObject):
@@ -28,7 +26,6 @@ class BDRun(BiobbObject):
             * **container_path** (*str*) - (None) Container path definition.
             * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
             * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
-            * **container_working_dir** (*str*) - (None) Container working directory definition.
             * **container_user_id** (*str*) - (None) Container user_id definition.
             * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
@@ -57,83 +54,30 @@ class BDRun(BiobbObject):
 
     def __init__(self, input_pdb_path: str, output_log_path: str,
                  output_crd_path: str, properties: Optional[dict] = None, **kwargs) -> None:
+        super().__init__(**locals())
 
-        properties = properties or {}
-
-        # Call parent class constructor
-        super().__init__(properties)
-        self.locals_var_dict = locals().copy()
-
-        # Input/Output files
-        self.io_dict = {
-            'in': {'input_pdb_path': input_pdb_path},
-            'out': {'output_log_path': output_log_path,
-                    'output_crd_path': output_crd_path}
-        }
-
-        # Properties specific for BB
-        self.properties = properties
-        self.binary_path = properties.get('binary_path', 'bd')
-        self.time = properties.get('time', 1000000)
-        self.dt = properties.get('dt', 1e-15)
-        self.wfreq = properties.get('wfreq', 1000)
-
-        # Check the properties
-        self.check_properties(properties)
-        self.check_arguments()
-
-    @launchlogger
-    def launch(self):
+    def run(self):
         """Launches the execution of the FlexServ BDRun module."""
-
-        # Setup Biobb
-        if self.check_restart():
-            return 0
-        self.stage_files()
-
-        if self.container_path:
-            working_dir = self.container_volume_path if self.container_volume_path else "/data"
-        else:
-            working_dir = self.stage_io_dict.get("unique_dir", "")
 
         # Command line
         # bd structure.ca.pdb 1000000 1e-15 1000 40 3.8 traj.crd > bd.log
         # itempsmax, dt, itsnap, const, r0
-        self.cmd = ["cd", working_dir, ";",
-                    self.binary_path,
-                    PurePath(self.stage_io_dict["in"]["input_pdb_path"]).name,
+        self.cmd = [self.binary_path,
+                    self.stage_io_dict["in"]["input_pdb_path"],
                     str(self.time),
                     str(self.dt),
                     str(self.wfreq),
                     "40",  # Hardcoded "Const", see https://mmb.irbbarcelona.org/gitlab/adam/FlexServ/blob/master/bd/bd2.f#L51
                     "3.8",  # Hardcoded "r0", see https://mmb.irbbarcelona.org/gitlab/adam/FlexServ/blob/master/bd/bd2.f#L52
-                    PurePath(self.stage_io_dict["out"]["output_crd_path"]).name,
-                    '>', PurePath(self.stage_io_dict["out"]["output_log_path"]).name
+                    self.stage_io_dict["out"]["output_crd_path"],
+                    '>', self.stage_io_dict["out"]["output_log_path"]
                     ]
 
         # Run Biobb block
         self.run_biobb()
 
-        # Copy files to host
-        self.copy_to_host()
 
-        # Remove temporary folder(s)
-        self.remove_tmp_files()
-        self.check_arguments(output_files_created=True, raise_exception=False)
-
-        return self.return_code
-
-
-def bd_run(input_pdb_path: str,
-           output_log_path: str, output_crd_path: str,
-           properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`BDRun <flexserv.bd_run.BDRun>`flexserv.bd_run.BDRun class and
-    execute :meth:`launch() <flexserv.bd_run.BDRun.launch>` method"""
-    return BDRun(**dict(locals())).launch()
-
-
-bd_run.__doc__ = BDRun.__doc__
-main = BDRun.get_main(bd_run, "Generates protein conformational structures using the Brownian Dynamics method.")
+bd_run = launcher(BDRun)
 
 if __name__ == '__main__':
-    main()
+    BDRun.main()

@@ -2,11 +2,10 @@
 
 """Module containing the PCZhinges class and the command line interface."""
 from typing import Optional
+import ast
 import json
 import re
-from pathlib import Path, PurePath
-from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.tools.file_utils import launchlogger
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZhinges(BiobbObject):
@@ -20,15 +19,14 @@ class PCZhinges(BiobbObject):
         output_json_path (str): Output hinge regions x PCA mode file. File type: output. `Sample file <https://github.com/bioexcel/biobb_flexserv/raw/master/biobb_flexserv/test/reference/pcasuite/hinges.json>`_. Accepted formats: json (edam:format_3464).
         properties (dict - Python dictionary object containing the tool parameters, not input/output files):
             * **binary_path** (*str*) - ("pczdump") pczdump binary path to be used.
-            * **eigenvector** (*int*) - (0) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
-            * **method** (*str*) - ("Dynamic_domain") Method to compute the hinge regions (Options: Bfactor_slope, Force_constant, Dynamic_domain)
+            * **eigenvector** (*int*) - (1) PCA mode (eigenvector) from which to extract bfactor values per residue (0 means average over all modes).
+            * **method** (*str*) - ("Bfactor_slope") Method to compute the hinge regions (Options: Bfactor_slope, Force_constant, Dynamic_domain)
             * **remove_tmp** (*bool*) - (True) [WF property] Remove temporal files.
             * **restart** (*bool*) - (False) [WF property] Do not execute if output files exist.
             * **sandbox_path** (*str*) - ("./") [WF property] Parent path to the sandbox directory.
             * **container_path** (*str*) - (None) Container path definition.
             * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
             * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
-            * **container_working_dir** (*str*) - (None) Container working directory definition.
             * **container_user_id** (*str*) - (None) Container user_id definition.
             * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
@@ -57,28 +55,7 @@ class PCZhinges(BiobbObject):
 
     def __init__(self, input_pcz_path: str, output_json_path: str,
                  properties: Optional[dict] = None, **kwargs) -> None:
-
-        properties = properties or {}
-
-        # Call parent class constructor
-        super().__init__(properties)
-        self.locals_var_dict = locals().copy()
-
-        # Input/Output files
-        self.io_dict = {
-            'in': {'input_pcz_path': input_pcz_path},
-            'out': {'output_json_path': output_json_path}
-        }
-
-        # Properties specific for BB
-        self.properties = properties
-        self.binary_path = properties.get('binary_path', 'pczdump')
-        self.eigenvector = properties.get('eigenvector', 1)
-        self.method = properties.get('method', "Bfactor_slope")
-
-        # Check the properties
-        self.check_properties(properties)
-        self.check_arguments()
+        super().__init__(**locals())
 
     def parse_output(self, output_file):
         """ Parses FlexServ hinges methods output file report """
@@ -91,7 +68,7 @@ class PCZhinges(BiobbObject):
         elif self.method == "Dynamic_domain":
             method = "#### Lavery method"
         else:
-            print("Method not recognised ({}), please check it and try again. ".format(self.method))
+            raise ValueError("Method not recognised ({}), please check it and try again. ".format(self.method))
 
         start = False
         out_data = ''
@@ -150,8 +127,7 @@ class PCZhinges(BiobbObject):
                     dict_out["clusters"].append(cluster)
                     start = start + 1
                 if start and "[" in line:
-                    # dict_out["clusters"][start-1]["residues"] = list(map(int,list(line.replace(", ]", "").replace("  [","").split(', '))))
-                    dict_out["clusters"][start-1]["residues"] = eval(line)
+                    dict_out["clusters"][start-1]["residues"] = ast.literal_eval(line)
                 # Interacting regions: 13 14 30 31 69 70 84 85 112 113 114 115 116 166 167 199 200
                 if "Interacting regions" in line:
                     nums = line.split(':')[1]
@@ -163,42 +139,19 @@ class PCZhinges(BiobbObject):
 
         return dict_out
 
-    @launchlogger
-    def launch(self):
+    def run(self):
         """Launches the execution of the FlexServ pcz_hinges module."""
 
-        # Setup Biobb
-        if self.check_restart():
-            return 0
-        self.stage_files()
-
-        if self.container_path:
-            working_dir = self.container_volume_path if self.container_volume_path else "/data"
-        else:
-            working_dir = self.stage_io_dict.get("unique_dir", "")
-
-        unique_dir = Path(self.stage_io_dict.get("unique_dir", ""))
-
         # Temporary output
-        # temp_out = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output.dat"))
-        temp_out = "output.dat"
-        temp_log = "output.log"
-        temp_out_path = unique_dir.joinpath(temp_out)
-        staged_output_json_path = unique_dir.joinpath(Path(self.stage_io_dict["out"]["output_json_path"]).name)
+        temp_out_path = self.create_tmp_file("_output.dat")
+        temp_out = self.staged_path(temp_out_path)
+        temp_log = self.staged_path(self.create_tmp_file("_output.log"))
+        staged_output_json_path = self.sandbox_file("output_json_path")
 
-        # Command line (1: dat file)
-        # pczdump -i structure.ca.std.pcz --fluc=1 -o bfactor_1.dat
-        # self.cmd = [self.binary_path,
-        #             "-i", input_pcz,
-        #             "-o", temp_out,
-        #             "-t", "0.3",
-        #             "--hinge={}".format(self.eigenvector),
-        #             ">&", "pcz_dump.hinges.log"
-        #             ]
-
-        self.cmd = ['cd', working_dir, ';',
-                    self.binary_path,
-                    '-i', PurePath(self.stage_io_dict["in"]["input_pcz_path"]).name,
+        # Command line
+        # pczdump -i structure.ca.std.pcz -t 0.3 --hinge=1 -o pcz.hinges >& pcz_dump.hinges.log
+        self.cmd = [self.binary_path,
+                    '-i', self.stage_io_dict["in"]["input_pcz_path"],
                     '-o', temp_out,
                     "-t", "0.3",
                     "--hinge={}".format(self.eigenvector),
@@ -214,26 +167,8 @@ class PCZhinges(BiobbObject):
         with open(staged_output_json_path, 'w') as out_file:
             out_file.write(json.dumps(dict_out, indent=4))
 
-        # Copy files to host
-        self.copy_to_host()
 
-        # Remove temporary folder(s)
-        self.remove_tmp_files()
-
-        self.check_arguments(output_files_created=True, raise_exception=False)
-
-        return self.return_code
-
-
-def pcz_hinges(input_pcz_path: str, output_json_path: str,
-               properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZhinges <flexserv.pcasuite.pcz_hinges>`flexserv.pcasuite.PCZhinges class and
-    execute :meth:`launch() <flexserv.pcasuite.pcz_hinges.launch>` method"""
-    return PCZhinges(**dict(locals())).launch()
-
-
-pcz_hinges.__doc__ = PCZhinges.__doc__
-main = PCZhinges.get_main(pcz_hinges, "Compute possible hinge regions (residues around which large protein movements are organized) of a molecule from a compressed PCZ file.")
+pcz_hinges = launcher(PCZhinges)
 
 if __name__ == '__main__':
-    main()
+    PCZhinges.main()

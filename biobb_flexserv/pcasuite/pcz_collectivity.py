@@ -2,10 +2,9 @@
 
 """Module containing the PCZcollectivity class and the command line interface."""
 from typing import Optional
-from pathlib import Path, PurePath
 import json
-from biobb_common.generic.biobb_object import BiobbObject
-from biobb_common.tools.file_utils import launchlogger
+from pathlib import Path
+from biobb_common.generic.biobb_object import BiobbObject, launcher
 
 
 class PCZcollectivity(BiobbObject):
@@ -26,7 +25,6 @@ class PCZcollectivity(BiobbObject):
             * **container_path** (*str*) - (None) Container path definition.
             * **container_image** (*str*) - ('afandiadib/ambertools:serial') Container image definition.
             * **container_volume_path** (*str*) - ('/tmp') Container volume path definition.
-            * **container_working_dir** (*str*) - (None) Container working directory definition.
             * **container_user_id** (*str*) - (None) Container user_id definition.
             * **container_shell_path** (*str*) - ('/bin/bash') Path to default shell inside the container.
 
@@ -56,61 +54,20 @@ class PCZcollectivity(BiobbObject):
 
     def __init__(self, input_pcz_path: str,
                  output_json_path: str, properties: Optional[dict] = None, **kwargs) -> None:
+        super().__init__(**locals())
 
-        properties = properties or {}
-
-        # Call parent class constructor
-        super().__init__(properties)
-        self.locals_var_dict = locals().copy()
-
-        # Input/Output files
-        self.io_dict = {
-            'in': {'input_pcz_path': input_pcz_path},
-            'out': {'output_json_path': output_json_path}
-        }
-
-        # Properties specific for BB
-        self.properties = properties
-        self.binary_path = properties.get('binary_path', 'pczdump')
-        self.eigenvector = properties.get('eigenvector', 0)
-
-        # Check the properties
-        self.check_properties(properties)
-        self.check_arguments()
-
-    @launchlogger
-    def launch(self):
+    def run(self):
         """Launches the execution of the FlexServ pcz_collectivity module."""
 
-        # Setup Biobb
-        if self.check_restart():
-            return 0
-        self.stage_files()
-
-        if self.container_path:
-            working_dir = self.container_volume_path if self.container_volume_path else "/data"
-        else:
-            working_dir = self.stage_io_dict.get("unique_dir", "")
-
-        unique_dir = Path(self.stage_io_dict.get("unique_dir", ""))
-
         # Temporary output
-        # temp_out = str(Path(self.stage_io_dict.get("unique_dir", "")).joinpath("output.dat"))
-        temp_out = "output.dat"
-        temp_out_path = unique_dir.joinpath(temp_out)
-        staged_output_json_path = unique_dir.joinpath(Path(self.stage_io_dict["out"]["output_json_path"]).name)
+        temp_out_path = self.create_tmp_file("_output.dat")
+        temp_out = self.staged_path(temp_out_path)
+        staged_output_json_path = self.sandbox_file("output_json_path")
 
         # Command line
-        # pczdump -i structure.ca.std.pcz --collectivity -o pcz.collectivity
-        # self.cmd = [self.binary_path,
-        #             "-i", input_pcz,
-        #             "-o", temp_out,
-        #             "--collectivity={}".format(self.eigenvector)
-        #             ]
-
-        self.cmd = ['cd', working_dir, ';',
-                    self.binary_path,
-                    '-i', PurePath(self.stage_io_dict["in"]["input_pcz_path"]).name,
+        # pczdump -i structure.ca.std.pcz --collectivity=1 -o pcz.collectivity
+        self.cmd = [self.binary_path,
+                    '-i', self.stage_io_dict["in"]["input_pcz_path"],
                     '-o', temp_out,
                     "--collectivity={}".format(self.eigenvector)
                     ]
@@ -122,36 +79,13 @@ class PCZcollectivity(BiobbObject):
         #  0.132891
         #  0.165089
         #  0.147202
-        info_dict = {}
-        info_dict['collectivity'] = []
-        with open(temp_out_path, 'r') as file:
-            for line in file:
-                info = float(line.strip())
-                info_dict['collectivity'].append(info)
+        info_dict = {'collectivity': [float(v) for v in Path(temp_out_path).read_text().split()]}
 
         with open(staged_output_json_path, 'w') as out_file:
             out_file.write(json.dumps(info_dict, indent=4))
 
-        # Copy files to host
-        self.copy_to_host()
 
-        # Remove temporary folder(s)
-        self.remove_tmp_files()
-
-        self.check_arguments(output_files_created=True, raise_exception=False)
-
-        return self.return_code
-
-
-def pcz_collectivity(input_pcz_path: str, output_json_path: str,
-                     properties: Optional[dict] = None, **kwargs) -> int:
-    """Create :class:`PCZcollectivity <flexserv.pcasuite.pcz_collectivity>`flexserv.pcasuite.PCZcollectivity class and
-    execute :meth:`launch() <flexserv.pcasuite.pcz_collectivity.launch>` method"""
-    return PCZcollectivity(**dict(locals())).launch()
-
-
-pcz_collectivity.__doc__ = PCZcollectivity.__doc__
-main = PCZcollectivity.get_main(pcz_collectivity, "Extract PCA collectivity (numerical measure of how many atoms are affected by a given mode) from a compressed PCZ file.")
+pcz_collectivity = launcher(PCZcollectivity)
 
 if __name__ == '__main__':
-    main()
+    PCZcollectivity.main()

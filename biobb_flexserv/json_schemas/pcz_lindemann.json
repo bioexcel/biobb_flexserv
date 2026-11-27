@@ -64,7 +64,7 @@
                 },
                 "mask": {
                     "type": "string",
-                    "default": "all atoms",
+                    "default": null,
                     "wf_prop": false,
                     "description": "Residue mask, in the format \":resnum1, resnum2, resnum3\" (e.g. \":10,21,33\"). See https://mmb.irbbarcelona.org/software/pcasuite/ for the complete format specification."
                 },
@@ -103,12 +103,6 @@
                     "default": "/tmp",
                     "wf_prop": false,
                     "description": "Container volume path definition."
-                },
-                "container_working_dir": {
-                    "type": "string",
-                    "default": null,
-                    "wf_prop": false,
-                    "description": "Container working directory definition."
                 },
                 "container_user_id": {
                     "type": "string",
