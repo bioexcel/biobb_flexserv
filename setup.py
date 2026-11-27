@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="biobb_flexserv",
-    version="5.3.0",
+    version="5.4.0",
     author="Biobb developers",
     author_email="adam.hospital@irbbarcelona.org",
     description="biobb_flexserv is a BioBB category for biomolecular flexibility studies on protein 3D structures.",
@@ -20,7 +20,7 @@ setuptools.setup(
     packages=setuptools.find_packages(exclude=['docs', 'test']),
     package_data={'biobb_flexserv': ['py.typed']},
     include_package_data=True,
-    install_requires=['biobb_common==5.3.1'],
+    install_requires=['biobb_common==5.4.0'],
     python_requires='>=3.11',
     entry_points={
         "console_scripts": [

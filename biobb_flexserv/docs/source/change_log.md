@@ -2,9 +2,19 @@
 
 ## [Unreleased]
 
+## What's new in version [5.4.0](https://github.com/bioexcel/biobb_flexserv/releases/tag/v5.4.0)?
+
 ### Changes
 
+* [UPDATE] Update to biobb_common 5.4.0.
 * [FIX] `pcz_similarity`: two pcz files with different atoms stop with an error that gives the sizes of their eigenvectors, instead of a numpy error.
+* [FIX] `pcz_hinges`: an unknown `method` raises a `ValueError`; it printed a message and went on. The residue lists of the pczdump output are read with `ast.literal_eval` instead of `eval`.
+* [FIX] `pcz_bfactor`: `pdb` set to True without an `output_pdb_path` no longer fails with a `KeyError`.
+* [FIX] `nma_run`: the FlexServ scripts are found in the Python environment when `CONDA_PREFIX` is not set.
+* [CHANGE] `pcz_stiffness`: the diagonal of the `stiffness` and `stiffness_log` matrices of the JSON output is `null` instead of `Infinity`, which is not valid JSON.
+* [CHANGE] `nma_run`: the intermediate files of the FlexServ tools (`hessian.dat`, `eigenvec.dat`, `file.proj`) are written in a temporary folder of their own.
+* [DOCS] `pcz_bfactor`, `pcz_hinges`, `pcz_lindemann`, `pcz_similarity` and `pcz_zip`: the documented defaults are the values the blocks use (`eigenvector` 1, `method` `Bfactor_slope`, and None for `mask`, `amplifying_factor` and `variance`).
+* [UPDATE] Python 3.11 to 3.13.
 
 ## What's new in version [5.3.0](https://github.com/bioexcel/biobb_amber/releases/tag/v5.3.0)?
 
